@@ -9,7 +9,7 @@
 import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { Routes, Route, Navigate, Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import Joyride from 'react-joyride';
+import { Joyride } from 'react-joyride';
 import { useOnboardingStore } from './onboarding/onboardingStore';
 import { SandboxToggle } from './components/SandboxToggle';
 import { ProgressIndicator } from './components/ProgressIndicator';
