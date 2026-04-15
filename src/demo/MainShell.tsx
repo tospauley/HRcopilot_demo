@@ -51,6 +51,8 @@ const LeakageWidget    = lazy(() => import('../components/leakage/Organizational
 import AIAdvisorModal      from '../../components/AIAdvisorModal';
 import ClockInModal        from '../../components/ClockInModal';
 import LeakageAnalysisModal from '../../components/LeakageAnalysisModal';
+import { DemoPayslipModal } from './components/DemoPayslipModal';
+import { DemoLeakageModal } from './components/DemoLeakageModal';
 
 // ── Page loader ───────────────────────────────────────────────────────────────
 function PageLoader() {
@@ -216,6 +218,8 @@ export default function MainShell() {
   const [isAIOpen, setIsAIOpen] = useState(false);
   const [isClockInOpen, setIsClockInOpen] = useState(false);
   const [isLeakageOpen, setIsLeakageOpen] = useState(false);
+  const [isDemoPayslipOpen, setIsDemoPayslipOpen] = useState(false);
+  const [isDemoLeakageOpen, setIsDemoLeakageOpen] = useState(false);
   const location = useLocation();
 
   // Apply brand color from CEO org profile
@@ -237,11 +241,12 @@ export default function MainShell() {
   useEffect(() => {
     const handler = (e: Event) => {
       const action = (e as CustomEvent<string>).detail;
-      if (action === 'open:ai-advisor') setIsAIOpen(true);
-      if (action === 'open:leakage')    setIsLeakageOpen(true);
-      // close:* actions fired when guided flow advances past a modal step
-      if (action === 'close:ai-advisor') setIsAIOpen(false);
-      if (action === 'close:leakage')    setIsLeakageOpen(false);
+      if (action === 'open:ai-advisor')   setIsAIOpen(true);
+      if (action === 'open:leakage')      setIsDemoLeakageOpen(true);
+      if (action === 'open:payslip')      setIsDemoPayslipOpen(true);
+      if (action === 'close:ai-advisor')  setIsAIOpen(false);
+      if (action === 'close:leakage')     setIsDemoLeakageOpen(false);
+      if (action === 'close:payslip')     setIsDemoPayslipOpen(false);
     };
     window.addEventListener('demo:uiAction', handler);
     return () => window.removeEventListener('demo:uiAction', handler);
@@ -475,6 +480,16 @@ export default function MainShell() {
         isOpen={isLeakageOpen}
         onClose={() => setIsLeakageOpen(false)}
         userName={roleLabel}
+      />
+
+      {/* ── Guided demo showcases ── */}
+      <DemoPayslipModal
+        isOpen={isDemoPayslipOpen}
+        onClose={() => setIsDemoPayslipOpen(false)}
+      />
+      <DemoLeakageModal
+        isOpen={isDemoLeakageOpen}
+        onClose={() => setIsDemoLeakageOpen(false)}
       />
 
       {/* ── Guided demo engine — navigates + narrates automatically ── */}

@@ -66,6 +66,10 @@ export default function OrganizationalIntelligenceWidget({
   onComplete = null,
   autoAdvance = false,
   standalone = false,
+  // Pre-fill props — skip wizard and jump straight to results
+  initialProfile = null,
+  initialInputs = null,
+  skipToResults = false,
   // Engine instances (injected from demo system or self-initialized)
   narrationEngine = null,
   ambientEngine = null,
@@ -92,6 +96,22 @@ export default function OrganizationalIntelligenceWidget({
   useEffect(() => {
     initCurrencyEngine()
   }, [])
+
+  // ── Pre-fill: skip wizard when initialProfile + skipToResults provided ────
+  useEffect(() => {
+    if (!initialProfile || !skipToResults) return
+    // Use completeProfile to build benchmarks + suggested defaults, then
+    // override inputs with our demo values and jump to results step (8)
+    completeProfile(initialProfile)
+    if (initialInputs) {
+      setTimeout(() => {
+        setInputs(initialInputs)
+        goToStep(8)
+      }, 50)
+    } else {
+      setTimeout(() => goToStep(8), 50)
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // Activate clock as soon as we have a non-zero perSecondLeakage
   useEffect(() => {

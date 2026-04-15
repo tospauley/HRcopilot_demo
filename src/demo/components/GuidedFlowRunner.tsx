@@ -73,19 +73,22 @@ export function GuidedFlowRunner() {
     const target = currentStep.module ? `/app/${currentStep.module}` : '/app';
     navigate(target);
 
-    // Fire any UI action for this step (e.g. open a modal)
-    if (currentStep.uiAction) {
-      // Small delay so the page has rendered before the action fires
-      setTimeout(() => {
-        window.dispatchEvent(new CustomEvent('demo:uiAction', { detail: currentStep.uiAction }));
-      }, 300);
-    }
-
     // Close any modal that was opened by the previous step
     const prevStep = GUIDED_FLOW[stepIndex - 1];
     if (prevStep?.uiAction?.startsWith('open:')) {
       const closeAction = prevStep.uiAction.replace('open:', 'close:');
-      window.dispatchEvent(new CustomEvent('demo:uiAction', { detail: closeAction }));
+      // Small delay so React has flushed the previous render before closing
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('demo:uiAction', { detail: closeAction }));
+      }, 50);
+    }
+
+    // Fire any UI action for this step (e.g. open a modal)
+    if (currentStep.uiAction) {
+      // Delay so the page has rendered and any previous modal has closed
+      setTimeout(() => {
+        window.dispatchEvent(new CustomEvent('demo:uiAction', { detail: currentStep.uiAction }));
+      }, 400);
     }
 
     // Helper to advance — guarded so it can only fire once per step
@@ -167,8 +170,13 @@ export function GuidedFlowRunner() {
     primeAudioContext();
     clearAllTimers();
     activeRef.current = null;
-    advancedRef.current = true; // prevent any pending onDone from firing
+    advancedRef.current = true;
     stop();
+    // Close any open modal from the current step
+    const cur = GUIDED_FLOW[useDemoOrchestrator.getState().stepIndex];
+    if (cur?.uiAction?.startsWith('open:')) {
+      window.dispatchEvent(new CustomEvent('demo:uiAction', { detail: cur.uiAction.replace('open:', 'close:') }));
+    }
     prevStep();
   }, [prevStep, clearAllTimers]);
 
@@ -176,8 +184,13 @@ export function GuidedFlowRunner() {
     primeAudioContext();
     clearAllTimers();
     activeRef.current = null;
-    advancedRef.current = true; // prevent any pending onDone from firing
+    advancedRef.current = true;
     stop();
+    // Close any open modal from the current step
+    const cur = GUIDED_FLOW[useDemoOrchestrator.getState().stepIndex];
+    if (cur?.uiAction?.startsWith('open:')) {
+      window.dispatchEvent(new CustomEvent('demo:uiAction', { detail: cur.uiAction.replace('open:', 'close:') }));
+    }
     nextStep();
   }, [nextStep, clearAllTimers]);
 
@@ -192,6 +205,11 @@ export function GuidedFlowRunner() {
     activeRef.current = null;
     advancedRef.current = true;
     stop();
+    // Close any open modal
+    const cur = GUIDED_FLOW[useDemoOrchestrator.getState().stepIndex];
+    if (cur?.uiAction?.startsWith('open:')) {
+      window.dispatchEvent(new CustomEvent('demo:uiAction', { detail: cur.uiAction.replace('open:', 'close:') }));
+    }
     resetDemo();
     navigate('/app');
   }, [resetDemo, navigate, clearAllTimers]);

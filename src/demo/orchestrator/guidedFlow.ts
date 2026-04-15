@@ -48,6 +48,7 @@ export const GUIDED_FLOW: DemoStep[] = [
     narrationKey: 'payroll.ledgerPost',
     durationMs:   12_000,
     joyrideTarget: '#payroll-run-btn',
+    uiAction:     'open:payslip',
   },
   {
     id:           'procurement',
