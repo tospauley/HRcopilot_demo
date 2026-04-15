@@ -1,5 +1,4 @@
 import path from 'path';
-import fs from 'fs';
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
@@ -25,33 +24,6 @@ export default defineConfig(({ mode }) => {
       plugins: () => [],
     },
     plugins: [
-      // Strip COEP from sw-kokoro.js — browsers refuse to register a SW
-      // when the script response carries Cross-Origin-Embedder-Policy.
-      {
-        name: 'sw-headers',
-        configureServer(server) {
-          server.middlewares.use((req, res, next) => {
-            if (req.url === '/sw-kokoro.js') {
-              // Serve the SW file directly as raw static content so Vite
-              // does NOT transform/inject HMR code into it — transformed SW
-              // scripts fail evaluation because they contain browser-only APIs.
-              const swPath = path.resolve(__dirname, 'public/sw-kokoro.js');
-              try {
-                const content = fs.readFileSync(swPath, 'utf-8');
-                res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
-                res.setHeader('Service-Worker-Allowed', '/');
-                res.removeHeader('Cross-Origin-Embedder-Policy');
-                res.removeHeader('Cross-Origin-Opener-Policy');
-                res.end(content);
-                return; // skip next() — we've handled the response
-              } catch (err) {
-                console.error('[sw-headers] Could not read sw-kokoro.js:', err);
-              }
-            }
-            next();
-          });
-        },
-      },
       react({
         // Babel fast-refresh only in dev — no extra plugins needed
         babel: {

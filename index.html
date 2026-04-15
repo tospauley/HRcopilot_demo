@@ -23,15 +23,6 @@
     }
     </script>
     <link rel="stylesheet" href="/index.css">
-    <script>
-      // Register Kokoro service worker — intercepts HuggingFace requests
-      // and serves model files from /models/ instead (no CDN download)
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw-kokoro.js', { scope: '/' })
-          .then(() => console.log('[SW] Kokoro service worker registered'))
-          .catch((e) => console.warn('[SW] Registration failed:', e));
-      }
-    </script>
   </head>
   <body class="bg-white text-slate-900 dark:bg-slate-950 dark:text-[#f8fafc] transition-colors duration-300">
     <div id="root"></div>

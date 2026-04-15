@@ -3,15 +3,6 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
 
-// ── Register Kokoro Service Worker ───────────────────────────────────────────
-// Intercepts huggingface.co requests for model/voice files and serves them
-// from /models/ instead — no re-download on every page refresh.
-if ('serviceWorker' in navigator && import.meta.env.PROD) {
-  navigator.serviceWorker.register('/sw-kokoro.js', { scope: '/' })
-    .then(() => console.log('[SW] Kokoro service worker registered'))
-    .catch((err) => console.warn('[SW] Registration failed:', err));
-}
-
 // ── Admin panel detection ─────────────────────────────────────────────────────
 // Accessible at /?admin — completely separate from the demo visitor flow.
 // No link to this URL exists anywhere in the demo UI.
