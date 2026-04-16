@@ -3,7 +3,7 @@
 // PURPOSE: Barrel export for the voice system (Kokoro removed)
 // ============================================
 
-export { speak, stop, isSpeaking, testProvider, sanitise, primeAudioContext, ensureAudioContextRunning } from './narrationEngine';
+export { speak, stop, isSpeaking, testProvider, sanitise, primeAudioContext, ensureAudioContextRunning, startAmbience, pauseAmbience, resumeAmbience, stopAmbience, syncAmbience } from './narrationEngine';
 export { subtitleEngine } from './subtitleEngine';
 export { useNarratorStore } from './narratorStore';
 export { useNarration } from './useNarration';

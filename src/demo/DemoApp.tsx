@@ -15,7 +15,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { HR360Provider } from '../context/HR360Context';
 import { CinematicSubtitles } from './voice';
 import { DemoCompletionModal } from './components/DemoCompletionModal';
-import { primeAudioContext, loadKokoro } from './voice/narrationEngine';
+import { primeAudioContext } from './voice/narrationEngine';
 import { useOnboardingStore } from './onboarding/onboardingStore';
 
 // ── Lazy-loaded onboarding screens ───────────────────────────────────────────
@@ -78,10 +78,6 @@ function LandingRoute() {
     // primeAudioContext stores it in the narrationEngine module scope
     // so it survives the React navigation that follows.
     primeAudioContext();
-
-    // Start Kokoro model download immediately — runs in background worker
-    // while the zoom animation plays (~1-2s head start before speak() fires)
-    loadKokoro().catch(() => {});
 
     setStep('welcome-zoom');
     navigate('/welcome');

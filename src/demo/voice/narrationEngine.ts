@@ -14,6 +14,7 @@ import { useNarratorStore } from './narratorStore';
 import { withGroqKey } from '../../lib/groqKeyPool';
 import { withElevenLabsKey } from '../../lib/elevenLabsKeyPool';
 import { cacheBlobAudio, getCachedBlobAudio } from './audioCache';
+import { useDemoOrchestrator } from '../orchestrator/demoOrchestrator';
 import type { NarratorProvider, SpeakOptions, NarratorTestResult } from './types';
 
 // ── Audio context ──────────────────────────────────────────────────────────────
@@ -54,112 +55,159 @@ let _speakToken = 0;
 let _currentScriptId: string | null = null;
 
 // ── Background Ambience ────────────────────────────────────────────────────────
-// Design rules:
-//   • Ambience ONLY plays when the demo is actively running (startAmbience called).
-//   • It loops continuously in the background at the configured volume.
-//   • When narration speaks, volume ducks to 20% (smooth fade), then swells back.
-//   • Ambience does NOT stop when narration plays — it ducks and resumes.
-//   • Admin panel preview uses a SEPARATE one-shot audio element (never touches _ambientAudio).
-//   • stopAmbience() fully tears down the loop (called when demo stops/pauses).
-//   • syncAmbience() only adjusts volume/URL on an already-running loop — it does
-//     NOT start playback on its own. Use startAmbience() to begin playback.
+//
+// Lifecycle:
+//   startAmbience()  — demo begins    → fade in, loop
+//   pauseAmbience()  — demo paused    → fade out, keep position (do NOT destroy)
+//   resumeAmbience() — demo resumed   → fade back in from same position
+//   stopAmbience()   — demo stopped / exited → fade out, then destroy
+//
+// Ducking (narration playing over ambience):
+//   setDucking(true)  → fade to 20% of configured volume (fast, 400ms)
+//   setDucking(false) → swell back to full volume (slow, 700ms)
+//
+// Admin panel preview uses a SEPARATE one-shot Audio element — never touches
+// _ambientAudio so it cannot interfere with the live demo loop.
 
 let _ambientAudio: HTMLAudioElement | null = null;
-let _isDucked = false;
-let _duckRaf: number | null = null;
+let _isDucked        = false;
+let _fadeRaf: number | null = null;
 let _loadedAmbienceUrl = '';
 
-/** Smoothly interpolate ambient volume toward `target` using rAF. */
-function _fadeTo(target: number, durationMs = 600): void {
-  if (_duckRaf !== null) cancelAnimationFrame(_duckRaf);
-  if (!_ambientAudio) return;
+// ── Core fade utility ──────────────────────────────────────────────────────────
 
-  const start     = _ambientAudio.volume;
-  const startTime = performance.now();
+/**
+ * Smoothly interpolate _ambientAudio.volume toward `target` over `durationMs`.
+ * Cancels any in-progress fade before starting a new one.
+ * Resolves when the fade completes (or is superseded).
+ */
+function _fadeTo(target: number, durationMs = 600): Promise<void> {
+  return new Promise((resolve) => {
+    if (_fadeRaf !== null) { cancelAnimationFrame(_fadeRaf); _fadeRaf = null; }
+    if (!_ambientAudio) { resolve(); return; }
 
-  const step = (now: number) => {
-    if (!_ambientAudio) return;
-    const t      = Math.min((now - startTime) / durationMs, 1);
-    const eased  = 1 - Math.pow(1 - t, 3); // ease-out cubic
-    _ambientAudio.volume = Math.max(0, Math.min(1, start + (target - start) * eased));
-    if (t < 1) {
-      _duckRaf = requestAnimationFrame(step);
-    } else {
-      _ambientAudio.volume = target;
-      _duckRaf = null;
-    }
-  };
+    const audio     = _ambientAudio;
+    const start     = audio.volume;
+    const startTime = performance.now();
 
-  _duckRaf = requestAnimationFrame(step);
+    const step = (now: number) => {
+      if (!_ambientAudio || _ambientAudio !== audio) { resolve(); return; } // superseded
+      const t      = Math.min((now - startTime) / durationMs, 1);
+      const eased  = 1 - Math.pow(1 - t, 3); // ease-out cubic
+      audio.volume = Math.max(0, Math.min(1, start + (target - start) * eased));
+      if (t < 1) {
+        _fadeRaf = requestAnimationFrame(step);
+      } else {
+        audio.volume = target;
+        _fadeRaf = null;
+        resolve();
+      }
+    };
+
+    _fadeRaf = requestAnimationFrame(step);
+  });
+}
+
+// ── Public ambience API ────────────────────────────────────────────────────────
+
+/**
+ * Start the ambient loop from the beginning.
+ * Call when the demo starts. Requires a prior user gesture.
+ * No-op if ambienceEnabled is false or narrator is muted.
+ */
+export function startAmbience(): void {
+  const state = useNarratorStore.getState();
+  if (!state.ambienceEnabled || state.muted) return;
+
+  // Create the element once — reuse across pause/resume cycles
+  if (!_ambientAudio) {
+    _ambientAudio        = new Audio();
+    _ambientAudio.loop   = true;
+    _ambientAudio.volume = 0; // start silent, fade in
+  }
+
+  // Switch track if the URL changed
+  if (_loadedAmbienceUrl !== state.ambienceUrl) {
+    _loadedAmbienceUrl   = state.ambienceUrl;
+    _ambientAudio.src    = state.ambienceUrl;
+    _ambientAudio.currentTime = 0;
+  }
+
+  _ambientAudio.play().catch(() => {});
+  _fadeTo(state.ambienceVolume, 800); // fade in over 800ms
 }
 
 /**
- * Sync volume and URL on the running ambient player.
- * Does NOT start playback — call startAmbience() for that.
+ * Pause the ambient loop, preserving playback position.
+ * Call when the demo is paused. Fades out before pausing.
+ */
+export async function pauseAmbience(): Promise<void> {
+  if (!_ambientAudio || _ambientAudio.paused) return;
+  await _fadeTo(0, 500);
+  _ambientAudio?.pause(); // pause after fade — position is preserved
+}
+
+/**
+ * Resume the ambient loop from where it was paused.
+ * Call when the demo resumes.
+ */
+export function resumeAmbience(): void {
+  const state = useNarratorStore.getState();
+  if (!state.ambienceEnabled || state.muted) return;
+  if (!_ambientAudio) { startAmbience(); return; }
+
+  _ambientAudio.play().catch(() => {});
+  _fadeTo(state.ambienceVolume, 600);
+}
+
+/**
+ * Stop and fully tear down the ambient loop.
+ * Call when the demo stops, exits, or the user explicitly stops it.
+ * Fades out gracefully before destroying the element.
+ */
+export async function stopAmbience(): Promise<void> {
+  if (!_ambientAudio) return;
+  const audio = _ambientAudio;
+  await _fadeTo(0, 400);
+  audio.pause();
+  audio.src = '';
+  if (_ambientAudio === audio) {
+    _ambientAudio      = null;
+    _loadedAmbienceUrl = '';
+  }
+  _isDucked = false;
+}
+
+/**
+ * Sync volume and track URL on a running loop (called from settings panel).
+ * Does NOT start or stop playback — use start/pause/resume/stop for that.
  */
 export function syncAmbience(): void {
   const state = useNarratorStore.getState();
+  if (!_ambientAudio) return;
 
   if (!state.ambienceEnabled || state.muted) {
     stopAmbience();
     return;
   }
 
-  if (!_ambientAudio) return; // not started yet — startAmbience() will handle it
-
   // Switch track if URL changed
   if (_loadedAmbienceUrl !== state.ambienceUrl) {
-    _loadedAmbienceUrl = state.ambienceUrl;
-    _ambientAudio.src  = state.ambienceUrl;
-    _ambientAudio.play().catch(() => {});
-  } else if (_ambientAudio.paused) {
+    _loadedAmbienceUrl        = state.ambienceUrl;
+    _ambientAudio.src         = state.ambienceUrl;
+    _ambientAudio.currentTime = 0;
     _ambientAudio.play().catch(() => {});
   }
 
-  // Sync volume (only when not mid-fade)
-  if (_duckRaf === null) {
-    const target = _isDucked ? state.ambienceVolume * 0.2 : state.ambienceVolume;
-    _ambientAudio.volume = Math.max(0, Math.min(1, target));
+  // Sync volume (only when not mid-duck-fade)
+  if (!_isDucked && _fadeRaf === null) {
+    _ambientAudio.volume = Math.max(0, Math.min(1, state.ambienceVolume));
   }
 }
 
-/**
- * Start the ambient loop. Call this when the demo begins.
- * Requires a prior user gesture (primeAudioContext must have been called).
- */
-export function startAmbience(): void {
-  const state = useNarratorStore.getState();
-  if (!state.ambienceEnabled || state.muted) return;
+// ── Ducking ────────────────────────────────────────────────────────────────────
 
-  if (!_ambientAudio) {
-    _ambientAudio = new Audio();
-    _ambientAudio.loop   = true;
-    _ambientAudio.volume = state.ambienceVolume;
-  }
-
-  if (_loadedAmbienceUrl !== state.ambienceUrl) {
-    _loadedAmbienceUrl = state.ambienceUrl;
-    _ambientAudio.src  = state.ambienceUrl;
-  }
-
-  if (_ambientAudio.paused) {
-    _ambientAudio.play().catch(() => {});
-  }
-}
-
-/** Stop and tear down the ambient loop (call when demo stops or pauses). */
-export function stopAmbience(): void {
-  if (_duckRaf !== null) { cancelAnimationFrame(_duckRaf); _duckRaf = null; }
-  if (_ambientAudio) {
-    _ambientAudio.pause();
-    _ambientAudio.src = '';
-    _ambientAudio = null;
-    _loadedAmbienceUrl = '';
-  }
-  _isDucked = false;
-}
-
-/** Duck: fade music to 20% while narrator speaks, swell back when done. */
+/** Duck: fade to 20% while narrator speaks; swell back when done. */
 function setDucking(ducked: boolean): void {
   if (_isDucked === ducked) return;
   _isDucked = ducked;
@@ -170,19 +218,25 @@ function setDucking(ducked: boolean): void {
   _fadeTo(target, ducked ? 400 : 700); // duck fast, swell slow
 }
 
-// React to store changes: volume slider and mute toggle on a running loop.
-// ambienceEnabled changes are handled explicitly by startAmbience/stopAmbience
-// calls in the UI — not here — to avoid auto-starting on rehydration.
+// ── React to store changes (volume slider / mute toggle) ──────────────────────
 useNarratorStore.subscribe((state, prevState) => {
-  if (state.ambienceVolume !== prevState.ambienceVolume || state.muted !== prevState.muted) {
-    if (!state.ambienceEnabled || state.muted) {
-      stopAmbience();
-    } else if (_ambientAudio) {
-      // Only adjust volume if the loop is already running
-      if (_duckRaf === null) {
-        const target = _isDucked ? state.ambienceVolume * 0.2 : state.ambienceVolume;
-        _ambientAudio.volume = Math.max(0, Math.min(1, target));
-      }
+  const volumeChanged  = state.ambienceVolume !== prevState.ambienceVolume;
+  const mutedChanged   = state.muted          !== prevState.muted;
+  const enabledChanged = state.ambienceEnabled !== prevState.ambienceEnabled;
+  const urlChanged     = state.ambienceUrl    !== prevState.ambienceUrl;
+
+  if (!volumeChanged && !mutedChanged && !enabledChanged && !urlChanged) return;
+
+  if (!state.ambienceEnabled || state.muted) {
+    stopAmbience();
+    return;
+  }
+
+  if (_ambientAudio) {
+    if (urlChanged) syncAmbience();
+    // Only update volume when not mid-duck
+    if ((volumeChanged || mutedChanged) && !_isDucked && _fadeRaf === null) {
+      _fadeTo(state.ambienceVolume, 300);
     }
   }
 });
@@ -583,19 +637,29 @@ export async function testProvider(provider: NarratorProvider): Promise<Narrator
 
 
 // ── Demo lifecycle → ambience wiring ─────────────────────────────────────────
-// Watch the demo orchestrator: start ambience when demo runs, stop when idle/paused.
-// Imported lazily to avoid circular deps (orchestrator doesn't import engine).
-if (typeof window !== 'undefined') {
-  import('../orchestrator/demoOrchestrator').then(({ useDemoOrchestrator }) => {
-    useDemoOrchestrator.subscribe((state, prevState) => {
-      if (state.status === prevState.status) return;
-      if (state.status === 'running') {
-        startAmbience();
-      } else {
-        // paused, idle, complete — stop the loop
-        stopAmbience();
-        stop(); // also stop any in-flight narration
-      }
-    });
-  }).catch(() => {});
-}
+// Watches the demo orchestrator and drives ambience accordingly:
+//   running  → start (first time) or resume (after pause)
+//   paused   → fade out + pause (position preserved)
+//   idle / complete / exit → fade out + destroy
+let _prevDemoStatus = useDemoOrchestrator.getState().status;
+
+useDemoOrchestrator.subscribe((state) => {
+  if (state.status === _prevDemoStatus) return;
+  const prev = _prevDemoStatus;
+  _prevDemoStatus = state.status;
+
+  if (state.status === 'running') {
+    if (prev === 'paused') {
+      resumeAmbience();
+    } else {
+      startAmbience();
+    }
+  } else if (state.status === 'paused') {
+    pauseAmbience();
+    stop();
+  } else {
+    // idle or complete — full teardown
+    stopAmbience();
+    stop();
+  }
+});

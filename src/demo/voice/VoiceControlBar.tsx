@@ -6,7 +6,7 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNarratorStore } from './narratorStore';
-import { stop, stopAmbience } from './narrationEngine';
+import { stop, pauseAmbience, resumeAmbience, stopAmbience } from './narrationEngine';
 import { useDemoOrchestrator } from '../orchestrator/demoOrchestrator';
 
 const PROVIDER_ICONS: Record<string, string> = {
@@ -21,11 +21,26 @@ const PROVIDER_LABELS: Record<string, string> = {
 
 export function VoiceControlBar() {
   const store = useNarratorStore();
-  const { status: demoStatus, pauseDemo, resumeDemo } = useDemoOrchestrator();
+  const { status: demoStatus, pauseDemo, resumeDemo, resetDemo } = useDemoOrchestrator();
 
+  // Pause: fade out ambience + pause narration + pause demo
+  const handlePause = () => {
+    stop();
+    pauseAmbience();
+    pauseDemo();
+  };
+
+  // Resume: resume ambience + resume demo (narration restarts via orchestrator)
+  const handleResume = () => {
+    resumeAmbience();
+    resumeDemo();
+  };
+
+  // Stop: full teardown — narration, ambience, demo state
   const handleStop = () => {
     stop();
     stopAmbience();
+    resetDemo();
   };
 
   return (
@@ -61,16 +76,16 @@ export function VoiceControlBar() {
             </span>
             {/* Pause/Resume demo */}
             <button
-              onClick={() => demoStatus === 'paused' ? resumeDemo() : pauseDemo()}
+              onClick={() => demoStatus === 'paused' ? handleResume() : handlePause()}
               title={demoStatus === 'paused' ? 'Resume demo' : 'Pause demo'}
               className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/30 transition-all text-[8px]"
             >
               {demoStatus === 'paused' ? '▶' : '⏸'}
             </button>
-            {/* Stop narration + ambience */}
+            {/* Stop narration + ambience + demo */}
             <button
               onClick={handleStop}
-              title="Stop narration and ambience"
+              title="Stop demo"
               className="w-4 h-4 rounded-full bg-white/20 flex items-center justify-center text-white/60 hover:text-white hover:bg-rose-500/60 transition-all text-[8px]"
             >
               ■
