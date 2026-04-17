@@ -14,8 +14,26 @@ import { useNarratorStore } from './narratorStore';
 import { withGroqKey } from '../../lib/groqKeyPool';
 import { withElevenLabsKey } from '../../lib/elevenLabsKeyPool';
 import { cacheBlobAudio, getCachedBlobAudio } from './audioCache';
-import { useDemoOrchestrator } from '../orchestrator/demoOrchestrator';
 import type { NarratorProvider, SpeakOptions, NarratorTestResult } from './types';
+
+// ── Lazy orchestrator accessor — avoids circular import TDZ ──────────────────
+// narrationEngine ← (barrel) ← DemoApp ← MainShell ← demoOrchestrator
+// Importing demoOrchestrator statically here creates a cycle that Rollup
+// resolves with a TDZ. We break it by loading the module lazily at runtime.
+let _getOrchestratorState: (() => { status: string }) | null = null;
+let _subscribeOrchestrator: ((cb: (s: { status: string }) => void) => void) | null = null;
+
+function _initOrchestrator(): void {
+  if (_getOrchestratorState) return;
+  // Dynamic import is async but we only need it after the first user gesture,
+  // so by the time it's called all modules are fully initialized.
+  import('../orchestrator/demoOrchestrator').then(({ useDemoOrchestrator }) => {
+    _getOrchestratorState    = () => useDemoOrchestrator.getState();
+    _subscribeOrchestrator   = (cb) => useDemoOrchestrator.subscribe(cb);
+    // Wire up the subscription now that the module is loaded
+    _wireOrchestratorSubscription();
+  }).catch(() => { /* non-fatal — ambience lifecycle just won't auto-wire */ });
+}
 
 // ── Audio context ──────────────────────────────────────────────────────────────
 
@@ -219,31 +237,27 @@ function setDucking(ducked: boolean): void {
 }
 
 // ── React to store changes (volume slider / mute toggle) ──────────────────────
-// NOTE: Deferred via setTimeout(0) to avoid TDZ — useNarratorStore must be
-// fully initialized before we call .subscribe() at module level.
-setTimeout(() => {
-  useNarratorStore.subscribe((state, prevState) => {
-    const volumeChanged  = state.ambienceVolume !== prevState.ambienceVolume;
-    const mutedChanged   = state.muted          !== prevState.muted;
-    const enabledChanged = state.ambienceEnabled !== prevState.ambienceEnabled;
-    const urlChanged     = state.ambienceUrl    !== prevState.ambienceUrl;
+useNarratorStore.subscribe((state, prevState) => {
+  const volumeChanged  = state.ambienceVolume !== prevState.ambienceVolume;
+  const mutedChanged   = state.muted          !== prevState.muted;
+  const enabledChanged = state.ambienceEnabled !== prevState.ambienceEnabled;
+  const urlChanged     = state.ambienceUrl    !== prevState.ambienceUrl;
 
-    if (!volumeChanged && !mutedChanged && !enabledChanged && !urlChanged) return;
+  if (!volumeChanged && !mutedChanged && !enabledChanged && !urlChanged) return;
 
-    if (!state.ambienceEnabled || state.muted) {
-      stopAmbience();
-      return;
+  if (!state.ambienceEnabled || state.muted) {
+    stopAmbience();
+    return;
+  }
+
+  if (_ambientAudio) {
+    if (urlChanged) syncAmbience();
+    // Only update volume when not mid-duck
+    if ((volumeChanged || mutedChanged) && !_isDucked && _fadeRaf === null) {
+      _fadeTo(state.ambienceVolume, 300);
     }
-
-    if (_ambientAudio) {
-      if (urlChanged) syncAmbience();
-      // Only update volume when not mid-duck
-      if ((volumeChanged || mutedChanged) && !_isDucked && _fadeRaf === null) {
-        _fadeTo(state.ambienceVolume, 300);
-      }
-    }
-  });
-}, 0);
+  }
+});
 
 function stopActiveAudio(): void {
   try { _currentAudio?.pause(); } catch { /* ignore */ }
@@ -641,19 +655,17 @@ export async function testProvider(provider: NarratorProvider): Promise<Narrator
 
 
 // ── Demo lifecycle → ambience wiring ─────────────────────────────────────────
-// Watches the demo orchestrator and drives ambience accordingly:
-//   running  → start (first time) or resume (after pause)
-//   paused   → fade out + pause (position preserved)
-//   idle / complete / exit → fade out + destroy
-//
-// NOTE: Deferred via setTimeout(0) to avoid TDZ — useDemoOrchestrator must be
-// fully initialized before we call .getState() or .subscribe().
+// Watches the demo orchestrator and drives ambience accordingly.
+// Uses a lazy dynamic import to break the circular dependency:
+//   narrationEngine → (voice barrel) → DemoApp → MainShell → demoOrchestrator
+//                                                           ↑ would TDZ here
 let _prevDemoStatus: string = 'idle';
 
-setTimeout(() => {
-  _prevDemoStatus = useDemoOrchestrator.getState().status;
+function _wireOrchestratorSubscription(): void {
+  if (!_subscribeOrchestrator || !_getOrchestratorState) return;
+  _prevDemoStatus = _getOrchestratorState().status;
 
-  useDemoOrchestrator.subscribe((state) => {
+  _subscribeOrchestrator((state) => {
     if (state.status === _prevDemoStatus) return;
     const prev = _prevDemoStatus;
     _prevDemoStatus = state.status;
@@ -673,4 +685,8 @@ setTimeout(() => {
       stop();
     }
   });
-}, 0);
+}
+
+// Kick off the lazy load immediately — it resolves async after all modules
+// are initialized, so no TDZ risk.
+_initOrchestrator();
