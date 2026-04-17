@@ -641,25 +641,32 @@ export async function testProvider(provider: NarratorProvider): Promise<Narrator
 //   running  → start (first time) or resume (after pause)
 //   paused   → fade out + pause (position preserved)
 //   idle / complete / exit → fade out + destroy
-let _prevDemoStatus = useDemoOrchestrator.getState().status;
+//
+// NOTE: Deferred via setTimeout(0) to avoid TDZ — useDemoOrchestrator must be
+// fully initialized before we call .getState() or .subscribe().
+let _prevDemoStatus: string = 'idle';
 
-useDemoOrchestrator.subscribe((state) => {
-  if (state.status === _prevDemoStatus) return;
-  const prev = _prevDemoStatus;
-  _prevDemoStatus = state.status;
+setTimeout(() => {
+  _prevDemoStatus = useDemoOrchestrator.getState().status;
 
-  if (state.status === 'running') {
-    if (prev === 'paused') {
-      resumeAmbience();
+  useDemoOrchestrator.subscribe((state) => {
+    if (state.status === _prevDemoStatus) return;
+    const prev = _prevDemoStatus;
+    _prevDemoStatus = state.status;
+
+    if (state.status === 'running') {
+      if (prev === 'paused') {
+        resumeAmbience();
+      } else {
+        startAmbience();
+      }
+    } else if (state.status === 'paused') {
+      pauseAmbience();
+      stop();
     } else {
-      startAmbience();
+      // idle or complete — full teardown
+      stopAmbience();
+      stop();
     }
-  } else if (state.status === 'paused') {
-    pauseAmbience();
-    stop();
-  } else {
-    // idle or complete — full teardown
-    stopAmbience();
-    stop();
-  }
-});
+  });
+}, 0);
