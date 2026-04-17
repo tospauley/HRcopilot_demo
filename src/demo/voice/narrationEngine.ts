@@ -219,27 +219,31 @@ function setDucking(ducked: boolean): void {
 }
 
 // ── React to store changes (volume slider / mute toggle) ──────────────────────
-useNarratorStore.subscribe((state, prevState) => {
-  const volumeChanged  = state.ambienceVolume !== prevState.ambienceVolume;
-  const mutedChanged   = state.muted          !== prevState.muted;
-  const enabledChanged = state.ambienceEnabled !== prevState.ambienceEnabled;
-  const urlChanged     = state.ambienceUrl    !== prevState.ambienceUrl;
+// NOTE: Deferred via setTimeout(0) to avoid TDZ — useNarratorStore must be
+// fully initialized before we call .subscribe() at module level.
+setTimeout(() => {
+  useNarratorStore.subscribe((state, prevState) => {
+    const volumeChanged  = state.ambienceVolume !== prevState.ambienceVolume;
+    const mutedChanged   = state.muted          !== prevState.muted;
+    const enabledChanged = state.ambienceEnabled !== prevState.ambienceEnabled;
+    const urlChanged     = state.ambienceUrl    !== prevState.ambienceUrl;
 
-  if (!volumeChanged && !mutedChanged && !enabledChanged && !urlChanged) return;
+    if (!volumeChanged && !mutedChanged && !enabledChanged && !urlChanged) return;
 
-  if (!state.ambienceEnabled || state.muted) {
-    stopAmbience();
-    return;
-  }
-
-  if (_ambientAudio) {
-    if (urlChanged) syncAmbience();
-    // Only update volume when not mid-duck
-    if ((volumeChanged || mutedChanged) && !_isDucked && _fadeRaf === null) {
-      _fadeTo(state.ambienceVolume, 300);
+    if (!state.ambienceEnabled || state.muted) {
+      stopAmbience();
+      return;
     }
-  }
-});
+
+    if (_ambientAudio) {
+      if (urlChanged) syncAmbience();
+      // Only update volume when not mid-duck
+      if ((volumeChanged || mutedChanged) && !_isDucked && _fadeRaf === null) {
+        _fadeTo(state.ambienceVolume, 300);
+      }
+    }
+  });
+}, 0);
 
 function stopActiveAudio(): void {
   try { _currentAudio?.pause(); } catch { /* ignore */ }
