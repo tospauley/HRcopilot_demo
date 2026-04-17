@@ -1,6 +1,6 @@
 /**
  * useLeakageState.js
- * HR360+ Organizational Intelligence Widget
+ * HRcopilot Organizational Intelligence Widget
  * Part of: Phase 2 — State & Computation
  * Org types supported: both
  * Dependencies: LeakageCalculator, BenchmarkEngine, MaturityScorer, OrgProfileEngine, CurrencyEngine
@@ -63,7 +63,7 @@ const INITIAL_STATE = {
     yearOneROI: 0, breakEvenMonths: 0, threeYearGain: 0,
     programmeEfficiencyRatio: 0, additionalBeneficiaries: 0, missionImpactScore: 0,
     dailyLeakage: 0, hourlyLeakage: 0, perSecondLeakage: 0,
-    hr360AnnualCost: 0, isNGO: false,
+    HRcopilotAnnualCost: 0, isNGO: false,
   },
   benchmarks: {},
   maturityScore: {

@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { useCurrency } from '../src/context/CurrencyContext';
 import { db } from '../mockDb';
 import { collection, query, onSnapshot, addDoc, serverTimestamp, orderBy } from '../mockDb';
 import GlassCard from '../components/GlassCard';
 import { ICONS } from '../constants';
+import { Sparkles } from 'lucide-react';
 
 const Invoices: React.FC = () => {
+  const { symbol, fmt } = useCurrency();
   const [invoices, setInvoices] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [isBuilderOpen, setIsBuilderOpen] = useState(false);
@@ -104,7 +107,7 @@ const Invoices: React.FC = () => {
                   <tr key={inv.id} className="hover:bg-slate-50 dark:hover:bg-white/[0.02] transition-colors">
                     <td className="py-4 text-xs font-black text-[var(--brand-primary)]">{inv.invoiceNumber}</td>
                     <td className="py-4 text-xs font-bold uppercase tracking-tight">{inv.clientName}</td>
-                    <td className="py-4 text-xs font-black italic">${inv.totalAmount?.toLocaleString()}</td>
+                    <td className="py-4 text-xs font-black italic">{fmt(inv.totalAmount ?? 0)}</td>
                     <td className="py-4">
                       <span className={`px-2 py-1 rounded-lg text-[9px] font-black uppercase ${
                         inv.status === 'PAID' ? 'bg-emerald-500/10 text-emerald-500' : 
@@ -127,22 +130,22 @@ const Invoices: React.FC = () => {
             <div className="space-y-4">
               <div className="flex justify-between items-end">
                 <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Total Outstanding</p>
-                <p className="text-xl font-black italic text-amber-500">$124,500.00</p>
+                <p className="text-xl font-black italic text-amber-500">{fmt(124_500, { decimals: 2 })}</p>
               </div>
               <div className="flex justify-between items-end">
                 <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Collected (MTD)</p>
-                <p className="text-xl font-black italic text-emerald-500">$482,100.00</p>
+                <p className="text-xl font-black italic text-emerald-500">{fmt(482_100, { decimals: 2 })}</p>
               </div>
               <div className="flex justify-between items-end">
                 <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest">Overdue</p>
-                <p className="text-xl font-black italic text-rose-500">$12,400.00</p>
+                <p className="text-xl font-black italic text-rose-500">{fmt(12_400, { decimals: 2 })}</p>
               </div>
             </div>
           </GlassCard>
 
           <GlassCard className="p-6 bg-[var(--brand-primary)]/5 border-[var(--brand-primary)]/20">
             <div className="flex items-center gap-3 mb-4">
-              <span className="text-2xl">??</span>
+              <Sparkles size={20} className="text-[var(--brand-primary)]" />
               <p className="text-[10px] font-black text-[var(--brand-primary)] uppercase tracking-widest">AI Smart Billing</p>
             </div>
             <p className="text-xs text-slate-500 leading-relaxed mb-4">
@@ -231,7 +234,7 @@ const Invoices: React.FC = () => {
               <div className="bg-white dark:bg-[#0d0a1a] p-10 rounded-[32px] shadow-2xl border border-slate-100 dark:border-white/5 min-h-full">
                 <div className="flex justify-between items-start mb-12">
                   <div>
-                    <h1 className="text-2xl font-black tracking-tighter italic text-[var(--brand-primary)]">HR360</h1>
+                    <h1 className="text-2xl font-black tracking-tighter italic text-[var(--brand-primary)]">HRcopilot</h1>
                     <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">Enterprise Solutions</p>
                   </div>
                   <div className="text-right">
@@ -267,8 +270,8 @@ const Invoices: React.FC = () => {
                       <tr key={i}>
                         <td className="py-4 text-[10px] font-bold uppercase tracking-tight">{item.description || 'Item Description'}</td>
                         <td className="py-4 text-center text-[10px] font-bold">{item.quantity}</td>
-                        <td className="py-4 text-right text-[10px] font-bold">${item.unitPrice?.toLocaleString()}</td>
-                        <td className="py-4 text-right text-[10px] font-black">${(item.quantity * item.unitPrice).toLocaleString()}</td>
+                        <td className="py-4 text-right text-[10px] font-bold">{fmt(item.unitPrice ?? 0)}</td>
+                        <td className="py-4 text-right text-[10px] font-black">{fmt((item.quantity ?? 0) * (item.unitPrice ?? 0))}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -278,15 +281,15 @@ const Invoices: React.FC = () => {
                   <div className="w-48 space-y-3">
                     <div className="flex justify-between text-[10px] font-bold text-slate-500 uppercase tracking-widest">
                       <span>Subtotal</span>
-                      <span>${subtotal.toLocaleString()}</span>
+                      <span>{fmt(subtotal)}</span>
                     </div>
                     <div className="flex justify-between text-[10px] font-bold text-slate-500 uppercase tracking-widest">
                       <span>Tax (15%)</span>
-                      <span>${tax.toLocaleString()}</span>
+                      <span>{fmt(tax)}</span>
                     </div>
                     <div className="pt-3 border-t border-slate-900 dark:border-white/10 flex justify-between items-end">
                       <span className="text-[10px] font-black uppercase tracking-widest">Total</span>
-                      <span className="text-lg font-black italic text-[var(--brand-primary)]">${total.toLocaleString()}</span>
+                      <span className="text-lg font-black italic text-[var(--brand-primary)]">{fmt(total)}</span>
                     </div>
                   </div>
                 </div>

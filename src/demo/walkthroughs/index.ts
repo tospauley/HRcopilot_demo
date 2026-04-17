@@ -1,4 +1,4 @@
-﻿// ============================================
+// ============================================
 // FILE: src/demo/walkthroughs/index.ts
 // PURPOSE: Joyride step definitions for all 12 modules.
 //   Targets use IDs that exist in the actual page components,

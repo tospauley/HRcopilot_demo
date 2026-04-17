@@ -54,7 +54,7 @@ class AudioCacheDB extends Dexie {
   stats!:     Table<CacheStats,      number>;
 
   constructor() {
-    super('hr360_audio_cache');
+    super('HRcopilot_audio_cache');
     this.version(1).stores({
       audio: 'cacheKey, scriptId, voiceId, cachedAt',
       stats: 'id',

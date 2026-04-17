@@ -1,4 +1,5 @@
 ﻿import React, { useState } from 'react';
+import { useForm, ValidationError } from '@formspree/react';
 import { motion } from 'motion/react';
 import { 
   ArrowRight, Play, Check, Plus, Minus, MapPin, 
@@ -11,13 +12,18 @@ import { BrandSettings } from '../types';
 interface LandingProps {
   onGetStarted: () => void;
   onLogin: () => void;
+  onViewApp: (role: 'executive' | 'employee') => void;
   brand: BrandSettings;
   theme: 'dark' | 'light';
   onToggleTheme: () => void;
 }
 
-const Landing: React.FC<LandingProps> = ({ onGetStarted, onLogin, brand }) => {
+const Landing: React.FC<LandingProps> = ({ onGetStarted, onLogin, onViewApp, brand }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showRolePicker, setShowRolePicker] = useState(false);
+
+  // ── Contact form — powered by Formspree ──────────────────────────────────
+  const [formState, handleFormSubmit] = useForm('xvzdknvj');
   const [activeFaq, setActiveFaq] = useState<number | null>(0);
   const [isAnnual, setIsAnnual] = useState(false);
 
@@ -33,7 +39,7 @@ const Landing: React.FC<LandingProps> = ({ onGetStarted, onLogin, brand }) => {
   }, [isMenuOpen]);
 
   const stats = [
-    { icon: <Users className="w-5 h-5" />, label: 'EMPLOYEES MANAGED', value: '2.5M+', desc: 'Across global enterprises, trusting HR360 daily.' },
+    { icon: <Users className="w-5 h-5" />, label: 'EMPLOYEES MANAGED', value: '2.5M+', desc: 'Across global enterprises, trusting HRcopilot daily.' },
     { icon: <TrendingUp className="w-5 h-5" />, label: 'ADMIN TIME SAVED', value: '40%', desc: 'Automated workflows reduce manual HR overhead.' },
     { icon: <Globe className="w-5 h-5" />, label: 'COUNTRIES SUPPORTED', value: '120+', desc: 'Built-in localization and global compliance.' },
     { icon: <Shield className="w-5 h-5" />, label: 'PLATFORM UPTIME', value: '99.99%', desc: 'Enterprise-grade reliability and security.' },
@@ -62,9 +68,9 @@ const Landing: React.FC<LandingProps> = ({ onGetStarted, onLogin, brand }) => {
   ];
 
   const testimonials = [
-    { name: 'Sarah Johnson', role: 'CHIEF HR OFFICER AT TECHFLOW', quote: '"HR360 replaced 5 different disjointed systems. Our HR team is finally strategic rather than administrative. The ROI was apparent within months."', img: '/HR360_Logo1.png' },
-    { name: 'Michael Chen', role: 'CIO AT GLOBALLOGISTICS', quote: '"Enterprise-grade security meets consumer-grade user experience. The implementation was seamless, and the analytics dashboard gives our C-suite unprecedented visibility."', img: '/Analytictosin_Logo.png' },
-    { name: 'Elena Rodriguez', role: 'VP OF TALENT AT BLOOM CREATIVE', quote: '"The AI-powered recruitment and automated onboarding workflows have reduced our time-to-hire by 35%. HR360 is a fundamental game-changer."', img: '/HR360_bg.jpg' },
+    { name: 'Sarah Johnson', role: 'CHIEF HR OFFICER AT TECHFLOW', quote: '"HRcopilot replaced 5 different disjointed systems. Our HR team is finally strategic rather than administrative. The ROI was apparent within months."', img: '/HRcopilot_Logo.png' },
+    { name: 'Michael Chen', role: 'CIO AT GLOBALLOGISTICS', quote: '"Enterprise-grade security meets consumer-grade user experience. The implementation was seamless, and the analytics dashboard gives our C-suite unprecedented visibility."', img: '/HRcopilot_Logo.png' },
+    { name: 'Elena Rodriguez', role: 'VP OF TALENT AT BLOOM CREATIVE', quote: '"The AI-powered recruitment and automated onboarding workflows have reduced our time-to-hire by 35%. HRcopilot is a fundamental game-changer."', img: '/HRcopilot_Logo.png' },
   ];
 
   const pricing = [
@@ -75,49 +81,48 @@ const Landing: React.FC<LandingProps> = ({ onGetStarted, onLogin, brand }) => {
 
   const news = [
     { date: 'April 02, 2026', title: 'How AI is Reshaping Enterprise Talent Acquisition', img: '/HR360_bg.jpg', tag: 'PRODUCT' },
-    { date: 'March 28, 2026', title: 'Navigating Global Compliance in a Remote-First World', img: '/Analytictosin_Logo.png', tag: 'COMPLIANCE' },
-    { date: 'March 15, 2026', title: 'HR360 Named Leader in HCM Magic Quadrant', img: '/HR360_Logo1.png', tag: 'COMPANY' },
+    { date: 'March 28, 2026', title: 'Navigating Global Compliance in a Remote-First World', img: '/HR360_bg.jpg', tag: 'COMPLIANCE' },
+    { date: 'March 15, 2026', title: 'HRcopilot Named Leader in HCM Magic Quadrant', img: '/HR360_bg.jpg', tag: 'COMPANY' },
   ];
 
   const faqs = [
-    { q: 'How does HR360 integrate with our existing ERP?', a: 'HR360 features a robust open API and pre-built connectors for major ERPs like SAP, Oracle, and Workday, ensuring seamless bidirectional data sync.' },
+    { q: 'How does HRcopilot integrate with our existing ERP?', a: 'HRcopilot features a robust open API and pre-built connectors for major ERPs like SAP, Oracle, and Workday, ensuring seamless bidirectional data sync.' },
     { q: 'What is the typical implementation timeline?', a: 'Enterprise implementations typically range from 8 to 16 weeks, depending on the complexity of your legacy data migration and custom integration requirements.' },
-    { q: 'Is HR360 compliant with GDPR and CCPA?', a: 'Yes. Security and privacy are foundational. HR360 is SOC 2 Type II certified, ISO 27001 compliant, and fully adheres to GDPR, CCPA, and other global data protection regulations.' },
+    { q: 'Is HRcopilot compliant with GDPR and CCPA?', a: 'Yes. Security and privacy are foundational. HRcopilot is SOC 2 Type II certified, ISO 27001 compliant, and fully adheres to GDPR, CCPA, and other global data protection regulations.' },
     { q: 'Do you offer dedicated customer success managers?', a: 'All Enterprise and Custom tier customers are assigned a dedicated Customer Success Manager to guide implementation, training, and ongoing strategic optimization.' },
   ];
 
   const SectionLabel = ({ text, center = false }: { text: string, center?: boolean }) => (
     <div className={`flex items-center gap-4 mb-6 ${center ? 'justify-center' : ''}`}>
-      {center && <div className="w-8 h-[2px] bg-[#0ea5e9]"></div>}
-      <span className="text-[#0ea5e9] font-bold text-[10px] tracking-[0.2em] uppercase">{text}</span>
-      <div className="w-8 h-[2px] bg-[#0ea5e9]"></div>
+      {center && <div className="w-8 h-[2px] bg-[#0047cc]"></div>}
+      <span className="text-[#0047cc] font-bold text-[10px] tracking-[0.2em] uppercase">{text}</span>
+      <div className="w-8 h-[2px] bg-[#0047cc]"></div>
     </div>
   );
 
   return (
-    <div className="min-h-screen min-h-[100dvh] bg-white text-slate-900 font-sans selection:bg-[#0ea5e9] selection:text-white">
+    <div className="min-h-screen min-h-[100dvh] bg-white text-slate-900 font-sans selection:bg-[#0047cc] selection:text-white">
       {/* Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-[100] px-6 py-4 md:py-6 bg-white/90 backdrop-blur-md border-b border-slate-100 shadow-sm">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="flex flex-col items-center justify-center pt-1">
-              <img src="/Analytictosin_Logo.png" alt="Analytictosin Logo" className="h-[45px] object-contain" />
+          <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center">
+              <img src="/HRcopilot_Logo.png" alt="HRcopilot Logo" className="h-[50px] object-contain" />
             </div>
-            <div className="font-black text-2xl tracking-tighter italic text-slate-900">HR360<span className="text-orange-500">.</span></div>
           </div>
 
           <div className="hidden lg:flex items-center gap-10 text-[11px] font-bold tracking-widest uppercase text-slate-400">
-            <a href="#home" className="hover:text-[#0ea5e9] transition-colors">HOME</a>
-            <a href="#features" className="hover:text-[#0ea5e9] transition-colors">FEATURES</a>
-            <a href="#pricing" className="hover:text-[#0ea5e9] transition-colors">PRICING</a>
-            <a href="#contact" className="hover:text-[#0ea5e9] transition-colors">CONTACT</a>
+            <a href="#home" className="hover:text-[#0047cc] transition-colors">HOME</a>
+            <a href="#features" className="hover:text-[#0047cc] transition-colors">FEATURES</a>
+            <a href="#pricing" className="hover:text-[#0047cc] transition-colors">PRICING</a>
+            <a href="#contact" className="hover:text-[#0047cc] transition-colors">CONTACT</a>
           </div>
 
           <div className="hidden lg:flex items-center gap-8">
-            <button onClick={onLogin} className="text-slate-700 text-[11px] font-bold tracking-widest uppercase hover:text-[#0ea5e9] transition-colors">
+            <button onClick={onLogin} className="text-slate-700 text-[11px] font-bold tracking-widest uppercase hover:text-[#0047cc] transition-colors">
               LOGIN
             </button>
-            <button onClick={onGetStarted} className="relative overflow-hidden bg-gradient-to-r from-[#0047cc] to-[#0ea5e9] text-white px-6 py-3 rounded-full text-[11px] font-bold tracking-widest uppercase hover:shadow-lg hover:shadow-[#0ea5e9]/30 transition-all group">
+            <button onClick={onGetStarted} className="relative overflow-hidden bg-gradient-to-r from-[#0047cc] to-[#0035a0] text-white px-6 py-3 rounded-full text-[11px] font-bold tracking-widest uppercase hover:shadow-lg hover:shadow-[#0047cc]/30 transition-all group">
               <motion.span
                 className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12"
                 initial={{ x: '-100%' }}
@@ -136,12 +141,12 @@ const Landing: React.FC<LandingProps> = ({ onGetStarted, onLogin, brand }) => {
         {/* Mobile Menu Overlay */}
         {isMenuOpen && (
           <div className="lg:hidden absolute top-full left-0 right-0 bg-white border-b border-slate-100 shadow-2xl py-6 px-6 flex flex-col gap-6 animate-in slide-in-from-top-2 z-[101] max-h-[80vh] overflow-y-auto overscroll-contain touch-pan-y">
-            <a href="#home" onClick={() => setIsMenuOpen(false)} className="text-sm font-bold tracking-widest uppercase text-slate-900 hover:text-[#0ea5e9] transition-colors">HOME</a>
-            <a href="#features" onClick={() => setIsMenuOpen(false)} className="text-sm font-bold tracking-widest uppercase text-slate-900 hover:text-[#0ea5e9] transition-colors">FEATURES</a>
-            <a href="#pricing" onClick={() => setIsMenuOpen(false)} className="text-sm font-bold tracking-widest uppercase text-slate-900 hover:text-[#0ea5e9] transition-colors">PRICING</a>
-            <a href="#contact" onClick={() => setIsMenuOpen(false)} className="text-sm font-bold tracking-widest uppercase text-slate-900 hover:text-[#0ea5e9] transition-colors">CONTACT</a>
+            <a href="#home" onClick={() => setIsMenuOpen(false)} className="text-sm font-bold tracking-widest uppercase text-slate-900 hover:text-[#0047cc] transition-colors">HOME</a>
+            <a href="#features" onClick={() => setIsMenuOpen(false)} className="text-sm font-bold tracking-widest uppercase text-slate-900 hover:text-[#0047cc] transition-colors">FEATURES</a>
+            <a href="#pricing" onClick={() => setIsMenuOpen(false)} className="text-sm font-bold tracking-widest uppercase text-slate-900 hover:text-[#0047cc] transition-colors">PRICING</a>
+            <a href="#contact" onClick={() => setIsMenuOpen(false)} className="text-sm font-bold tracking-widest uppercase text-slate-900 hover:text-[#0047cc] transition-colors">CONTACT</a>
             <div className="h-px bg-slate-100 w-full my-2"></div>
-            <button onClick={() => { setIsMenuOpen(false); onLogin(); }} className="text-slate-700 text-sm font-bold tracking-widest uppercase hover:text-[#0ea5e9] transition-colors text-left">
+            <button onClick={() => { setIsMenuOpen(false); onLogin(); }} className="text-slate-700 text-sm font-bold tracking-widest uppercase hover:text-[#0047cc] transition-colors text-left">
               LOGIN
             </button>
             <button onClick={() => { setIsMenuOpen(false); onGetStarted(); }} className="bg-[#0047cc] text-white px-6 py-4 rounded-xl text-sm font-bold tracking-widest uppercase hover:bg-blue-700 transition-all text-center w-full">
@@ -156,8 +161,8 @@ const Landing: React.FC<LandingProps> = ({ onGetStarted, onLogin, brand }) => {
         {/* Hero Background Image */}
         <div className="absolute inset-0 z-0">
           <img
-            src="/HR360_bg.jpg"
-            alt="HR360 Background"
+            src="/HRcopilot_bg.jpg"
+            alt="HRcopilot Background"
             className="w-full h-full object-cover opacity-20 dark:opacity-10"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-white/50 via-white/30 to-white dark:from-[#0d0a1a]/50 dark:via-[#0d0a1a]/30 dark:to-[#0d0a1a]" />
@@ -187,7 +192,7 @@ const Landing: React.FC<LandingProps> = ({ onGetStarted, onLogin, brand }) => {
             transition={{ duration: 0.7, delay: 0.6, ease: [0.16, 1, 0.3, 1] }}
             className="max-w-2xl mx-auto text-slate-500 dark:text-slate-400 text-base md:text-lg lg:text-xl font-medium leading-relaxed mb-8 md:mb-12"
           >
-            Empower your workforce with HR360's most advanced HR operating system. Provision identities, automate compliance, and unlock predictive intelligence.
+            Empower your workforce with HRcopilot's most advanced HR operating system. Provision identities, automate compliance, and unlock predictive intelligence.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 24 }}
@@ -202,7 +207,7 @@ const Landing: React.FC<LandingProps> = ({ onGetStarted, onLogin, brand }) => {
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
               className="relative w-full sm:w-auto px-10 py-5 rounded-2xl text-white text-xs font-black uppercase tracking-[0.2em] overflow-hidden shadow-2xl shadow-[#eff6ff]0/30 group"
-              style={{ background: 'linear-gradient(135deg, #0047cc, #0ea5e9, #14b8a6)' }}
+              style={{ background: 'linear-gradient(135deg, #0047cc, #0035a0, #1d4ed8)' }}
             >
               {/* Shimmer sweep */}
               <motion.span
@@ -226,19 +231,90 @@ const Landing: React.FC<LandingProps> = ({ onGetStarted, onLogin, brand }) => {
                   transition={{ duration: 1.2, repeat: Infinity, delay: s.delay, ease: 'easeInOut' }}
                 />
               ))}
-              <span className="relative z-10 flex items-center gap-2">
+              <span className="relative z-10 flex items-center justify-center gap-2">
                 Explore Demo
               </span>
             </motion.button>
 
             <button
-              onClick={() => document.getElementById('features')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => setShowRolePicker(true)}
               className="w-full sm:w-auto px-10 py-5 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl text-slate-600 dark:text-white text-xs font-black uppercase tracking-[0.2em] hover:bg-slate-50 dark:hover:bg-white/10 transition-all shadow-sm"
             >
-              Explore Solutions
+              View Application
             </button>
           </motion.div>
         </div>
+
+        {/* ── Role Picker Modal ─────────────────────────────────────────── */}
+        {showRolePicker && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[200] flex items-center justify-center p-4"
+            style={{ background: 'rgba(10,22,40,0.7)', backdropFilter: 'blur(12px)' }}
+            onClick={() => setShowRolePicker(false)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.92, y: 24 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              className="w-full max-w-lg bg-white rounded-[32px] shadow-2xl overflow-hidden"
+              onClick={e => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div className="px-8 pt-8 pb-6 border-b border-slate-100">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-[10px] font-black tracking-[0.25em] uppercase text-[#0047cc] mb-1">No login required</p>
+                    <h2 className="text-2xl font-black text-slate-900 tracking-tight">Choose Your View</h2>
+                  </div>
+                  <button onClick={() => setShowRolePicker(false)} className="w-9 h-9 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400 hover:text-slate-900 transition-colors">
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+                <p className="text-sm text-slate-400 mt-2">Explore the full application interface. Switch views anytime from inside the app.</p>
+              </div>
+
+              {/* Role cards */}
+              <div className="p-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* Executive */}
+                <button
+                  onClick={() => { setShowRolePicker(false); onViewApp('executive'); }}
+                  className="group relative p-6 rounded-2xl border-2 border-slate-100 hover:border-[#0047cc] bg-white hover:bg-[#f0f5ff] transition-all text-left"
+                >
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#0047cc] to-[#0035a0] flex items-center justify-center text-white text-2xl mb-4 shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
+                    👔
+                  </div>
+                  <h3 className="text-sm font-black text-slate-900 uppercase tracking-tight mb-1">Executive View</h3>
+                  <p className="text-[11px] text-slate-400 leading-relaxed">Full dashboard — payroll, attendance, finance, procurement, CRM & more.</p>
+                  <div className="mt-4 flex items-center gap-1.5 text-[10px] font-black text-[#0047cc] uppercase tracking-widest">
+                    Enter <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </button>
+
+                {/* Employee */}
+                <button
+                  onClick={() => { setShowRolePicker(false); onViewApp('employee'); }}
+                  className="group relative p-6 rounded-2xl border-2 border-slate-100 hover:border-[#0047cc] bg-white hover:bg-[#f0f5ff] transition-all text-left"
+                >
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#0047cc] to-[#1d4ed8] flex items-center justify-center text-white text-2xl mb-4 shadow-lg shadow-blue-500/20 group-hover:scale-110 transition-transform">
+                    🧑‍💼
+                  </div>
+                  <h3 className="text-sm font-black text-slate-900 uppercase tracking-tight mb-1">Employee View</h3>
+                  <p className="text-[11px] text-slate-400 leading-relaxed">Personal portal — my payslips, attendance, leave, performance & approvals.</p>
+                  <div className="mt-4 flex items-center gap-1.5 text-[10px] font-black text-[#0047cc] uppercase tracking-widest">
+                    Enter <ArrowRight className="w-3 h-3 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </button>
+              </div>
+
+              <div className="px-6 pb-6 text-center">
+                <p className="text-[10px] text-slate-300 uppercase tracking-widest">You can start the guided demo anytime from inside the app</p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
 
         {/* Marquee â€” pinned to hero bottom, always in viewport */}
         <div className="absolute bottom-0 left-0 right-0 text-white py-4 overflow-hidden flex whitespace-nowrap z-30" style={{ background: "linear-gradient(90deg, #0d1f3c, #0a3060, #0d1f3c)" }}>
@@ -250,7 +326,7 @@ const Landing: React.FC<LandingProps> = ({ onGetStarted, onLogin, brand }) => {
             {['UNIFIED PLATFORM','ENTERPRISE GRADE','AI-DRIVEN INSIGHTS','SEAMLESS INTEGRATION','GLOBAL COMPLIANCE','BIOMETRIC ATTENDANCE','AUTOMATED PAYROLL','REAL-TIME ANALYTICS','UNIFIED PLATFORM','ENTERPRISE GRADE','AI-DRIVEN INSIGHTS','SEAMLESS INTEGRATION','GLOBAL COMPLIANCE'].map((label, i) => (
               <React.Fragment key={i}>
                 <span>{label}</span>
-                <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: "#14b8a6" }} />
+                <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ background: "#0047cc" }} />
               </React.Fragment>
             ))}
           </motion.div>
@@ -263,7 +339,7 @@ const Landing: React.FC<LandingProps> = ({ onGetStarted, onLogin, brand }) => {
           {stats.map((stat, i) => (
             <div key={i}>
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 bg-[#0ea5e9] rounded flex items-center justify-center text-white">
+                <div className="w-10 h-10 bg-[#0047cc] rounded flex items-center justify-center text-white">
                   {stat.icon}
                 </div>
                 <span className="text-[10px] font-bold tracking-widest uppercase text-slate-900">{stat.label}</span>
@@ -279,17 +355,17 @@ const Landing: React.FC<LandingProps> = ({ onGetStarted, onLogin, brand }) => {
       <section className="py-32 px-6 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-16">
-            <SectionLabel text="DISCOVER HR360" center />
+            <SectionLabel text="DISCOVER HRcopilot" center />
             <h2 className="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight leading-tight">
               Built for Scale: The Platform Powering Modern Enterprises
             </h2>
           </div>
 
           <div className="relative w-full max-w-5xl mx-auto aspect-video bg-slate-200 rounded-[2rem] overflow-hidden mb-12 group cursor-pointer">
-            <img src="/HR360_bg.jpg" alt="Dashboard Preview" className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700" />
+            <img src="/HRcopilot_bg.jpg" alt="Dashboard Preview" className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700" />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors"></div>
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-20 h-20 bg-[#0ea5e9] rounded-full flex items-center justify-center text-white shadow-xl group-hover:scale-110 transition-transform">
+              <div className="w-20 h-20 bg-[#0047cc] rounded-full flex items-center justify-center text-white shadow-xl group-hover:scale-110 transition-transform">
                 <Play className="w-8 h-8 ml-1" fill="currentColor" />
               </div>
             </div>
@@ -302,12 +378,12 @@ const Landing: React.FC<LandingProps> = ({ onGetStarted, onLogin, brand }) => {
             <div className="flex items-center gap-6">
               <div className="flex -space-x-4">
                 {[1,2,3,4].map(i => (
-                  <div key={i} className="w-12 h-12 rounded-full border-2 border-white bg-gradient-to-br from-[#0ea5e9] to-[#14b8a6] flex items-center justify-center text-white font-bold text-sm">
+                  <div key={i} className="w-12 h-12 rounded-full border-2 border-white bg-gradient-to-br from-[#0047cc] to-[#1d4ed8] flex items-center justify-center text-white font-bold text-sm">
                     {i}
                   </div>
                 ))}
               </div>
-              <button className="text-xs font-bold tracking-widest uppercase text-slate-900 flex items-center gap-2 hover:text-[#0ea5e9] transition-colors">
+              <button className="text-xs font-bold tracking-widest uppercase text-slate-900 flex items-center gap-2 hover:text-[#0047cc] transition-colors">
                 MEET OUR CUSTOMERS <ArrowRight className="w-4 h-4" />
               </button>
             </div>
@@ -321,12 +397,12 @@ const Landing: React.FC<LandingProps> = ({ onGetStarted, onLogin, brand }) => {
           <div>
             <SectionLabel text="PLATFORM ARCHITECTURE" />
             <h2 className="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight leading-tight mb-6">
-              How HR360 Transforms Operations
+              How HRcopilot Transforms Operations
             </h2>
             <p className="text-slate-500 mb-10 leading-relaxed">
               Our unified architecture ensures data flows seamlessly across all modules, eliminating silos and empowering strategic decision-making from the C-suite to the frontline.
             </p>
-            <button className="bg-[#0a0a0a] text-white px-8 py-4 rounded-full text-xs font-bold tracking-wider uppercase hover:bg-[#0ea5e9] hover:shadow-lg hover:shadow-[#0ea5e9]/30 hover:-translate-y-0.5 active:scale-95 transition-all flex items-center gap-2">
+            <button className="bg-[#0a0a0a] text-white px-8 py-4 rounded-full text-xs font-bold tracking-wider uppercase hover:bg-[#0047cc] hover:shadow-lg hover:shadow-[#0047cc]/30 hover:-translate-y-0.5 active:scale-95 transition-all flex items-center gap-2">
               VIEW ARCHITECTURE <ArrowRight className="w-4 h-4" />
             </button>
           </div>
@@ -334,7 +410,7 @@ const Landing: React.FC<LandingProps> = ({ onGetStarted, onLogin, brand }) => {
           <div className="flex flex-col gap-12">
             {workflow.map((step, i) => (
               <div key={i} className="flex gap-6">
-                <div className="w-12 h-12 rounded-full bg-[#0ea5e9] text-white flex items-center justify-center font-bold shrink-0">
+                <div className="w-12 h-12 rounded-full bg-[#0047cc] text-white flex items-center justify-center font-bold shrink-0">
                   {step.num}
                 </div>
                 <div>
@@ -356,17 +432,17 @@ const Landing: React.FC<LandingProps> = ({ onGetStarted, onLogin, brand }) => {
               A Complete Ecosystem For Your Workforce
             </h2>
             <p className="text-white/60 mb-10 leading-relaxed">
-              From hire to retire, HR360 provides specialized modules that work together flawlessly within a single unified platform.
+              From hire to retire, HRcopilot provides specialized modules that work together flawlessly within a single unified platform.
             </p>
             <ul className="space-y-4">
               <li className="flex items-center gap-3 text-sm font-semibold">
-                <div className="w-5 h-5 rounded-full border border-[#0ea5e9] flex items-center justify-center text-[#0ea5e9]">
+                <div className="w-5 h-5 rounded-full border border-[#0047cc] flex items-center justify-center text-[#0047cc]">
                   <Check className="w-3 h-3" />
                 </div>
                 SOC 2 Type II Certified Security
               </li>
               <li className="flex items-center gap-3 text-sm font-semibold">
-                <div className="w-5 h-5 rounded-full border border-[#0ea5e9] flex items-center justify-center text-[#0ea5e9]">
+                <div className="w-5 h-5 rounded-full border border-[#0047cc] flex items-center justify-center text-[#0047cc]">
                   <Check className="w-3 h-3" />
                 </div>
                 Open API & Pre-built Integrations
@@ -376,170 +452,10 @@ const Landing: React.FC<LandingProps> = ({ onGetStarted, onLogin, brand }) => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {services.map((service, i) => (
-              <div key={i} className="border border-white/10 bg-white/5 p-8 rounded-xl hover:border-[#0ea5e9]/50 transition-colors">
-                <div className="text-[#0ea5e9] mb-6">{service.icon}</div>
+              <div key={i} className="border border-white/10 bg-white/5 p-8 rounded-xl hover:border-[#0047cc]/50 transition-colors">
+                <div className="text-[#0047cc] mb-6">{service.icon}</div>
                 <h3 className="text-lg font-bold mb-4">{service.title}</h3>
                 <p className="text-white/50 text-sm leading-relaxed">{service.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Premier Services List */}
-      <section className="py-20 md:py-32 px-6 bg-white">
-        <div className="max-w-5xl mx-auto">
-          <SectionLabel text="CORE CAPABILITIES" center />
-          
-          <div className="mt-16 flex flex-col">
-            {premierServices.map((service, i) => (
-              <div key={i} className="group border-b border-slate-200 py-8 flex flex-col md:flex-row md:items-center justify-between gap-6 cursor-pointer hover:bg-slate-50 transition-colors px-4 -mx-4 rounded-lg">
-                <div className="flex items-center gap-8">
-                  <span className="text-slate-300 font-mono text-lg">0{i+1}</span>
-                  <h3 className="text-2xl md:text-3xl font-bold text-slate-900 group-hover:text-[#0ea5e9] transition-colors">{service}</h3>
-                </div>
-                <div className="flex items-center gap-8">
-                  {i === 0 && (
-                    <img src="/Analytictosin_Logo.png" alt="Analytics Preview" className="w-32 h-20 object-cover rounded hidden md:block" />
-                  )}
-                  <button className="text-[10px] font-bold tracking-widest uppercase text-slate-500 flex items-center gap-2 group-hover:text-[#0ea5e9] transition-colors">
-                    EXPLORE FEATURE <ArrowRight className="w-3 h-3" />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section className="py-20 md:py-32 px-6 bg-slate-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <SectionLabel text="SUCCESS STORIES" center />
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">
-              Trusted by Enterprise Leaders
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, i) => (
-              <div key={i} className="bg-white p-10 rounded-2xl shadow-sm relative">
-                <Quote className="absolute top-10 right-10 w-12 h-12 text-[#e0f7ff] opacity-50" />
-                <div className="flex items-center gap-4 mb-8 relative z-10">
-                  <img src={testimonial.img} alt={testimonial.name} className="w-12 h-12 rounded-full object-cover" />
-                  <div>
-                    <h4 className="font-bold text-slate-900">{testimonial.name}</h4>
-                    <p className="text-[9px] font-bold tracking-widest uppercase text-slate-400">{testimonial.role}</p>
-                  </div>
-                </div>
-                <p className="text-slate-600 text-sm leading-relaxed italic relative z-10">
-                  {testimonial.quote}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing */}
-      <section id="pricing" className="py-20 md:py-32 px-6 relative bg-[#0a0a0a]">
-        <div className="absolute inset-0 z-0 opacity-20">
-          <img src="/HR360_bg.jpg" alt="Office" className="w-full h-full object-cover" />
-        </div>
-        
-        <div className="relative z-10 max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <SectionLabel text="ENTERPRISE PRICING" center />
-            <h2 className="text-4xl md:text-5xl font-bold text-white tracking-tight mb-8">
-              Scalable Plans For Global Teams
-            </h2>
-            <div className="flex items-center justify-center gap-4 text-sm font-semibold text-white">
-              <span className={!isAnnual ? 'opacity-100' : 'opacity-50'}>Billed Monthly</span>
-              <button 
-                onClick={() => setIsAnnual(!isAnnual)}
-                className="w-14 h-7 rounded-full bg-[#0ea5e9] relative flex items-center px-1 shadow-inner transition-colors hover:bg-[#38bdf8]"
-              >
-                <div className={`w-5 h-5 rounded-full bg-white shadow-sm transition-transform duration-300 ${isAnnual ? 'translate-x-7' : 'translate-x-0'}`} />
-              </button>
-              <span className={isAnnual ? 'opacity-100' : 'opacity-50'}>Billed Annually</span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
-            {pricing.map((plan, i) => (
-              <div key={i} className={`rounded-2xl p-10 ${plan.highlighted ? 'bg-[#0ea5e9] text-white scale-105 shadow-2xl' : 'bg-[#111]/80 backdrop-blur border border-white/10 text-white'}`}>
-                <div className="mb-8">
-                  <span className={`text-[10px] font-bold tracking-widest uppercase px-3 py-1 rounded ${plan.highlighted ? 'bg-white/20' : 'bg-white/10'}`}>
-                    {plan.name}
-                  </span>
-                </div>
-                <h3 className="text-2xl font-bold mb-4">{plan.name}</h3>
-                <p className={`text-sm mb-8 ${plan.highlighted ? 'text-white/80' : 'text-white/50'}`}>{plan.desc}</p>
-                <div className="flex items-baseline gap-2 mb-2">
-                  {plan.price !== 'Custom' && <span className="text-2xl font-bold">$</span>}
-                  <span className="text-6xl font-bold tracking-tighter">{plan.price}</span>
-                </div>
-                {plan.price !== 'Custom' && (
-                  <p className={`text-sm mb-8 ${plan.highlighted ? 'text-white/80' : 'text-white/50'}`}>{plan.unit}</p>
-                )}
-                {plan.price === 'Custom' && (
-                  <p className={`text-sm mb-8 font-semibold ${plan.highlighted ? 'text-white/80' : 'text-white/70'}`}>
-                    +234 706 811 0163
-                  </p>
-                )}
-                {plan.ctaHref ? (
-                  <a
-                    href={plan.ctaHref}
-                    className={`w-full py-4 rounded-full text-xs font-bold tracking-widest uppercase mb-10 flex items-center justify-center gap-2 hover:-translate-y-0.5 active:scale-95 transition-all shadow-lg ${plan.highlighted ? 'bg-white text-[#0ea5e9] hover:bg-slate-50 hover:shadow-white/20' : 'bg-[#0ea5e9] text-white hover:bg-[#38bdf8] hover:shadow-[#0ea5e9]/30'}`}
-                  >
-                    {plan.cta} <ArrowRight className="w-4 h-4" />
-                  </a>
-                ) : (
-                  <button className={`w-full py-4 rounded-full text-xs font-bold tracking-widest uppercase mb-10 flex items-center justify-center gap-2 hover:-translate-y-0.5 active:scale-95 transition-all shadow-lg ${plan.highlighted ? 'bg-white text-[#0ea5e9] hover:bg-slate-50 hover:shadow-white/20' : 'bg-[#0ea5e9] text-white hover:bg-[#38bdf8] hover:shadow-[#0ea5e9]/30'}`}>
-                    {plan.cta} <ArrowRight className="w-4 h-4" />
-                  </button>
-                )}
-                <ul className="space-y-4">
-                  {plan.features.map((feature, fi) => (
-                    <li key={fi} className="flex items-center gap-3 text-sm">
-                      <div className={`w-4 h-4 rounded-full flex items-center justify-center border ${plan.highlighted ? 'border-white/30 text-white' : 'border-white/10 text-[#e0f7ff]0'}`}>
-                        <Check className="w-2 h-2" />
-                      </div>
-                      <span className={plan.highlighted ? 'text-white/90' : 'text-white/70'}>{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Insights / News */}
-      <section className="py-20 md:py-32 px-6 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <SectionLabel text="LATEST INSIGHTS" center />
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">
-              HR Tech Trends & News
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {news.map((item, i) => (
-              <div key={i} className="group cursor-pointer">
-                <div className="relative aspect-[4/3] rounded-2xl overflow-hidden mb-6">
-                  <img src={item.img} alt={item.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-                  <div className="absolute top-4 left-4 bg-[#0ea5e9] text-white text-[9px] font-bold tracking-widest uppercase px-3 py-1 rounded">
-                    {item.tag}
-                  </div>
-                </div>
-                <p className="text-slate-400 text-xs mb-3">{item.date}</p>
-                <h3 className="text-xl font-bold text-slate-900 mb-4 group-hover:text-[#0ea5e9] transition-colors">{item.title}</h3>
-                <button className="text-xs font-bold tracking-widest uppercase text-slate-900 flex items-center gap-2 group-hover:text-[#0ea5e9] transition-colors">
-                  READ ARTICLE <ArrowRight className="w-4 h-4" />
-                </button>
               </div>
             ))}
           </div>
@@ -563,8 +479,8 @@ const Landing: React.FC<LandingProps> = ({ onGetStarted, onLogin, brand }) => {
                   onClick={() => setActiveFaq(activeFaq === i ? null : i)}
                   className="w-full px-8 py-6 flex items-center justify-between text-left"
                 >
-                  <span className={`font-bold ${activeFaq === i ? 'text-[#0ea5e9]' : 'text-slate-900'}`}>{faq.q}</span>
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${activeFaq === i ? 'bg-[#0ea5e9] text-white' : 'bg-slate-100 text-slate-400'}`}>
+                  <span className={`font-bold ${activeFaq === i ? 'text-[#0047cc]' : 'text-slate-900'}`}>{faq.q}</span>
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 transition-colors ${activeFaq === i ? 'bg-[#0047cc] text-white' : 'bg-slate-100 text-slate-400'}`}>
                     {activeFaq === i ? <Minus className="w-4 h-4" /> : <Plus className="w-4 h-4" />}
                   </div>
                 </button>
@@ -583,16 +499,16 @@ const Landing: React.FC<LandingProps> = ({ onGetStarted, onLogin, brand }) => {
       <section id="contact" className="py-20 md:py-32 px-6 bg-white relative">
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="w-full h-[400px] bg-slate-200 rounded-3xl mb-20 relative overflow-hidden">
-            <img src="/HR360_bg.jpg" alt="Map" className="w-full h-full object-cover opacity-50 grayscale" />
+            <img src="/HRcopilot_bg.jpg" alt="Map" className="w-full h-full object-cover opacity-50 grayscale" />
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center">
-              <div className="w-12 h-12 bg-[#0ea5e9] rounded-full flex items-center justify-center text-white shadow-xl mb-4">
+              <div className="w-12 h-12 bg-[#0047cc] rounded-full flex items-center justify-center text-white shadow-xl mb-4">
                 <MapPin className="w-6 h-6" />
               </div>
               <div className="bg-white p-6 rounded-xl shadow-xl text-center min-w-[250px]">
                 <p className="text-[9px] font-bold tracking-widest uppercase text-slate-400 mb-2">GLOBAL HQ:</p>
-                <p className="text-sm font-semibold text-slate-900 mb-4">100 Innovation Drive, San Francisco, CA 94105, USA.</p>
+                <p className="text-sm font-semibold text-slate-900 mb-4">Hillcrest Mall, Ahmadu Bello Way, Lokogoma Crecient, Abuja, Nigeria</p>
                 <p className="text-[9px] font-bold tracking-widest uppercase text-slate-400 mb-2">ENTERPRISE SALES:</p>
-                <p className="text-sm font-semibold text-slate-900">+1 800 HR360-OS</p>
+                <p className="text-sm font-semibold text-slate-900">HRcopilot-OS</p>
               </div>
             </div>
           </div>
@@ -605,23 +521,34 @@ const Landing: React.FC<LandingProps> = ({ onGetStarted, onLogin, brand }) => {
               </h2>
             </div>
 
-            <form className="space-y-8">
+            {formState.succeeded ? (
+              <div className="flex flex-col items-center justify-center py-16 gap-4 text-center">
+                <div className="w-16 h-16 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center">
+                  <Check className="w-8 h-8 text-emerald-500" />
+                </div>
+                <h3 className="text-xl font-bold text-slate-900">Request Received!</h3>
+                <p className="text-slate-500 text-sm max-w-sm">Thanks for reaching out. Our team will be in touch within one business day.</p>
+              </div>
+            ) : (
+            <form className="space-y-8" onSubmit={handleFormSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
                   <label className="block text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-2">YOUR NAME</label>
-                  <input type="text" placeholder="John Doe" className="w-full border-b border-slate-200 py-3 bg-transparent focus:outline-none focus:border-[#0ea5e9] transition-colors text-slate-900" />
+                  <input required type="text" name="name" placeholder="John Doe" className="w-full border-b border-slate-200 py-3 bg-transparent focus:outline-none focus:border-[#0047cc] transition-colors text-slate-900" />
+                  <ValidationError field="name" errors={formState.errors} className="text-rose-500 text-xs mt-1" />
                 </div>
                 <div>
                   <label className="block text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-2">WORK EMAIL</label>
-                  <input type="email" placeholder="john@company.com" className="w-full border-b border-slate-200 py-3 bg-transparent focus:outline-none focus:border-[#0ea5e9] transition-colors text-slate-900" />
+                  <input required type="email" name="email" placeholder="john@company.com" className="w-full border-b border-slate-200 py-3 bg-transparent focus:outline-none focus:border-[#0047cc] transition-colors text-slate-900" />
+                  <ValidationError field="email" errors={formState.errors} className="text-rose-500 text-xs mt-1" />
                 </div>
                 <div>
                   <label className="block text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-2">COMPANY NAME</label>
-                  <input type="text" placeholder="Acme Corp" className="w-full border-b border-slate-200 py-3 bg-transparent focus:outline-none focus:border-[#0ea5e9] transition-colors text-slate-900" />
+                  <input required type="text" name="company" placeholder="Acme Corp" className="w-full border-b border-slate-200 py-3 bg-transparent focus:outline-none focus:border-[#0047cc] transition-colors text-slate-900" />
                 </div>
                 <div>
                   <label className="block text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-2">COMPANY SIZE</label>
-                  <select className="w-full border-b border-slate-200 py-3 bg-transparent focus:outline-none focus:border-[#0ea5e9] transition-colors text-slate-900 appearance-none">
+                  <select name="size" className="w-full border-b border-slate-200 py-3 bg-transparent focus:outline-none focus:border-[#0047cc] transition-colors text-slate-900 appearance-none">
                     <option>100 - 499 Employees</option>
                     <option>500 - 999 Employees</option>
                     <option>1000 - 4999 Employees</option>
@@ -631,14 +558,28 @@ const Landing: React.FC<LandingProps> = ({ onGetStarted, onLogin, brand }) => {
               </div>
               <div>
                 <label className="block text-[10px] font-bold tracking-widest uppercase text-slate-400 mb-2">WHAT ARE YOUR MAIN HR CHALLENGES?</label>
-                <textarea placeholder="Tell us about your current stack and goals..." rows={4} className="w-full border-b border-slate-200 py-3 bg-transparent focus:outline-none focus:border-[#0ea5e9] transition-colors text-slate-900 resize-none"></textarea>
+                <textarea name="message" placeholder="Tell us about your current stack and goals..." rows={4} className="w-full border-b border-slate-200 py-3 bg-transparent focus:outline-none focus:border-[#0047cc] transition-colors text-slate-900 resize-none"></textarea>
+                <ValidationError field="message" errors={formState.errors} className="text-rose-500 text-xs mt-1" />
               </div>
+
+              {/* General form error */}
+              <ValidationError errors={formState.errors} className="p-4 bg-rose-50 border border-rose-200 rounded-2xl text-rose-700 text-sm font-medium" />
+
               <div className="flex justify-end">
-                <button type="button" className="bg-[#0ea5e9] text-white px-8 py-4 rounded-full text-xs font-bold tracking-wider uppercase hover:bg-[#38bdf8] hover:shadow-lg hover:shadow-[#0ea5e9]/30 hover:-translate-y-0.5 active:scale-95 transition-all flex items-center gap-2">
-                  REQUEST DEMO <ArrowRight className="w-4 h-4" />
+                <button
+                  type="submit"
+                  disabled={formState.submitting}
+                  className="bg-[#0047cc] text-white px-8 py-4 rounded-full text-xs font-bold tracking-wider uppercase hover:bg-[#0035a0] hover:shadow-lg hover:shadow-[#0047cc]/30 hover:-translate-y-0.5 active:scale-95 transition-all flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+                >
+                  {formState.submitting ? (
+                    <><span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> SENDING…</>
+                  ) : (
+                    <>REQUEST DEMO <ArrowRight className="w-4 h-4" /></>
+                  )}
                 </button>
               </div>
             </form>
+            )}
           </div>
         </div>
       </section>
@@ -649,11 +590,7 @@ const Landing: React.FC<LandingProps> = ({ onGetStarted, onLogin, brand }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
             <div>
               <div className="flex items-center gap-3 mb-6">
-                <img src="/Analytictosin_Logo.png" alt="Analytictosin Logo" className="h-10 w-auto object-contain drop-shadow-md rounded-md bg-white p-1" />
-                <div>
-                  <div className="font-bold text-xl leading-none tracking-tight">Analytictosin.</div>
-                  <div className="text-[8px] tracking-widest uppercase opacity-80">Enterprise HCM OS</div>
-                </div>
+                <img src="/HRcopilot_Logo.png" alt="HRcopilot Logo" className="h-10 w-auto object-contain" />
               </div>
               <p className="text-white/50 text-sm leading-relaxed mb-8">
                 The unified human capital operating system built for global enterprises. Automate workflows, ensure compliance, and unlock insights.
@@ -669,9 +606,9 @@ const Landing: React.FC<LandingProps> = ({ onGetStarted, onLogin, brand }) => {
             <div>
               <h4 className="font-bold mb-6">Newsletter</h4>
               <p className="text-white/50 text-sm mb-4">Stay updated with the latest HR tech trends and platform updates.</p>
-              <div className="flex items-center bg-white/5 rounded-full p-1 border border-white/10 focus-within:border-[#0ea5e9]/50 transition-colors">
+              <div className="flex items-center bg-white/5 rounded-full p-1 border border-white/10 focus-within:border-[#0047cc]/50 transition-colors">
                 <input type="email" placeholder="Your work email" className="bg-transparent border-none outline-none px-4 py-2 text-sm w-full text-white" />
-                <button className="w-10 h-10 bg-[#0ea5e9] rounded-full flex items-center justify-center hover:bg-[#38bdf8] hover:shadow-lg hover:shadow-[#0ea5e9]/30 active:scale-95 transition-all shrink-0">
+                <button className="w-10 h-10 bg-[#0047cc] rounded-full flex items-center justify-center hover:bg-[#0035a0] hover:shadow-lg hover:shadow-[#0047cc]/30 active:scale-95 transition-all shrink-0">
                   <ArrowRight className="w-4 h-4" />
                 </button>
               </div>

@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
+import { motion } from 'framer-motion';
 import { HashRouter, Link } from 'react-router-dom';
 import { Routes, Route, useLocation, Navigate } from 'react-router';
 import { signInAnonymously } from './mockDb';
@@ -43,6 +44,8 @@ import AIAdvisorModal from './components/AIAdvisorModal';
 import ClockInModal from './components/ClockInModal';
 import LeakageAnalysisModal from './components/LeakageAnalysisModal';
 import { HR360Provider } from './src/context/HR360Context';
+import { CurrencyProvider } from './src/context/CurrencyContext';
+import { loadBrandSettings } from './src/db/settingsDb';
 import { CinematicSubtitles } from './src/demo/voice';
 
 // ── Page loading fallback ─────────────────────────────────────────────────────
@@ -223,7 +226,7 @@ const SIDEBAR_CONFIG = [
 
 // ── Removed DemoPortal ─────────────────────────────────────────────────────────────
 
-const MainApp: React.FC<{ 
+export const MainApp: React.FC<{ 
   onLogout: () => void; 
   brand: BrandSettings; 
   onUpdateBrand: (b: BrandSettings) => void;
@@ -231,7 +234,9 @@ const MainApp: React.FC<{
   onUpdateProfile: (p: UserProfile) => void;
   theme: 'dark' | 'light';
   onToggleTheme: () => void;
-}> = ({ onLogout, brand, onUpdateBrand, userProfile, onUpdateProfile, theme, onToggleTheme }) => {
+  isGuestMode?: boolean;
+  onExitGuest?: () => void;
+}> = ({ onLogout, brand, onUpdateBrand, userProfile, onUpdateProfile, theme, onToggleTheme, isGuestMode, onExitGuest }) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>(INITIAL_NOTIFICATIONS);
@@ -302,7 +307,7 @@ const MainApp: React.FC<{
             <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center">
               <img src="/Analytictosin_Logo.png" alt="Analytictosin Logo" className="w-full h-full object-contain drop-shadow-md" />
             </div>
-            {(!isCollapsed || isMobileMenuOpen) && <h1 className="text-xl font-black tracking-tighter text-slate-900 dark:text-white uppercase italic animate-in fade-in slide-in-from-left-2">HR360</h1>}
+            {(!isCollapsed || isMobileMenuOpen) && <h1 className="text-xl font-black tracking-tighter text-slate-900 dark:text-white uppercase italic animate-in fade-in slide-in-from-left-2">HRcopilot</h1>}
           </div>
           <button 
             onClick={() => setIsMobileMenuOpen(false)}
@@ -315,8 +320,28 @@ const MainApp: React.FC<{
           {filteredMenu.map((item, idx) => (
             <SidebarItem key={idx} item={item} isCollapsed={isCollapsed && !isMobileMenuOpen} />
           ))}
+          {isGuestMode && (
+            <div className="px-3 pt-2 md:hidden">
+              <button
+                onClick={onExitGuest}
+                className="w-full flex items-center gap-3 px-6 py-3.5 rounded-xl bg-[#0047cc]/5 hover:bg-[#0047cc]/10 text-[#0047cc] transition-all border border-[#0047cc]/20"
+              >
+                <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+                <span className="font-bold text-[13px] tracking-wide">Home</span>
+              </button>
+            </div>
+          )}
         </nav>
-        <div className="p-4 border-t border-slate-200 dark:border-white/5 hidden md:block">
+        <div className="p-4 border-t border-slate-200 dark:border-white/5 hidden md:block space-y-1">
+           {isGuestMode && (
+             <button
+               onClick={onExitGuest}
+               className="w-full flex items-center gap-3 p-3 rounded-xl bg-[#0047cc]/5 hover:bg-[#0047cc]/10 text-[#0047cc] transition-all border border-[#0047cc]/20"
+             >
+               <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+               {!isCollapsed && <span className="text-[11px] font-black uppercase tracking-widest">Home</span>}
+             </button>
+           )}
            <button 
             onClick={() => setIsCollapsed(!isCollapsed)}
             className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-50 dark:hover:bg-white/5 text-slate-500 transition-all"
@@ -343,7 +368,7 @@ const MainApp: React.FC<{
                 <div className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center">
                   <img src="/Analytictosin_Logo.png" alt="Analytictosin Logo" className="w-full h-full object-contain" />
                 </div>
-                <span className="text-base md:text-lg font-black text-[#0047cc] italic hidden xs:block">HR360</span>
+                <span className="text-base md:text-lg font-black text-[#0047cc] italic hidden xs:block">HRcopilot</span>
               </div>
 
               <div className="relative flex-1 max-w-md hidden md:block">
@@ -398,12 +423,29 @@ const MainApp: React.FC<{
               </button>
 
               <ThemeToggle theme={theme} onToggle={onToggleTheme} />
-              
-              <NotificationCenter notifications={notifications} onMarkAsRead={markAsRead} />
+
+              {/* ── Guest mode: Explore Demo badge ── */}
+              {isGuestMode && (
+                <motion.button
+                  onClick={onExitGuest}
+                  animate={{ scale: [1, 1.06, 1], rotate: [0, -1.5, 1.5, 0] }}
+                  transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 6, ease: 'easeInOut' }}
+                  className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-2xl text-white text-[10px] font-black uppercase tracking-widest shadow-lg relative overflow-hidden flex-shrink-0"
+                  style={{ background: 'linear-gradient(135deg, #0047cc, #0ea5e9, #14b8a6)' }}
+                  title="Back to guided demo"
+                >
+                  <motion.span
+                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 pointer-events-none"
+                    animate={{ x: ['-100%', '200%'] }}
+                    transition={{ duration: 2, repeat: Infinity, repeatDelay: 5, ease: 'easeInOut' }}
+                  />
+                  <span className="relative z-10">✦ Explore Demo</span>
+                </motion.button>
+              )}
               
               <div className="flex items-center gap-2 group cursor-pointer p-1 rounded-2xl hover:bg-slate-50 dark:hover:bg-white/5 transition-all" onClick={onLogout}>
                  <div className="text-right hidden sm:block">
-                   <p className="text-xs font-black text-slate-900 dark:text-white">HR360 System</p>
+                   <p className="text-xs font-black text-slate-900 dark:text-white">HRcopilot</p>
                    <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">SYSTEM</p>
                  </div>
                  <div className="w-8 h-8 md:w-10 md:h-10 rounded-2xl border-2 border-orange-500 bg-orange-500/20 flex items-center justify-center text-orange-500 font-black text-lg md:text-xl italic shadow-lg">
@@ -475,30 +517,41 @@ const MainApp: React.FC<{
 
 // Fixed: Added the App component with default export to fix the "no default export" error in App.tsx
 const App: React.FC = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  // Read guest role set by Landing role picker — skip login entirely
+  const guestRole = sessionStorage.getItem('hr360_guest_role') as 'executive' | 'employee' | null;
+
+  const [isAuthenticated, setIsAuthenticated] = useState(!!guestRole);
   const [showLogin, setShowLogin] = useState(false);
+  const [isGuestMode, setIsGuestMode] = useState(!!guestRole);
   const [theme, setTheme] = useState<'dark' | 'light'>('light');
   const [brand, setBrand] = useState<BrandSettings>({
-    companyName: 'HR360',
+    companyName: 'HRcopilot',
     logoUrl: '',
-    primaryColor: '#0047cc'
+    primaryColor: '#0047cc',
+    currency: 'NGN',
   });
   const [userProfile, setUserProfile] = useState<UserProfile>({
-    name: 'Sarah Chen',
-    username: 'ceo',
-    avatar: 'https://picsum.photos/40/40?sig=ceo',
-    role: UserRole.CEO
+    name: guestRole === 'employee' ? 'Guest Employee' : 'HRcopilot System',
+    username: guestRole === 'employee' ? 'employee' : 'ceo',
+    avatar: '',
+    role: guestRole === 'employee' ? UserRole.EMPLOYEE : UserRole.CEO,
   });
 
   useEffect(() => {
+    loadBrandSettings().then(saved => {
+      if (saved) setBrand(saved);
+    });
+  }, []);
+
+  useEffect(() => {
     // Only apply dark mode if we are NOT on the landing page
-    const isLandingPage = !isAuthenticated && !showLogin;
+    const isLandingPage = !isAuthenticated && !showLogin && !isGuestMode;
     if (theme === 'dark' && !isLandingPage) {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
-  }, [theme, isAuthenticated, showLogin]);
+  }, [theme, isAuthenticated, showLogin, isGuestMode]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -537,7 +590,17 @@ const App: React.FC = () => {
       <Landing 
         brand={brand} 
         onLogin={() => setShowLogin(true)} 
-        onGetStarted={() => setShowLogin(true)} 
+        onGetStarted={() => setShowLogin(true)}
+        onViewApp={(role) => {
+          setUserProfile({
+            name: role === 'executive' ? 'Guest Executive' : 'Guest Employee',
+            username: role === 'executive' ? 'guest_ceo' : 'guest_employee',
+            avatar: `https://picsum.photos/40/40?sig=${role}`,
+            role: role === 'executive' ? UserRole.CEO : UserRole.EMPLOYEE,
+          });
+          setIsGuestMode(true);
+          setIsAuthenticated(true);
+        }}
         theme={theme}
         onToggleTheme={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}
       />
@@ -546,20 +609,32 @@ const App: React.FC = () => {
 
   return (
     <HR360Provider>
-      <HashRouter>
-        <MainApp 
-          theme={theme}
-          onToggleTheme={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}
-          brand={brand}
-          onUpdateBrand={setBrand}
-          userProfile={userProfile}
-          onUpdateProfile={setUserProfile}
-          onLogout={() => {
-            auth.signOut();
-            setIsAuthenticated(false);
-          }}
-        />
-      </HashRouter>
+      <CurrencyProvider currency={brand.currency}>
+        <HashRouter>
+          <MainApp 
+            theme={theme}
+            onToggleTheme={() => setTheme(t => t === 'dark' ? 'light' : 'dark')}
+            brand={brand}
+            onUpdateBrand={setBrand}
+            userProfile={userProfile}
+            onUpdateProfile={setUserProfile}
+            isGuestMode={isGuestMode}
+            onExitGuest={() => {
+              sessionStorage.removeItem('hr360_guest_role');
+              setIsAuthenticated(false);
+              setIsGuestMode(false);
+              window.location.href = '/';
+            }}
+            onLogout={() => {
+              sessionStorage.removeItem('hr360_guest_role');
+              auth.signOut();
+              setIsAuthenticated(false);
+              setIsGuestMode(false);
+              window.location.href = '/';
+            }}
+          />
+        </HashRouter>
+      </CurrencyProvider>
     </HR360Provider>
   );
 };

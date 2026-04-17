@@ -1,4 +1,4 @@
-﻿// ============================================
+// ============================================
 // FILE: src/demo/components/GuidedFlowRunner.tsx
 // PURPOSE: Drives the guided demo automatically.
 //   - Navigates to the correct module for each step

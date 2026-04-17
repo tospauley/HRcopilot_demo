@@ -263,10 +263,13 @@ export interface FormTemplate {
   status: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
 }
 
+export type CurrencyCode = 'USD' | 'EUR' | 'GBP' | 'NGN';
+
 export interface BrandSettings {
   companyName: string;
   logoUrl: string;
   primaryColor: string;
+  currency: CurrencyCode;
 }
 
 export interface SecurityAlert {

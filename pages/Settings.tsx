@@ -1,7 +1,8 @@
-
 import React, { useState } from 'react';
+import { User, Palette, DollarSign, HardDrive, CheckSquare, Shield, AlertTriangle, Camera, Info, Cloud, Download, Upload, Trash2, Clock, Palmtree, FileText, Building2, Globe, Edit2, ChevronRight, Loader2, CheckCircle } from 'lucide-react';
 import GlassCard from '../components/GlassCard';
 import { BrandSettings, UserProfile } from '../types';
+import { saveBrandSettings } from '../src/db/settingsDb';
 
 interface SettingsProps {
   brand: BrandSettings;
@@ -13,9 +14,20 @@ interface SettingsProps {
 const Settings: React.FC<SettingsProps> = ({ brand, onUpdate, userProfile, onUpdateProfile }) => {
   const [localBrand, setLocalBrand] = useState<BrandSettings>(brand);
   const [localProfile, setLocalProfile] = useState<UserProfile>(userProfile);
+  const [isSaving, setIsSaving] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
 
-  const handleSaveBrand = () => {
-    onUpdate(localBrand);
+  const handleSaveBrand = async () => {
+    setIsSaving(true);
+    setSaveSuccess(false);
+    try {
+      await saveBrandSettings(localBrand);
+      onUpdate(localBrand);
+      setSaveSuccess(true);
+      setTimeout(() => setSaveSuccess(false), 3000);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   const handleSaveProfile = () => {
@@ -34,13 +46,13 @@ const Settings: React.FC<SettingsProps> = ({ brand, onUpdate, userProfile, onUpd
   };
 
   const tabs = [
-    { id: 'profile', label: 'My Profile', icon: '??' },
-    { id: 'brand', label: 'Company Branding', icon: '??' },
-    { id: 'currency', label: 'Currency Settings', icon: '??' },
-    { id: 'backup', label: 'Backup & Restore', icon: '??' },
-    { id: 'payroll', label: 'Payroll Approval', icon: '?' },
-    { id: 'governance', label: 'Corporate Governance', icon: '??' },
-    { id: 'danger', label: 'Danger Zone', icon: '??' },
+    { id: 'profile',    label: 'My Profile',           Icon: User },
+    { id: 'brand',      label: 'Company Branding',      Icon: Palette },
+    { id: 'currency',   label: 'Currency Settings',     Icon: DollarSign },
+    { id: 'backup',     label: 'Backup & Restore',      Icon: HardDrive },
+    { id: 'payroll',    label: 'Payroll Approval',      Icon: CheckSquare },
+    { id: 'governance', label: 'Corporate Governance',  Icon: Shield },
+    { id: 'danger',     label: 'Danger Zone',           Icon: AlertTriangle },
   ] as const;
 
   type TabId = typeof tabs[number]['id'];
@@ -61,7 +73,7 @@ const Settings: React.FC<SettingsProps> = ({ brand, onUpdate, userProfile, onUpd
             onClick={() => setActiveTab(tab.id as any)}
             className={`pb-4 text-[10px] font-black uppercase tracking-widest relative transition-all whitespace-nowrap flex-shrink-0 flex items-center gap-1.5 px-1 mr-4 sm:mr-6 ${activeTab === tab.id ? 'text-slate-900 dark:text-white' : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-300'}`}
           >
-            <span className="text-sm opacity-70">{tab.icon}</span>
+            <tab.Icon size={13} className="opacity-70" />
             {tab.label}
             {activeTab === tab.id && <div className="absolute bottom-0 left-0 w-full h-0.5 bg-[#0047cc] shadow-[0_0_8px_rgba(0,71,204,0.5)]" />}
           </button>
@@ -89,7 +101,7 @@ const Settings: React.FC<SettingsProps> = ({ brand, onUpdate, userProfile, onUpd
                           <img src={localProfile.avatar} className="w-full h-full object-cover transition-transform group-hover:scale-110" alt="Avatar Preview" />
                         ) : (
                           <div className="flex flex-col items-center gap-2 opacity-40">
-                            <span className="text-4xl">??</span>
+                            <Camera size={32} />
                           </div>
                         )}
                         <div className="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
@@ -221,11 +233,15 @@ const Settings: React.FC<SettingsProps> = ({ brand, onUpdate, userProfile, onUpd
                   <div className="space-y-6">
                     <div>
                       <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-3">Base Currency</label>
-                      <select className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-2xl px-8 py-4 text-sm text-slate-900 dark:text-white focus:border-[#0047cc] outline-none transition-all font-medium">
+                      <select
+                        value={localBrand.currency}
+                        onChange={(e) => setLocalBrand({ ...localBrand, currency: e.target.value as any })}
+                        className="w-full bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-2xl px-8 py-4 text-sm text-slate-900 dark:text-white focus:border-[#0047cc] outline-none transition-all font-medium"
+                      >
                         <option value="USD">USD - US Dollar ($)</option>
-                        <option value="EUR">EUR - Euro (€)</option>
-                        <option value="GBP">GBP - British Pound (£)</option>
-                        <option value="NGN">NGN - Nigerian Naira (?)</option>
+                        <option value="EUR">EUR - Euro (â‚¬)</option>
+                        <option value="GBP">GBP - British Pound (Â£)</option>
+                        <option value="NGN">NGN - Nigerian Naira (â‚¦)</option>
                       </select>
                     </div>
                     <div>
@@ -236,15 +252,35 @@ const Settings: React.FC<SettingsProps> = ({ brand, onUpdate, userProfile, onUpd
                         <option>1 234,56</option>
                       </select>
                     </div>
+                    <div className="p-6 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-100 dark:border-white/10">
+                      <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2">Preview</p>
+                      <p className="text-2xl font-black italic text-[#0047cc]">
+                        {{ USD: '$', EUR: 'â‚¬', GBP: 'Â£', NGN: 'â‚¦' }[localBrand.currency]}1,234,567.00
+                      </p>
+                    </div>
                   </div>
                   <div className="p-4 sm:p-8 bg-blue-500/5 border border-blue-500/10 rounded-[32px] flex gap-4">
-                    <span className="text-2xl">??</span>
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium">Changing the base currency will affect how all financial reports and payroll data are displayed. Historical data will not be converted automatically.</p>
+                    <Info size={20} className="text-blue-500 shrink-0 mt-0.5" />
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed font-medium">Changing the base currency will affect how all financial figures are displayed across Payroll, CRM, Finance, and Invoices. Historical data will not be converted automatically.</p>
                   </div>
                 </div>
-                <div className="flex justify-end pt-6">
-                  <button className="px-12 py-4 bg-[#0047cc] text-white font-black text-[11px] uppercase tracking-[0.2em] rounded-2xl shadow-xl shadow-blue-500/20 hover:scale-[1.02] active:scale-95 transition-all">
-                    Save Localization Settings
+                <div className="flex justify-end items-center gap-4 pt-6">
+                  {saveSuccess && (
+                    <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 border border-emerald-500/20 rounded-xl animate-in fade-in slide-in-from-right-2 duration-300">
+                      <CheckCircle size={14} className="text-emerald-500" />
+                      <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest">Currency saved</span>
+                    </div>
+                  )}
+                  <button
+                    onClick={handleSaveBrand}
+                    disabled={isSaving}
+                    className="flex items-center gap-2 px-12 py-4 bg-[#0047cc] text-white font-black text-[11px] uppercase tracking-[0.2em] rounded-2xl shadow-xl shadow-blue-500/20 hover:scale-[1.02] hover:bg-[#0035a0] active:scale-95 transition-all disabled:opacity-60 disabled:cursor-not-allowed disabled:scale-100"
+                  >
+                    {isSaving ? (
+                      <><Loader2 size={14} className="animate-spin" /> Saving...</>
+                    ) : (
+                      'Save Localization Settings'
+                    )}
                   </button>
                 </div>
               </div>
@@ -257,7 +293,7 @@ const Settings: React.FC<SettingsProps> = ({ brand, onUpdate, userProfile, onUpd
                 <div className="space-y-10">
                   <div className="flex items-center justify-between p-8 bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-[32px]">
                     <div className="flex items-center gap-6">
-                      <div className="w-16 h-16 rounded-[24px] bg-emerald-500/10 text-emerald-500 flex items-center justify-center text-3xl shadow-inner">??</div>
+                      <div className="w-16 h-16 rounded-[24px] bg-emerald-500/10 text-emerald-500 flex items-center justify-center shadow-inner"><Cloud size={28} /></div>
                       <div>
                         <p className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tight">Automated Cloud Backup</p>
                         <p className="text-[10px] text-slate-500 font-black uppercase mt-1 tracking-widest opacity-70">Last backup: Today at 04:00 AM</p>
@@ -267,12 +303,12 @@ const Settings: React.FC<SettingsProps> = ({ brand, onUpdate, userProfile, onUpd
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <button className="p-10 bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-[40px] text-center space-y-4 hover:bg-slate-100 dark:hover:bg-white/10 transition-all group">
-                      <span className="text-4xl block group-hover:scale-110 transition-transform">??</span>
+                      <Download size={36} className="mx-auto group-hover:scale-110 transition-transform text-slate-400" />
                       <p className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-widest">Download Full Export</p>
                       <p className="text-[9px] text-slate-500 font-black uppercase tracking-widest opacity-60">JSON/CSV Format</p>
                     </button>
                     <button className="p-10 bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-[40px] text-center space-y-4 hover:bg-slate-100 dark:hover:bg-white/10 transition-all group">
-                      <span className="text-4xl block group-hover:scale-110 transition-transform">??</span>
+                      <Upload size={36} className="mx-auto group-hover:scale-110 transition-transform text-slate-400" />
                       <p className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-widest">Restore from File</p>
                       <p className="text-[9px] text-slate-500 font-black uppercase tracking-widest opacity-60">Upload .bak file</p>
                     </button>
@@ -299,7 +335,7 @@ const Settings: React.FC<SettingsProps> = ({ brand, onUpdate, userProfile, onUpd
                                 <p className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-tight">{step.role}</p>
                                 <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest mt-1 opacity-70">{step.user}</p>
                              </div>
-                             <button className="text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">??</button>
+                             <button className="text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors"><Edit2 size={14} /></button>
                              {i < 2 && <div className="absolute -bottom-4 left-11 w-0.5 h-4 bg-slate-200 dark:bg-white/10" />}
                           </div>
                         ))}
@@ -317,7 +353,7 @@ const Settings: React.FC<SettingsProps> = ({ brand, onUpdate, userProfile, onUpd
               <GlassCard className="border-rose-500/20 bg-rose-500/[0.02] !p-10">
                  <div className="space-y-10">
                     <div className="flex items-start gap-6">
-                       <div className="w-16 h-16 rounded-[24px] bg-rose-500/10 text-rose-500 flex items-center justify-center text-3xl shadow-inner">??</div>
+                       <div className="w-16 h-16 rounded-[24px] bg-rose-500/10 text-rose-500 flex items-center justify-center shadow-inner"><Trash2 size={28} /></div>
                        <div>
                           <h3 className="text-base font-black text-slate-900 dark:text-white uppercase tracking-tight">Critical Actions</h3>
                           <p className="text-[11px] text-slate-500 dark:text-slate-400 leading-relaxed mt-2 font-medium">These actions are irreversible and will impact all organizational data. Please proceed with extreme caution.</p>
@@ -348,31 +384,31 @@ const Settings: React.FC<SettingsProps> = ({ brand, onUpdate, userProfile, onUpd
           {activeTab === 'governance' && (
             <div className="space-y-6 animate-in slide-in-from-bottom-2 duration-500">
               <div className="flex items-center gap-4 p-6 bg-slate-50 dark:bg-white/5 border border-slate-100 dark:border-white/10 rounded-[32px] mb-6">
-                <div className="w-12 h-12 rounded-2xl bg-[#eff6ff]0/10 text-[#eff6ff]0 flex items-center justify-center text-2xl shadow-inner">??</div>
+                <div className="w-12 h-12 rounded-2xl bg-[#eff6ff]0/10 text-[#eff6ff]0 flex items-center justify-center shadow-inner"><Shield size={20} className="text-[#0047cc]" /></div>
                 <div className="flex-1">
                   <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tight">CORPORATE GOVERNANCE</h3>
-                  <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest mt-1 opacity-70">ORGANISATION-WIDE POLICY — APPLIES TO ALL BRANCHES BY DEFAULT</p>
+                  <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest mt-1 opacity-70">ORGANISATION-WIDE POLICY ï¿½ APPLIES TO ALL BRANCHES BY DEFAULT</p>
                 </div>
                 <div className="flex bg-slate-200 dark:bg-white/10 p-1 rounded-2xl">
                    <button className="px-6 py-3 bg-white dark:bg-slate-800 text-slate-900 dark:text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-sm flex items-center gap-2">
-                     <span className="text-sm">??</span> CORPORATE POLICY
+                     <Globe size={13} /> CORPORATE POLICY
                    </button>
                    <button className="px-6 py-3 text-slate-500 dark:text-slate-400 text-[10px] font-black uppercase tracking-widest rounded-xl hover:text-slate-900 dark:hover:text-white transition-colors flex items-center gap-2">
-                     <span className="text-sm">??</span> BRANCH OVERRIDES
+                     <Building2 size={13} /> BRANCH OVERRIDES
                    </button>
                 </div>
               </div>
 
               <div className="p-6 bg-[#eff6ff]0/5 border border-[#eff6ff]0/10 rounded-[24px] flex gap-4 mb-8">
-                <span className="text-[#eff6ff]0 text-xl">??</span>
-                <p className="text-[11px] text-[#2563eb] dark:text-[#60a5fa] leading-relaxed font-medium">Corporate Policy is the organisation-wide standard. It applies to every branch automatically — no branch configuration required. Set it once and it works everywhere.</p>
+                <Info size={18} className="text-[#2563eb] shrink-0 mt-0.5" />
+                <p className="text-[11px] text-[#2563eb] dark:text-[#60a5fa] leading-relaxed font-medium">Corporate Policy is the organisation-wide standard. It applies to every branch automatically ï¿½ no branch configuration required. Set it once and it works everywhere.</p>
               </div>
 
               {/* ATTENDANCE & TIME */}
               <div className="border border-slate-200 dark:border-white/10 rounded-[32px] overflow-hidden mb-6">
                 <div className="flex items-center justify-between p-6 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-white/10">
                   <div className="flex items-center gap-4">
-                    <div className="text-2xl">?</div>
+                    <div className="text-2xl"><Clock size={22} className="text-slate-500" /></div>
                     <div>
                       <h4 className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-tight">ATTENDANCE & TIME</h4>
                       <p className="text-[10px] text-slate-500 font-medium mt-1">Work hours, grace periods, overtime thresholds</p>
@@ -387,14 +423,14 @@ const Settings: React.FC<SettingsProps> = ({ brand, onUpdate, userProfile, onUpd
                     <span className="text-[10px] font-black text-slate-700 dark:text-slate-300 uppercase tracking-widest">WORK START TIME</span>
                     <div className="flex items-center gap-3">
                       <span className="text-sm font-bold text-slate-900 dark:text-white">09:00</span>
-                      <span className="text-slate-400 text-sm">??</span>
+                      <Edit2 size={12} className="text-slate-400" />
                     </div>
                   </div>
                   <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-white/5 rounded-2xl">
                     <span className="text-[10px] font-black text-slate-700 dark:text-slate-300 uppercase tracking-widest">WORK END TIME</span>
                     <div className="flex items-center gap-3">
                       <span className="text-sm font-bold text-slate-900 dark:text-white">--:--</span>
-                      <span className="text-slate-400 text-sm">??</span>
+                      <Edit2 size={12} className="text-slate-400" />
                     </div>
                   </div>
                   <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-white/5 rounded-2xl">
@@ -413,7 +449,7 @@ const Settings: React.FC<SettingsProps> = ({ brand, onUpdate, userProfile, onUpd
                     <span className="text-[10px] font-black text-slate-700 dark:text-slate-300 uppercase tracking-widest">AUTO CLOCK-OUT TIME</span>
                     <div className="flex items-center gap-3">
                       <span className="text-sm font-bold text-slate-900 dark:text-white">20:00</span>
-                      <span className="text-slate-400 text-sm">??</span>
+                      <Edit2 size={12} className="text-slate-400" />
                     </div>
                   </div>
                 </div>
@@ -423,7 +459,7 @@ const Settings: React.FC<SettingsProps> = ({ brand, onUpdate, userProfile, onUpd
               <div className="border border-slate-200 dark:border-white/10 rounded-[32px] overflow-hidden mb-6">
                 <div className="flex items-center justify-between p-6 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-white/10">
                   <div className="flex items-center gap-4">
-                    <div className="text-2xl">???</div>
+                    <div className="text-2xl"><Palmtree size={22} className="text-slate-500" /></div>
                     <div>
                       <h4 className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-tight">LEAVE POLICY</h4>
                       <p className="text-[10px] text-slate-500 font-medium mt-1">Entitlements, carry-over, sick leave</p>
@@ -459,7 +495,7 @@ const Settings: React.FC<SettingsProps> = ({ brand, onUpdate, userProfile, onUpd
               <div className="border border-slate-200 dark:border-white/10 rounded-[32px] overflow-hidden mb-6">
                 <div className="flex items-center justify-between p-6 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-white/10">
                   <div className="flex items-center gap-4">
-                    <div className="text-2xl">??</div>
+                    <div className="text-2xl"><FileText size={22} className="text-slate-500" /></div>
                     <div>
                       <h4 className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-tight">PAYROLL & COMPLIANCE</h4>
                       <p className="text-[10px] text-slate-500 font-medium mt-1">Tax engine, pension rates, pay frequency</p>
@@ -477,13 +513,13 @@ const Settings: React.FC<SettingsProps> = ({ brand, onUpdate, userProfile, onUpd
                     </div>
                   </div>
                   <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-white/5 rounded-2xl">
-                    <span className="text-[10px] font-black text-slate-700 dark:text-slate-300 uppercase tracking-widest">PENSION RATE — EMPLOYEE (%)</span>
+                    <span className="text-[10px] font-black text-slate-700 dark:text-slate-300 uppercase tracking-widest">PENSION RATE ï¿½ EMPLOYEE (%)</span>
                     <div className="flex items-center gap-3">
                       <span className="text-sm font-bold text-slate-900 dark:text-white">8</span>
                     </div>
                   </div>
                   <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-white/5 rounded-2xl">
-                    <span className="text-[10px] font-black text-slate-700 dark:text-slate-300 uppercase tracking-widest">PENSION RATE — EMPLOYER (%)</span>
+                    <span className="text-[10px] font-black text-slate-700 dark:text-slate-300 uppercase tracking-widest">PENSION RATE ï¿½ EMPLOYER (%)</span>
                     <div className="flex items-center gap-3">
                       <span className="text-sm font-bold text-slate-900 dark:text-white">10</span>
                     </div>

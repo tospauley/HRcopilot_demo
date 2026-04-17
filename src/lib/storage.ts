@@ -1,5 +1,5 @@
 /**
- * HR360 Persistent Local Storage Layer
+ * HRcopilot Persistent Local Storage Layer
  *
  * - Versioned: bumping STORAGE_VERSION wipes stale data automatically
  * - Debounced writes: state changes are batched (300ms) to avoid thrashing
@@ -8,7 +8,7 @@
  * - Reset: clearPersistedState() wipes storage and reloads from demoData
  */
 
-const STORAGE_KEY   = 'hr360_state';
+const STORAGE_KEY   = 'HRcopilot_state';
 const STORAGE_VERSION = 3; // bump this to invalidate old persisted data
 
 // Collections that are user-mutable and should survive page refresh
@@ -81,7 +81,7 @@ export function persistState(data: Partial<Record<PersistedKey, any[]>>): void {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
     } catch (e) {
       // Storage quota exceeded — fail silently
-      console.warn('[HR360] localStorage write failed:', e);
+      console.warn('[HRcopilot] localStorage write failed:', e);
     }
   }, 300);
 }

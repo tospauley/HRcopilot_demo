@@ -1,5 +1,5 @@
 /**
- * HR360 In-Memory Query Cache
+ * HRcopilot In-Memory Query Cache
  *
  * A lightweight TTL-based cache for expensive derived computations
  * (department breakdowns, performance rankings, payroll summaries, etc.)

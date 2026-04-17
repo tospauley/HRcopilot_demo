@@ -46,7 +46,7 @@ export function TopNav() {
 
         <div className="flex items-center gap-3 pl-2">
           <div className="text-right">
-            <p className="text-xs font-bold text-slate-800 leading-none">HR360 System</p>
+            <p className="text-xs font-bold text-slate-800 leading-none">HRcopilot</p>
             <p className="text-[10px] text-slate-400 uppercase tracking-tighter">System</p>
           </div>
           <div className="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center border border-orange-200">

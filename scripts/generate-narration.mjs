@@ -33,21 +33,21 @@ console.log(`🔑  key=...${API_KEY.slice(-6)}  voice=${VOICE_ID}\n`);
 
 const SCRIPTS = [
   // Onboarding
-  { id:'onboarding.welcome',          role:null,      text:"Welcome to HR360 Explorer. I'm your AI guide. Let me show you what's possible when people, finance, and operations work as one." },
+  { id:'onboarding.welcome',          role:null,      text:"Welcome to HRcopilot Explorer. I'm your AI guide. Let me show you what's possible when people, finance, and operations work as one." },
   { id:'role.ceo',                    role:null,      text:"As CEO, you'll see the full financial picture — payroll costs, procurement spend, and workforce ROI — all in one command centre." },
-  { id:'role.hr',                     role:null,      text:"As HR Manager, you'll see how HR360 eliminates manual processes — attendance, payroll, and performance reviews all automated." },
+  { id:'role.hr',                     role:null,      text:"As HR Manager, you'll see how HRcopilot eliminates manual processes — attendance, payroll, and performance reviews all automated." },
   { id:'role.finance',                role:null,      text:"As Accountant, you'll see how every payroll run posts directly to the general ledger — automated journal entries, instant reconciliation." },
-  { id:'onboarding.mode.guided',      role:null,      text:"HR360 At A Glance gives you the complete picture in under twelve minutes. I'll walk you through every module, show you a live payroll slip, reveal what your organisation is losing right now, and end with a personalised proposal." },
+  { id:'onboarding.mode.guided',      role:null,      text:"HRcopilot At A Glance gives you the complete picture in under twelve minutes. I'll walk you through every module, show you a live payroll slip, reveal what your organisation is losing right now, and end with a personalised proposal." },
   { id:'onboarding.mode.sandbox',     role:null,      text:"Sandbox mode gives you full control. Add employees, run payroll, test the geofence — everything is live and you can reset any time." },
   { id:'onboarding.mode.flows',       role:null,      text:"Strategic flows show you complete business processes from start to finish — onboarding an employee, closing the month, running a compliance audit." },
-  { id:'onboarding.org-profile',      role:null,      text:"Great. I've personalised your HR360 experience. Let's choose how you'd like to explore." },
+  { id:'onboarding.org-profile',      role:null,      text:"Great. I've personalised your HRcopilot experience. Let's choose how you'd like to explore." },
   { id:'onboarding.org-profile-skip', role:null,      text:"No problem. You can customise your brand settings any time from the Settings module." },
   // hook.opening
-  { id:'hook.opening', role:'CEO',     text:"Most organisations run on five or six disconnected systems. HR360+ replaces all of them. One platform — people, finance, operations, and intelligence — all connected, all real-time. Let me show you what that looks like." },
-  { id:'hook.opening', role:'HR',      text:"Every manual process your team runs today — attendance tracking, leave approvals, payroll reconciliation, performance reviews — HR360+ automates all of it. Here is what your team gets back." },
-  { id:'hook.opening', role:'FINANCE', text:"HR360+ connects every financial control point — payroll, procurement, invoices, and the general ledger — in one auditable system. Every number has a verified source. Let me walk you through it." },
+  { id:'hook.opening', role:'CEO',     text:"Most organisations run on five or six disconnected systems. HRcopilot replaces all of them. One platform — people, finance, operations, and intelligence — all connected, all real-time. Let me show you what that looks like." },
+  { id:'hook.opening', role:'HR',      text:"Every manual process your team runs today — attendance tracking, leave approvals, payroll reconciliation, performance reviews — HRcopilot automates all of it. Here is what your team gets back." },
+  { id:'hook.opening', role:'FINANCE', text:"HRcopilot connects every financial control point — payroll, procurement, invoices, and the general ledger — in one auditable system. Every number has a verified source. Let me walk you through it." },
   // talentManagement
-  { id:'talentManagement.hook', role:'CEO',     text:"Hiring pipeline, candidate scoring, onboarding progress, and cost-per-hire — all in one view. Talent acquisition is your most expensive people process. HR360+ makes every step visible and measurable." },
+  { id:'talentManagement.hook', role:'CEO',     text:"Hiring pipeline, candidate scoring, onboarding progress, and cost-per-hire — all in one view. Talent acquisition is your most expensive people process. HRcopilot makes every step visible and measurable." },
   { id:'talentManagement.hook', role:'HR',      text:"From job posting to first payslip, every step of the hiring and onboarding process is tracked, automated, and connected to the rest of the HR system." },
   { id:'talentManagement.hook', role:'FINANCE', text:"Hiring costs, onboarding timelines, and headcount changes feed directly into financial planning. Cost-per-hire and time-to-productivity are tracked automatically." },
   { id:'talentManagement.pipeline', role:'CEO',     text:"Your hiring funnel — applications, screenings, interviews, offers, and hires — is visible in real time. You see where candidates are dropping off and why." },
@@ -86,15 +86,15 @@ const SCRIPTS = [
   { id:'procurement.approvalWorkflow', role:'FINANCE', text:"Approval workflows enforce spending authority limits automatically. No purchase above the threshold can be processed without the correct approval chain." },
   { id:'procurement.threeWayMatch', role:'CEO',     text:"Three-way match verification runs automatically before any payment is released. Overbilling and duplicate invoices are caught before they cost you money." },
   { id:'procurement.threeWayMatch', role:'HR',      text:"Every HR vendor invoice is matched against the approved purchase order and confirmed delivery before payment is released." },
-  { id:'procurement.threeWayMatch', role:'FINANCE', text:"Three-way match is the strongest accounts payable control available. HR360+ runs it automatically on every invoice." },
+  { id:'procurement.threeWayMatch', role:'FINANCE', text:"Three-way match is the strongest accounts payable control available. HRcopilot runs it automatically on every invoice." },
   { id:'procurement.savingsTracker', role:'CEO',     text:"The procurement savings tracker quantifies cost avoidance from blocked maverick spending, caught duplicate invoices, and negotiated vendor discounts." },
   { id:'procurement.savingsTracker', role:'HR',      text:"HR procurement savings — avoided training overspend, blocked duplicate vendor invoices, and enforced contract rates — are tracked and reported automatically." },
-  { id:'procurement.savingsTracker', role:'FINANCE', text:"Procurement cost avoidance is one of the most underreported financial controls. HR360+ makes it visible — every blocked payment, every caught duplicate, every enforced contract rate is quantified." },
+  { id:'procurement.savingsTracker', role:'FINANCE', text:"Procurement cost avoidance is one of the most underreported financial controls. HRcopilot makes it visible — every blocked payment, every caught duplicate, every enforced contract rate is quantified." },
   { id:'procurement.advisorInsight', role:'CEO',     text:"The AI Advisor is analysing your procurement spend patterns. It will identify your highest-risk vendor relationships and the categories where maverick spending is most likely occurring." },
   { id:'procurement.advisorInsight', role:'HR',      text:"Watch the advisor identify HR procurement inefficiencies — vendors with declining performance scores, contracts approaching renewal, and categories where spend is trending above budget." },
   { id:'procurement.advisorInsight', role:'FINANCE', text:"The advisor is cross-referencing your procurement spend against contract rates and market benchmarks. It will surface the vendors where you are overpaying." },
   // performance
-  { id:'performance.hook', role:'CEO',     text:"Performance management in most organisations is subjective, inconsistent, and disconnected from compensation. HR360+ makes it objective, standardised, and directly linked to payroll — automatically." },
+  { id:'performance.hook', role:'CEO',     text:"Performance management in most organisations is subjective, inconsistent, and disconnected from compensation. HRcopilot makes it objective, standardised, and directly linked to payroll — automatically." },
   { id:'performance.hook', role:'HR',      text:"Evaluation templates standardise reviews across every department. Every manager scores on the same criteria, with the same weights, producing comparable results." },
   { id:'performance.hook', role:'FINANCE', text:"Standardised performance scoring makes performance-linked payroll adjustments defensible, auditable, and fully controlled. No more bonus disputes." },
   { id:'performance.payrollTrigger', role:'CEO',     text:"The score meets the bonus threshold. A payroll adjustment is queued automatically — no email to HR, no manual calculation, no approval chain delay." },
@@ -104,13 +104,13 @@ const SCRIPTS = [
   { id:'accountingFinance.hook', role:'CEO',     text:"Every financial transaction in your organisation — payroll, procurement, invoices, expenses — posts to the general ledger automatically. No manual journal entries. No reconciliation backlog. Financial close in hours, not days." },
   { id:'accountingFinance.hook', role:'HR',      text:"Every HR cost is visible in real-time financial reports the moment it is incurred. Payroll, benefits, training, and recruitment costs are all tracked automatically." },
   { id:'accountingFinance.hook', role:'FINANCE', text:"Full double-entry accounting with automated journal entries, real-time reconciliation, and financial close in one system. The chart of accounts, AR, AP, and reporting are all connected." },
-  { id:'accountingFinance.financialClose', role:'CEO',     text:"Monthly financial close used to take your team six to ten days. HR360+ compresses it to under twenty-four hours — because every transaction is already posted, reconciled, and categorised." },
+  { id:'accountingFinance.financialClose', role:'CEO',     text:"Monthly financial close used to take your team six to ten days. HRcopilot compresses it to under twenty-four hours — because every transaction is already posted, reconciled, and categorised." },
   { id:'accountingFinance.financialClose', role:'HR',      text:"The financial close is clean because the data was clean from the start. Verified attendance, automated payroll, and real-time cost posting mean there is nothing to reconcile manually." },
   { id:'accountingFinance.financialClose', role:'FINANCE', text:"Attendance locked, payroll posted, expenses reconciled, reports generated — in one automated sequence. The close cycle is a workflow, not a fire drill." },
   { id:'accountingFinance.advisorInsight', role:'CEO',     text:"The AI Advisor is analysing your financial position right now. It will surface the highest-priority variance — the number that most needs your attention before the close." },
   { id:'accountingFinance.advisorInsight', role:'HR',      text:"Watch the advisor identify where HR costs are trending above budget — and quantify the impact before it becomes a problem." },
   { id:'accountingFinance.advisorInsight', role:'FINANCE', text:"The advisor is cross-referencing your ledger data against your budget and prior periods. It will identify the root cause of every significant variance." },
-  { id:'accountingFinance.costSavings', role:'CEO',     text:"Organisations using HR360+ typically reduce their finance team's manual workload by sixty to seventy percent. That is headcount cost you can redeploy to higher-value work." },
+  { id:'accountingFinance.costSavings', role:'CEO',     text:"Organisations using HRcopilot typically reduce their finance team's manual workload by sixty to seventy percent. That is headcount cost you can redeploy to higher-value work." },
   { id:'accountingFinance.costSavings', role:'HR',      text:"When HR costs post automatically, your finance team stops chasing HR for numbers. That friction disappears entirely." },
   { id:'accountingFinance.costSavings', role:'FINANCE', text:"Automated reconciliation, instant close, and real-time reporting eliminate the overtime, the errors, and the audit findings that come with manual financial processes." },
   // dashboard
@@ -138,9 +138,9 @@ const SCRIPTS = [
   { id:'leave.hook', role:'HR',      text:"Leave policies, balances, and approval workflows are fully automated. No more spreadsheet tracking, no more manual balance calculations, no more approval emails." },
   { id:'leave.hook', role:'FINANCE', text:"Leave deductions flow automatically into payroll. No manual adjustments, no reconciliation errors, no end-of-month corrections." },
   // elevator pitch
-  { id:'elevator.pitch.ceo',     role:'CEO',     text:"The average organisation with two hundred employees loses between forty and eighty thousand dollars annually to payroll errors, attendance fraud, manual reconciliation, and disconnected systems. HR360+ closes every one of those gaps — and the ROI is typically visible within the first payroll cycle." },
-  { id:'elevator.pitch.hr',      role:'HR',      text:"Your team spends an estimated thirty percent of its time on tasks that should be automated — chasing approvals, reconciling attendance, correcting payroll errors, and generating reports manually. HR360+ gives that time back. Most HR teams recover eight to twelve hours per week within the first month." },
-  { id:'elevator.pitch.finance', role:'FINANCE', text:"Manual payroll processing, disconnected procurement, and delayed financial close are your three biggest controllable cost risks. HR360+ automates all three — payroll posts to the ledger automatically, procurement enforces three-way match, and financial close shrinks from days to hours." },
+  { id:'elevator.pitch.ceo',     role:'CEO',     text:"The average organisation with two hundred employees loses between forty and eighty thousand dollars annually to payroll errors, attendance fraud, manual reconciliation, and disconnected systems. HRcopilot closes every one of those gaps — and the ROI is typically visible within the first payroll cycle." },
+  { id:'elevator.pitch.hr',      role:'HR',      text:"Your team spends an estimated thirty percent of its time on tasks that should be automated — chasing approvals, reconciling attendance, correcting payroll errors, and generating reports manually. HRcopilot gives that time back. Most HR teams recover eight to twelve hours per week within the first month." },
+  { id:'elevator.pitch.finance', role:'FINANCE', text:"Manual payroll processing, disconnected procurement, and delayed financial close are your three biggest controllable cost risks. HRcopilot automates all three — payroll posts to the ledger automatically, procurement enforces three-way match, and financial close shrinks from days to hours." },
 ];
 
 async function synthesise(text) {

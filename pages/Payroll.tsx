@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+ï»¿import React, { useState } from 'react';
+import { useCurrency } from '../src/context/CurrencyContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Download, Plus, Trophy, TrendingUp, Users, Clock, 
@@ -26,6 +27,7 @@ const MOCK_WORKFORCE_MIX = empTypes.map(t => ({
 const COLORS = ['#0047cc', '#10b981', '#f59e0b'];
 
 const Payroll: React.FC = () => {
+  const { symbol, fmt } = useCurrency();
   const [activeTab, setActiveTab] = useState('DASHBOARD');
   const [isCreatePayrollModalOpen, setIsCreatePayrollModalOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -99,8 +101,8 @@ const Payroll: React.FC = () => {
             {/* Stats Grid */}
             <div data-demo-id="payroll-stats-grid" className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
               {[
-                { label: 'MONTHLY PAYROLL', value: `?${(DEMO_DASHBOARD_KPIS.monthlyPayrollTotal / 1000000).toFixed(2)}M`, sub: 'NET DISBURSEMENT', icon: TrendingUp, color: 'text-[#0047cc]', accent: '#0047cc' },
-                { label: 'AVERAGE PAY',     value: `?${Math.round(DEMO_DASHBOARD_KPIS.monthlyPayrollTotal / DEMO_DASHBOARD_KPIS.activeEmployees / 1000)}K`, sub: 'PER WORKFORCE', icon: Users, color: 'text-emerald-500', accent: '#10b981' },
+                { label: 'MONTHLY PAYROLL', value: fmt(DEMO_DASHBOARD_KPIS.monthlyPayrollTotal, { compact: true, decimals: 2 }), sub: 'NET DISBURSEMENT', icon: TrendingUp, color: 'text-[#0047cc]', accent: '#0047cc' },
+                { label: 'AVERAGE PAY',     value: fmt(Math.round(DEMO_DASHBOARD_KPIS.monthlyPayrollTotal / DEMO_DASHBOARD_KPIS.activeEmployees), { compact: true }), sub: 'PER WORKFORCE', icon: Users, color: 'text-emerald-500', accent: '#10b981' },
                 { label: 'HEADCOUNT',       value: String(DEMO_DASHBOARD_KPIS.activeEmployees), sub: 'ACTIVE EMPLOYEES', icon: Users, color: 'text-amber-500', accent: '#f59e0b' },
                 { label: 'PENDING RUNS',    value: String(DEMO_DASHBOARD_KPIS.pendingPayrollApprovals), sub: 'APPROVALS NEEDED', icon: Clock, color: 'text-rose-500', accent: '#ef4444' },
               ].map((stat, i) => (
@@ -241,7 +243,7 @@ const Payroll: React.FC = () => {
                             <Clock size={32} />
                           </div>
                           <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">
-                            NO APPROVED PAYROLL RUNS YET — APPROVE A RUN TO SEE IT HERE
+                            NO APPROVED PAYROLL RUNS YET ï¿½ APPROVE A RUN TO SEE IT HERE
                           </p>
                         </div>
                       </td>
@@ -266,8 +268,8 @@ const Payroll: React.FC = () => {
                     <div className="text-right">
                       <p className="text-sm font-black text-slate-900 dark:text-white">
                         {DEMO_PAYROLL_RUNS.find(r => r.periodId === period.id)
-                          ? `?${DEMO_PAYROLL_RUNS.find(r => r.periodId === period.id)!.totalNet.toLocaleString()}`
-                          : '?0.00'}
+                          ? `${symbol}${DEMO_PAYROLL_RUNS.find(r => r.periodId === period.id)!.totalNet.toLocaleString()}`
+                          : `${symbol}0.00`}
                       </p>
                       <span className={`px-2 py-0.5 rounded text-[8px] font-black uppercase ${period.status === 'OPEN' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-slate-500/10 text-slate-500'}`}>
                         {period.status}
@@ -306,10 +308,10 @@ const Payroll: React.FC = () => {
                             </div>
                           </div>
                         </td>
-                        <td className="px-6 py-4 text-xs text-slate-600 dark:text-slate-400">?{line.baseSalary.toLocaleString()}</td>
-                        <td className="px-6 py-4 text-xs text-slate-600 dark:text-slate-400">?{line.allowances.toLocaleString()}</td>
-                        <td className="px-6 py-4 text-xs text-rose-500">?{line.deductions.toLocaleString()}</td>
-                        <td className="px-6 py-4 text-xs font-black text-slate-900 dark:text-white text-right">?{line.netPay.toLocaleString()}</td>
+                        <td className="px-6 py-4 text-xs text-slate-600 dark:text-slate-400">{symbol}{line.baseSalary.toLocaleString()}</td>
+                        <td className="px-6 py-4 text-xs text-slate-600 dark:text-slate-400">{symbol}{line.allowances.toLocaleString()}</td>
+                        <td className="px-6 py-4 text-xs text-rose-500">{symbol}{line.deductions.toLocaleString()}</td>
+                        <td className="px-6 py-4 text-xs font-black text-slate-900 dark:text-white text-right">{symbol}{line.netPay.toLocaleString()}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -342,7 +344,7 @@ const Payroll: React.FC = () => {
                   <div className="w-1.5 h-6 bg-[#0047cc] rounded-full" />
                   <div>
                     <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tight">STATUTORY DEDUCTIONS</h3>
-                    <p className="text-[9px] text-slate-500 font-bold uppercase mt-0.5 tracking-widest">TOGGLE EACH DEDUCTION ON/OFF — NIGERIA FINANCE ACT 2025</p>
+                    <p className="text-[9px] text-slate-500 font-bold uppercase mt-0.5 tracking-widest">TOGGLE EACH DEDUCTION ON/OFF ï¿½ NIGERIA FINANCE ACT 2025</p>
                   </div>
                 </div>
               </div>
@@ -404,7 +406,7 @@ const Payroll: React.FC = () => {
                 <div className="flex items-center justify-between py-3">
                   <div>
                     <p className="text-xs font-bold text-slate-900 dark:text-white">State Development Levy</p>
-                    <p className="text-[9px] text-slate-500 uppercase mt-0.5">?100 fixed annual deduction per employee. Remitted to the specific State Internal Revenue Service.</p>
+                    <p className="text-[9px] text-slate-500 uppercase mt-0.5">{symbol}100 fixed annual deduction per employee. Remitted to the specific State Internal Revenue Service.</p>
                   </div>
                   <div className="flex items-center gap-2 px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest bg-emerald-500/10 text-emerald-500">
                     <div className="w-2 h-2 rounded-full bg-emerald-500" /> ON
@@ -470,8 +472,8 @@ const Payroll: React.FC = () => {
                 </div>
                 <div className="flex items-center justify-between py-3 border-b border-slate-100 dark:border-white/5">
                   <div>
-                    <p className="text-xs font-bold text-slate-900 dark:text-white">Rent Relief Monthly Cap (?)</p>
-                    <p className="text-[9px] text-slate-500 uppercase mt-0.5">FIRS standard: ?200,000/year ÷ 12 = ?16,667/month. Employees with documented FIRS approval can exceed this.</p>
+                    <p className="text-xs font-bold text-slate-900 dark:text-white">Rent Relief Monthly Cap ({symbol})</p>
+                    <p className="text-[9px] text-slate-500 uppercase mt-0.5">FIRS standard: {symbol}200,000/year Ã· 12 = {symbol}16,667/month. Employees with documented FIRS approval can exceed this.</p>
                   </div>
                   <div className="flex items-center gap-3 bg-slate-50 dark:bg-white/5 px-4 py-2 rounded-xl border border-slate-200 dark:border-white/10">
                     <span className="text-[10px] font-black text-slate-400">?</span>
@@ -647,7 +649,7 @@ const Payroll: React.FC = () => {
                   <div className="w-1.5 h-6 bg-rose-500 rounded-full" />
                   <div>
                     <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tight">ACTIVE TAX RULE</h3>
-                    <p className="text-[9px] text-slate-500 font-bold uppercase mt-0.5 tracking-widest">NIGERIA PAYE 2026 (FINANCE ACT 2025) — EFFECTIVE 2026-01-01</p>
+                    <p className="text-[9px] text-slate-500 font-bold uppercase mt-0.5 tracking-widest">NIGERIA PAYE 2026 (FINANCE ACT 2025) ï¿½ EFFECTIVE 2026-01-01</p>
                   </div>
                 </div>
               </div>
@@ -655,7 +657,7 @@ const Payroll: React.FC = () => {
                 <div className="grid grid-cols-4 gap-4 mb-6">
                   <div className="bg-slate-50 dark:bg-white/5 p-4 rounded-2xl border border-slate-100 dark:border-white/10">
                     <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">TAX-FREE THRESHOLD</p>
-                    <p className="text-sm font-black text-slate-900 dark:text-white">?800,000</p>
+                    <p className="text-sm font-black text-slate-900 dark:text-white">{symbol}800,000</p>
                   </div>
                   <div className="bg-slate-50 dark:bg-white/5 p-4 rounded-2xl border border-slate-100 dark:border-white/10">
                     <p className="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">PENSION EMPLOYEE</p>
@@ -683,7 +685,7 @@ const Payroll: React.FC = () => {
                   <div className="w-1.5 h-6 bg-[#0047cc] rounded-full" />
                   <div>
                     <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tight">TAX RULE VERSIONS</h3>
-                    <p className="text-[9px] text-slate-500 font-bold uppercase mt-0.5 tracking-widest">HISTORICAL AND ACTIVE PAYE RULE SETS — ACTIVATE TO SWITCH</p>
+                    <p className="text-[9px] text-slate-500 font-bold uppercase mt-0.5 tracking-widest">HISTORICAL AND ACTIVE PAYE RULE SETS ï¿½ ACTIVATE TO SWITCH</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-4">
@@ -703,7 +705,7 @@ const Payroll: React.FC = () => {
                 <div className="flex items-center gap-3">
                   <div className="w-1.5 h-6 bg-rose-500 rounded-full" />
                   <div>
-                    <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tight">FIRS FORM A — ANNUAL PAYE RETURN</h3>
+                    <h3 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tight">FIRS FORM A ï¿½ ANNUAL PAYE RETURN</h3>
                     <p className="text-[9px] text-slate-500 font-bold uppercase mt-0.5 tracking-widest">GENERATE AND EXPORT THE ANNUAL PAYE RETURN FOR E-TAX PORTAL UPLOAD</p>
                   </div>
                 </div>
@@ -809,11 +811,11 @@ const Payroll: React.FC = () => {
                       <p className="text-[9px] text-slate-500 font-black uppercase mt-2 tracking-widest">Employees</p>
                     </div>
                     <div>
-                      <p className="text-2xl font-black text-slate-900 dark:text-white leading-none">?4.8M+</p>
+                      <p className="text-2xl font-black text-slate-900 dark:text-white leading-none">{symbol}4.8M+</p>
                       <p className="text-[9px] text-slate-500 font-black uppercase mt-2 tracking-widest">Est. Net Pay</p>
                     </div>
                     <div>
-                      <p className="text-2xl font-black text-slate-900 dark:text-white leading-none">?1.2M+</p>
+                      <p className="text-2xl font-black text-slate-900 dark:text-white leading-none">{symbol}1.2M+</p>
                       <p className="text-[9px] text-slate-500 font-black uppercase mt-2 tracking-widest">Statutory Liab.</p>
                     </div>
                   </div>
@@ -845,7 +847,7 @@ const Payroll: React.FC = () => {
                 </div>
 
                 <p className="text-center text-[9px] text-slate-500 font-black uppercase tracking-[0.1em] opacity-40">
-                  Secure disbursement channel • Audited by HR360 Engine v4.0
+                  Secure disbursement channel ï¿½ Audited by HRcopilot Engine v4.0
                 </p>
               </div>
             </motion.div>

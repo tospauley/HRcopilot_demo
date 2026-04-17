@@ -1,6 +1,6 @@
 /**
  * useBenchmarks.js
- * HR360+ Organizational Intelligence Widget
+ * HRcopilot Organizational Intelligence Widget
  * Part of: Phase 2 — State & Computation
  * Org types supported: both
  * Dependencies: engine/BenchmarkEngine.js

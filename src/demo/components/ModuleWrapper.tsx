@@ -1,4 +1,4 @@
-﻿// ============================================
+// ============================================
 // FILE: src/demo/components/ModuleWrapper.tsx
 // PURPOSE: ErrorBoundary wrapper for every module.
 //   Catches render errors in isolation — one broken module

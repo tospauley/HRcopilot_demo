@@ -1,4 +1,4 @@
-﻿// ============================================
+// ============================================
 // FILE: src/demo/voice/CinematicSubtitles.tsx
 // PURPOSE: Cinematic glassmorphism subtitle overlay.
 //   - Floats as a compact pill in the TOP-CENTER (never blocks buttons)

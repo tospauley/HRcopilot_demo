@@ -1,6 +1,6 @@
 /**
  * ROICloseSection.jsx
- * HR360+ Organizational Intelligence Widget
+ * HRcopilot Organizational Intelligence Widget
  * Part of: Phase 6 — Close Sections
  * Org types supported: commercial
  * Dependencies: useCurrencyFormat
@@ -13,7 +13,7 @@ import { useCurrencyFormat } from '../hooks/useCurrencyFormat.js'
 
 export default function ROICloseSection({ results, currency, locale }) {
   const { format } = useCurrencyFormat(currency, locale)
-  const { yearOneROI, breakEvenMonths, threeYearGain, recoveryEstimate, hr360AnnualCost } = results
+  const { yearOneROI, breakEvenMonths, threeYearGain, recoveryEstimate, HRcopilotAnnualCost } = results
 
   return (
     <div
@@ -25,7 +25,7 @@ export default function ROICloseSection({ results, currency, locale }) {
           Return on Investment
         </p>
         <h3 className="text-2xl font-black uppercase tracking-tight">
-          HR360 Pays for Itself
+          HRcopilot Pays for Itself
         </h3>
         <p className="text-blue-200/80 text-sm mt-2">
           Based on 50% leakage recovery — a conservative estimate used across enterprise deployments.

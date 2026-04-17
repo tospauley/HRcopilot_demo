@@ -12,7 +12,7 @@ const LINKED_INTEGRATIONS = [
   { name: 'Zoom', category: 'HR Video Meetings', sync: 'Syncs daily', realtime: true, icon: '??' },
   { name: 'Slack', category: 'HR Team Chat', sync: 'Syncs in real-time', realtime: true, icon: '??' },
   { name: 'Microsoft Teams', category: 'HR Team Chat', sync: 'Syncs in real-time', realtime: true, icon: '??' },
-  { name: 'QuickBooks', category: 'Payroll – Every Saturday', sync: 'Syncs in real-time', realtime: false, icon: '??' },
+  { name: 'QuickBooks', category: 'Payroll ï¿½ Every Saturday', sync: 'Syncs in real-time', realtime: false, icon: '??' },
   { name: 'Workday', category: 'HR & People Data', sync: 'Syncs morning', realtime: false, icon: '??' },
   { name: 'DocuSign', category: 'Digital Signatures', sync: 'Syncs daily', realtime: true, icon: '??' },
   { name: 'Paycor', category: 'Payroll - Weekly', sync: 'Syncs morning', realtime: false, icon: '??' },
@@ -245,7 +245,7 @@ const Integrations: React.FC = () => {
                     <div className="p-4 bg-white/5 border border-white/10 rounded-xl space-y-4">
                        <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Master API Key</p>
                        <div className="flex justify-between items-center">
-                          <span className="text-xs font-mono text-slate-400">hr360_live_sk_••••••••••••</span>
+                          <span className="text-xs font-mono text-slate-400">HRcopilot_live_sk_ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</span>
                           <button className="text-[9px] font-black text-[#0047cc] uppercase tracking-widest">Reveal</button>
                        </div>
                        <button className="w-full py-2 bg-white/10 text-white text-[9px] font-black uppercase tracking-widest rounded-lg hover:bg-white/20 transition-all">Generate New Key</button>
@@ -276,7 +276,7 @@ const Integrations: React.FC = () => {
                               <p className="text-[9px] text-slate-500 leading-relaxed mt-1">{item.s}</p>
                            </div>
                         </div>
-                        <span className="text-slate-600">›</span>
+                        <span className="text-slate-600">ï¿½</span>
                      </div>
                      <button className="w-full py-2 bg-blue-500/10 text-blue-400 border border-blue-500/20 text-[9px] font-black uppercase tracking-widest rounded-xl hover:bg-blue-500 hover:text-white transition-all">
                         {i === 0 ? 'Launch' : i === 1 ? 'Manage Rules' : 'View Dashboard'}
@@ -286,7 +286,7 @@ const Integrations: React.FC = () => {
              </div>
           </GlassCard>
 
-          <GlassCard title="Integrations Activity" action={<span className="text-slate-500 font-black">›</span>}>
+          <GlassCard title="Integrations Activity" action={<span className="text-slate-500 font-black">ï¿½</span>}>
              <div className="space-y-6">
                 {ACTIVITY.map((act, i) => (
                   <div key={i} className="flex gap-4 group">
@@ -304,7 +304,7 @@ const Integrations: React.FC = () => {
                         </div>
                         <p className="text-[9px] text-slate-500 mt-1 font-bold italic leading-tight">{act.action}</p>
                      </div>
-                     <span className="text-slate-700">›</span>
+                     <span className="text-slate-700">ï¿½</span>
                   </div>
                 ))}
              </div>

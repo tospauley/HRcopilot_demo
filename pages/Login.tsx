@@ -1,4 +1,4 @@
-﻿import React, { useState } from 'react';
+import React, { useState } from 'react';
 import { BrandSettings, UserRole, UserProfile } from '../types';
 import { ThemeToggle } from '../App';
 
@@ -82,7 +82,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, onBackToLanding, brand, theme, o
             <div className="mb-6 md:mb-8">
               <img src="/Analytictosin_Logo.png" alt="Analytictosin Logo" className="h-12 md:h-14 w-auto object-contain mb-4 md:mb-5 drop-shadow-md" />
               <h1 className="text-xl md:text-2xl font-black text-slate-900 dark:text-white tracking-tight">Welcome back</h1>
-              <p className="text-sm text-slate-500 mt-1">Sign in to your HR360 workspace</p>
+              <p className="text-sm text-slate-500 mt-1">Sign in to your HRcopilot workspace</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">

@@ -24,12 +24,26 @@ if (isAdminRoute) {
     );
   });
 } else {
-  // Main demo flow — no login required
-  import('./src/demo/DemoApp').then(({ DemoApp }) => {
-    root.render(
-      <React.StrictMode>
-        <DemoApp />
-      </React.StrictMode>,
-    );
-  });
+  // Check if visitor chose to view the real application (set by Landing role picker)
+  const guestRole = sessionStorage.getItem('hr360_guest_role');
+
+  if (guestRole) {
+    // Load the real App directly — full role-based sidebar, no login
+    import('./App').then(({ default: App }) => {
+      root.render(
+        <React.StrictMode>
+          <App />
+        </React.StrictMode>,
+      );
+    });
+  } else {
+    // Main demo flow — no login required
+    import('./src/demo/DemoApp').then(({ DemoApp }) => {
+      root.render(
+        <React.StrictMode>
+          <DemoApp />
+        </React.StrictMode>,
+      );
+    });
+  }
 }

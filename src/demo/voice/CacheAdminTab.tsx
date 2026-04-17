@@ -1,4 +1,4 @@
-﻿// ============================================
+// ============================================
 // FILE: src/demo/voice/CacheAdminTab.tsx
 // PURPOSE: Audio cache tab — shows ElevenLabs/Groq blob cache.
 //          Light/dark styling for NarratorAdminPanel.

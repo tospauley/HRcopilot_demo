@@ -93,7 +93,7 @@ export const useDemoOrchestrator = create<OrchestratorState>()(
       setAutoAdvance: (autoAdvance) => set({ autoAdvance }),
     }),
     {
-      name:    'hr360_demo_orchestrator',
+      name:    'HRcopilot_demo_orchestrator',
       storage: createJSONStorage(() => sessionStorage),
       partialize: (s) => ({
         mode:        s.mode,

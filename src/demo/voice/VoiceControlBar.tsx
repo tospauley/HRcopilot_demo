@@ -1,4 +1,4 @@
-﻿// ============================================
+// ============================================
 // FILE: src/demo/voice/VoiceControlBar.tsx
 // PURPOSE: Floating mini voice control bar
 // Shows active provider, speaking status, quick mute, open admin

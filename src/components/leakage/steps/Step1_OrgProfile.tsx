@@ -1,6 +1,6 @@
 /**
  * Step1_OrgProfile.jsx
- * HR360+ Organizational Intelligence Widget
+ * HRcopilot Organizational Intelligence Widget
  * Part of: Phase 3 — Core UI
  * Org types supported: both
  * Dependencies: data/orgTypeProfiles.js, engine/OrgProfileEngine.js

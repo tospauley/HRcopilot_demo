@@ -1,4 +1,4 @@
-﻿@import "tailwindcss";
+@import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
 /* Google Fonts loaded via index.html — fallback to system fonts if offline */
@@ -6,7 +6,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter", "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif, "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji";
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
   --brand-primary: #0047cc;
 
@@ -74,7 +74,7 @@
 
   body {
     @apply bg-white text-slate-900 dark:bg-slate-950 dark:text-[#f8fafc] transition-colors duration-300;
-    font-family: var(--font-sans);
+    font-family: var(--font-sans), "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
   }
 
   /* Refined Scrollbar */
@@ -157,9 +157,9 @@
   .gradient-text-live {
     background: linear-gradient(to right,
         #0047cc 0%,
-        #0ea5e9 30%,
-        #14b8a6 55%,
-        #0ea5e9 75%,
+        #1d4ed8 25%,
+        #3b82f6 50%,
+        #1d4ed8 75%,
         #0047cc 100%);
     background-size: 200% auto;
     background-clip: text;
@@ -222,3 +222,19 @@
 
 
 
+  /* Emoji support */
+  .emoji {
+    font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
+  }
+
+  /* Ensure emojis display correctly in all contexts */
+  * {
+    font-feature-settings: "calt", "liga", "kern";
+  }
+
+  /* Improve emoji rendering */
+  @supports (font-variation-settings: normal) {
+    .emoji {
+      font-family: "Segoe UI Emoji", "Apple Color Emoji", "Noto Color Emoji", "Twemoji Mozilla", sans-serif;
+    }
+  }

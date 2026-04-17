@@ -8,7 +8,7 @@
 //          VITE_ELEVENLABS_API_KEY   + VITE_ELEVENLABS_VOICE_ID    ← slot 1
 //          VITE_ELEVENLABS_API_KEY_2 + VITE_ELEVENLABS_VOICE_ID_2  ← slot 2
 //          … up to _10
-//     2. localStorage 'hr360_elevenlabs_keys' (set via Admin Panel)
+//     2. localStorage 'HRcopilot_elevenlabs_keys' (set via Admin Panel)
 //
 //   Rotation triggers:
 //     - 429 Too Many Requests  → rate-limited, cooldown 60s
@@ -19,7 +19,7 @@
 
 const RATELIMIT_COOLDOWN_MS = 60_000;   // 1 min
 const QUOTA_COOLDOWN_MS     = 300_000;  // 5 min — quota resets on billing cycle, but retry sooner
-const STORAGE_KEY           = 'hr360_elevenlabs_keys';
+const STORAGE_KEY           = 'HRcopilot_elevenlabs_keys';
 
 // ── Types ──────────────────────────────────────────────────────────────────────
 

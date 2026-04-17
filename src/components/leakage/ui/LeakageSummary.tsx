@@ -1,6 +1,6 @@
 /**
  * LeakageSummary.jsx
- * HR360+ Organizational Intelligence Widget
+ * HRcopilot Organizational Intelligence Widget
  * Part of: Phase 4 — Domain Sections
  * Org types supported: both
  * Dependencies: DomainCard, useCurrencyFormat
@@ -37,7 +37,7 @@ export default function LeakageSummary({ results, profile, currency, locale }) {
         </div>
         <div className="text-right">
           <p className="text-[10px] font-black text-emerald-400 uppercase tracking-widest mb-1">
-            Estimated Recovery with HR360
+            Estimated Recovery with HRcopilot
           </p>
           <p className="text-2xl font-black text-emerald-400 tabular-nums">
             {format(recoveryEstimate)}

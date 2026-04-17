@@ -1,4 +1,4 @@
-﻿// ============================================
+// ============================================
 // FILE: src/demo/onboarding/WelcomeZoom.tsx
 // PURPOSE: Premium light welcome screen.
 //   Clean white/light background, subtle blue accents,
@@ -12,7 +12,7 @@ import { speak, primeAudioContext } from '../voice/narrationEngine';
 interface Props { onDone: () => void; }
 
 const WELCOME_TEXT =
-  "Welcome to HR360 Explorer. I'm your AI guide. Let me show you what's possible when people, finance, and operations work as one.";
+  "Welcome to HRcopilot Explorer. I'm your AI guide. Let me show you what's possible when people, finance, and operations work as one.";
 
 export function WelcomeZoom({ onDone }: Props) {
   const [show, setShow] = useState(false);
@@ -129,7 +129,7 @@ export function WelcomeZoom({ onDone }: Props) {
           animate={{ opacity: show ? 1 : 0, y: show ? 0 : 12 }}
           transition={{ duration: 0.6, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
         >
-          HR<span style={{ color: '#0047cc' }}>360</span>
+          HR<span style={{ color: '#0047cc' }}>copilot</span>
         </motion.h1>
 
         <motion.p

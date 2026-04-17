@@ -1,4 +1,4 @@
-﻿// ============================================
+// ============================================
 // FILE: src/demo/MainShell.tsx
 // PURPOSE: Post-onboarding app shell.
 //   Sidebar + TopNav + all 12 module routes.
@@ -29,6 +29,7 @@ function useActiveModule(): string {
 
 // ── Lazy module pages ─────────────────────────────────────────────────────────
 const Dashboard        = lazy(() => import('../../pages/Dashboard'));
+const EmployeeDashboard = lazy(() => import('../../pages/EmployeeDashboard'));
 const Employees        = lazy(() => import('../../pages/Employees'));
 const Attendance       = lazy(() => import('../../pages/Attendance'));
 const Payroll          = lazy(() => import('../../pages/Payroll'));
@@ -76,36 +77,43 @@ interface NavItem {
   icon?:    React.ReactNode;
   isHeader?: boolean;
   badge?:   string | number;
+  roles?:   UserRole[]; // if set, only show for these roles
 }
 
 const I = (C: React.FC<{className?:string}>) => <C className="w-4 h-4" />;
 
 const NAV: NavItem[] = [
   { label: 'Dashboard',          route: '/app',              icon: I(LayoutDashboard) },
-  { label: 'PEOPLE',             isHeader: true },
-  { label: 'Employees',          route: '/app/employees',    icon: I(Users) },
-  { label: 'Role Management',    route: '/app/roles',        icon: I(Lock) },
-  { label: 'Branches',           route: '/app/branches',     icon: I(Building2) },
+  // ── Executive / HR sections ──
+  { label: 'PEOPLE',             isHeader: true,             roles: [UserRole.CEO, UserRole.HR_MANAGER, UserRole.ACCOUNTANT] },
+  { label: 'Employees',          route: '/app/employees',    icon: I(Users),           roles: [UserRole.CEO, UserRole.HR_MANAGER, UserRole.ACCOUNTANT] },
+  { label: 'Role Management',    route: '/app/roles',        icon: I(Lock),            roles: [UserRole.CEO, UserRole.HR_MANAGER] },
+  { label: 'Branches',           route: '/app/branches',     icon: I(Building2),       roles: [UserRole.CEO, UserRole.HR_MANAGER] },
   { label: 'OPERATIONS',         isHeader: true },
-  { label: 'Attendance',         route: '/app/attendance',   icon: I(Clock),         badge: 'Live' },
+  // Employee-only items
+  { label: 'My Payslips',        route: '/app/my-payroll',   icon: I(DollarSign),      roles: [UserRole.EMPLOYEE] },
+  { label: 'My Attendance',      route: '/app/my-attendance',icon: I(Clock),           roles: [UserRole.EMPLOYEE] },
+  { label: 'My Performance',     route: '/app/my-performance',icon: I(Target),         roles: [UserRole.EMPLOYEE] },
+  // Shared
+  { label: 'Attendance',         route: '/app/attendance',   icon: I(Clock),           badge: 'Live', roles: [UserRole.CEO, UserRole.HR_MANAGER, UserRole.ACCOUNTANT] },
   { label: 'Leave',              route: '/app/leave',        icon: I(Palmtree) },
-  { label: 'Payroll',            route: '/app/payroll',      icon: I(DollarSign) },
+  { label: 'Payroll',            route: '/app/payroll',      icon: I(DollarSign),      roles: [UserRole.CEO, UserRole.HR_MANAGER, UserRole.ACCOUNTANT] },
   { label: 'TALENT',             isHeader: true },
-  { label: 'Performance',        route: '/app/performance',  icon: I(Target) },
-  { label: 'Talent Management',  route: '/app/talent',       icon: I(Star) },
+  { label: 'Performance',        route: '/app/performance',  icon: I(Target),          roles: [UserRole.CEO, UserRole.HR_MANAGER, UserRole.ACCOUNTANT] },
+  { label: 'Talent Management',  route: '/app/talent',       icon: I(Star),            roles: [UserRole.CEO, UserRole.HR_MANAGER] },
   { label: 'Goals',              route: '/app/goals',        icon: I(Trophy) },
-  { label: 'ENTERPRISE+',        isHeader: true },
-  { label: 'Finance',            route: '/app/finance',      icon: I(TrendingUp) },
-  { label: 'Procurement',        route: '/app/procurement',  icon: I(ShoppingCart) },
-  { label: 'CRM & Sales',        route: '/app/crm',          icon: I(Handshake) },
-  { label: 'Invoices',           route: '/app/invoices',     icon: I(FileText) },
-  { label: 'Virtual Cabinet',    route: '/app/cabinet',      icon: I(Archive) },
-  { label: 'Intelligence',       route: '/app/intelligence', icon: I(Brain) },
+  { label: 'ENTERPRISE+',        isHeader: true,             roles: [UserRole.CEO, UserRole.ACCOUNTANT] },
+  { label: 'Finance',            route: '/app/finance',      icon: I(TrendingUp),      roles: [UserRole.CEO, UserRole.ACCOUNTANT] },
+  { label: 'Procurement',        route: '/app/procurement',  icon: I(ShoppingCart),    roles: [UserRole.CEO] },
+  { label: 'CRM & Sales',        route: '/app/crm',          icon: I(Handshake),       roles: [UserRole.CEO] },
+  { label: 'Invoices',           route: '/app/invoices',     icon: I(FileText),        roles: [UserRole.CEO, UserRole.ACCOUNTANT] },
+  { label: 'Virtual Cabinet',    route: '/app/cabinet',      icon: I(Archive),         roles: [UserRole.CEO, UserRole.HR_MANAGER, UserRole.ACCOUNTANT] },
+  { label: 'Intelligence',       route: '/app/intelligence', icon: I(Brain),           roles: [UserRole.CEO, UserRole.ACCOUNTANT] },
   { label: 'COMMUNICATION',      isHeader: true },
-  { label: 'Team Chat',          route: '/app/chat',         icon: I(MessageSquare), badge: 12 },
+  { label: 'Team Chat',          route: '/app/chat',         icon: I(MessageSquare),   badge: 12 },
   { label: 'Memo',               route: '/app/memo',         icon: I(FileEdit) },
-  { label: 'SYSTEM',             isHeader: true },
-  { label: 'Brand Settings',     route: '/app/settings',     icon: I(Palette) },
+  { label: 'SYSTEM',             isHeader: true,             roles: [UserRole.CEO] },
+  { label: 'Brand Settings',     route: '/app/settings',     icon: I(Palette),         roles: [UserRole.CEO] },
 ];
 
 
@@ -262,8 +270,8 @@ export default function MainShell() {
     return () => window.removeEventListener('demo:uiAction', handler);
   }, []);
 
-  const companyName = orgProfile?.companyName || 'HR360';
-  const roleLabel = role === UserRole.CEO ? 'CEO' : role === UserRole.HR_MANAGER ? 'HR Manager' : role === UserRole.ACCOUNTANT ? 'Accountant' : 'Guest';
+  const companyName = orgProfile?.companyName || 'HRcopilot';
+  const roleLabel = role === UserRole.CEO ? 'CEO' : role === UserRole.HR_MANAGER ? 'HR Manager' : role === UserRole.ACCOUNTANT ? 'Accountant' : role === UserRole.EMPLOYEE ? 'Employee' : 'Guest';
 
   const handleRestart = () => {
     reset();
@@ -321,7 +329,7 @@ export default function MainShell() {
             {!collapsed && (
               <div className="min-w-0">
                 <p className="text-[13px] font-black text-slate-900 uppercase tracking-tight truncate">{companyName}</p>
-                <p className="text-[9px] text-slate-400 font-bold uppercase tracking-[0.15em]">HR360 Demo</p>
+                <p className="text-[9px] text-slate-400 font-bold uppercase tracking-[0.15em]">HRcopilot Demo</p>
               </div>
             )}
           </div>
@@ -449,7 +457,7 @@ export default function MainShell() {
 
             <Suspense fallback={<PageLoader />}>
               <Routes>
-                <Route index               element={<ModuleWrapper name="Dashboard"><Dashboard userProfile={userProfile} /></ModuleWrapper>} />
+                <Route index               element={<ModuleWrapper name="Dashboard">{role === UserRole.EMPLOYEE ? <EmployeeDashboard /> : <Dashboard userProfile={userProfile} />}</ModuleWrapper>} />
                 <Route path="employees"    element={<ModuleWrapper name="Employees"><Employees /></ModuleWrapper>} />
                 <Route path="roles"        element={<ModuleWrapper name="Role Management"><RoleManagement /></ModuleWrapper>} />
                 <Route path="branches"     element={<ModuleWrapper name="Branches"><Branches /></ModuleWrapper>} />

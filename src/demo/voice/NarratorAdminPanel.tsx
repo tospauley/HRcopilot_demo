@@ -74,7 +74,7 @@ export function NarratorAdminPanel() {
   const [testing,     setTesting]     = useState<NarratorProvider | null>(null);
   const [activeTab,   setActiveTab]   = useState<NarratorProvider>('elevenlabs');
   const [mainTab,     setMainTab]     = useState<MainTab>('providers');
-  const [previewText, setPreviewText] = useState('Welcome to HR360. Your workforce intelligence platform is ready.');
+  const [previewText, setPreviewText] = useState('Welcome to HRcopilot. Your workforce intelligence platform is ready.');
 
   // ── Ambience preview (admin-only, one-shot 6s clip) ───────────────────────
   const previewRef   = useRef<HTMLAudioElement | null>(null);

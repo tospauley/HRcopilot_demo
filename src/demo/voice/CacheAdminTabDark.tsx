@@ -1,4 +1,4 @@
-﻿// ============================================
+// ============================================
 // FILE: src/demo/voice/CacheAdminTabDark.tsx
 // PURPOSE: Audio cache tab — shows ElevenLabs/Groq blob cache.
 //          Dark-first styling for the inline admin panel.

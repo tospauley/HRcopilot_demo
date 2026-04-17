@@ -1,6 +1,6 @@
 /**
  * LeakageCalculator.js
- * HR360+ Organizational Intelligence Widget
+ * HRcopilot Organizational Intelligence Widget
  * Part of: Phase 1 — Data Layer
  * Org types supported: both
  * Dependencies: orgTypeProfiles.js, benchmarks.js
@@ -604,14 +604,14 @@ export class LeakageCalculator {
     }
 
     const recoveryEstimate = totalLeakage * 0.50
-    const hr360AnnualCost = headcount * 120
+    const HRcopilotAnnualCost = headcount * 120
     // Cap ROI display at 9,999% — beyond that it loses credibility with clients
-    const rawROI = hr360AnnualCost > 0
-      ? ((recoveryEstimate - hr360AnnualCost) / hr360AnnualCost) * 100
+    const rawROI = HRcopilotAnnualCost > 0
+      ? ((recoveryEstimate - HRcopilotAnnualCost) / HRcopilotAnnualCost) * 100
       : 0
     const yearOneROI = Math.min(rawROI, 9999)
-    const breakEvenMonths = recoveryEstimate > 0 ? (hr360AnnualCost / (recoveryEstimate / 12)) : 0
-    const threeYearGain = (recoveryEstimate * 3) - (hr360AnnualCost * 3)
+    const breakEvenMonths = recoveryEstimate > 0 ? (HRcopilotAnnualCost / (recoveryEstimate / 12)) : 0
+    const threeYearGain = (recoveryEstimate * 3) - (HRcopilotAnnualCost * 3)
 
     const additionalBeneficiaries = isNGOOrg && this.p.costPerBeneficiary
       ? Math.round(recoveryEstimate / this.p.costPerBeneficiary)
@@ -633,7 +633,7 @@ export class LeakageCalculator {
       dailyLeakage: totalLeakage / 365,
       hourlyLeakage: totalLeakage / (365 * 24),
       perSecondLeakage: totalLeakage / (365 * 24 * 3600),
-      hr360AnnualCost,
+      HRcopilotAnnualCost,
       isNGO: isNGOOrg,
     }
   }

@@ -1,6 +1,6 @@
 /**
  * services/elevenLabsService.ts
- * Neural voice synthesis for HR360 — powered by ElevenLabs.
+ * Neural voice synthesis for HRcopilot — powered by ElevenLabs.
  *
  * Usage:
  *   import { speak, stopSpeech } from '../services/elevenLabsService';

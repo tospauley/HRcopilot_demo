@@ -1,6 +1,6 @@
 /**
  * src/lib/ai.ts
- * Central AI client initializer for HR360.
+ * Central AI client initializer for HRcopilot.
  *
  * Active services:
  *   • Groq       — primary LLM (llama-3.3-70b-versatile, fast inference)

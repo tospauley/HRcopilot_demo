@@ -1,5 +1,5 @@
 {
-  "name": "hr360-management-platform",
+  "name": "HRcopilot-management-platform",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -12,6 +12,7 @@
     "narration:generate:groq": "PROVIDER=groq node scripts/pregenerate-narration.mjs"
   },
   "dependencies": {
+    "@formspree/react": "^3.0.0",
     "@google/genai": "^1.35.0",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.2.2",

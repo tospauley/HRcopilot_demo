@@ -1,7 +1,7 @@
-﻿// ============================================
+// ============================================
 // FILE: src/demo/admin/AdminShell.tsx
 // PURPOSE: Admin panel shell — sidebar + tab routing.
-//          Completely isolated from the main HR360 app.
+//          Completely isolated from the main HRcopilot app.
 // ============================================
 
 import { useState } from 'react';
@@ -49,7 +49,7 @@ export function AdminShell({ onLogout }: Props) {
               </svg>
             </div>
             <div>
-              <p className="text-[13px] font-black text-white uppercase tracking-tight">HR360</p>
+              <p className="text-[13px] font-black text-white uppercase tracking-tight">HRcopilot</p>
               <p className="text-[9px] text-white/40 font-bold uppercase tracking-[0.2em]">Admin Panel</p>
             </div>
           </div>
@@ -141,8 +141,8 @@ function SystemInfoTab() {
     { label: 'Kokoro Package',    value: 'kokoro-js@1.2.1'                },
     { label: 'React Version',     value: '19.x'                           },
     { label: 'Vite Version',      value: '6.x'                            },
-    { label: 'IndexedDB Cache',   value: 'hr360_audio_cache'              },
-    { label: 'Config Storage',    value: 'hr360_narrator_config'          },
+    { label: 'IndexedDB Cache',   value: 'HRcopilot_audio_cache'              },
+    { label: 'Config Storage',    value: 'HRcopilot_narrator_config'          },
     { label: 'Admin Session TTL', value: '8 hours'                        },
     { label: 'Admin Route',       value: '/#/admin  or  /?admin'          },
   ];

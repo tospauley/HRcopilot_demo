@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { Plus, Shield, Edit3, Lock } from 'lucide-react';
 import { cn } from '../lib/utils';
 

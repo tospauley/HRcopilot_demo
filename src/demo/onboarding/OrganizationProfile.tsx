@@ -1,4 +1,4 @@
-﻿// ============================================
+// ============================================
 // FILE: src/demo/onboarding/OrganizationProfile.tsx
 // PURPOSE: CEO-only step — collect company name, brand color,
 //          logo, industry, headcount. Applies CSS var on submit.
@@ -65,7 +65,7 @@ export function OrganizationProfile({ onDone }: Props) {
       applyBrandColor(form.primaryColor);
       setOrgProfile(form);
       speak(
-        `Great. I've personalised your HR360 experience for ${form.companyName}. Let's choose how you'd like to explore.`,
+        `Great. I've personalised your HRcopilot experience for ${form.companyName}. Let's choose how you'd like to explore.`,
         { scriptId: 'onboarding.org-profile' },
       ).catch(() => {});
     } else {

@@ -1,6 +1,6 @@
 /**
  * OrganizationalIntelligenceWidget.jsx
- * HR360+ Organizational Intelligence Widget
+ * HRcopilot Organizational Intelligence Widget
  * Part of: Phase 3 — Core UI (Root Component)
  * Org types supported: commercial | ngo | both
  * Dependencies: useLeakageState, useAIAnalysis, all UI components

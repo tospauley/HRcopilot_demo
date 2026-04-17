@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, UserPlus, Briefcase, Mail, Phone, MapPin, Check } from 'lucide-react';
+import { Plus, UserPlus, Briefcase, Mail, Phone, MapPin, Check, Users, MessageSquare, GraduationCap, Building2 } from 'lucide-react';
 import GlassCard from '../components/GlassCard';
 import Button from '../components/Button';
 import { 
@@ -83,16 +83,16 @@ const TalentManagement: React.FC = () => {
       {/* Top Stats Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
         {[
-          { label: 'Active Job Openings', val: '14', footer: 'View All ›', icon: '??', color: 'text-[#0047cc]', accent: '#0047cc' },
-          { label: 'New Applicants', val: '68', footer: '+25% vs last 30 days', icon: '??', color: 'text-emerald-500', accent: '#10b981' },
-          { label: 'Interviews Scheduled Today', val: '5', footer: 'Today: 3', icon: '??', color: 'text-rose-500', accent: '#ef4444' },
-          { label: 'Active Onboarding Programs', val: '8', footer: 'Front: 6', icon: '??', color: 'text-amber-500', accent: '#f59e0b' },
-          { label: 'Active Onshore Days', val: '8', footer: 'View List', icon: '???', color: 'text-[#0047cc]', accent: '#0035a0' },
+          { label: 'Active Job Openings',        val: '14', footer: 'View All â†’', Icon: Briefcase,    color: 'text-[#0047cc]',    accent: '#0047cc' },
+          { label: 'New Applicants',             val: '68', footer: '+25% vs last 30 days', Icon: Users, color: 'text-emerald-500', accent: '#10b981' },
+          { label: 'Interviews Scheduled Today', val: '5',  footer: 'Today: 3',  Icon: MessageSquare, color: 'text-rose-500',      accent: '#ef4444' },
+          { label: 'Active Onboarding Programs', val: '8',  footer: 'Front: 6',  Icon: GraduationCap, color: 'text-amber-500',     accent: '#f59e0b' },
+          { label: 'Active Onshore Days',        val: '8',  footer: 'View List', Icon: Building2,     color: 'text-[#0047cc]',    accent: '#0035a0' },
         ].map((stat, i) => (
           <GlassCard key={i} accentColor={stat.accent} className="!p-4 group">
             <div className="flex justify-between items-center mb-3">
               <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest">{stat.label}</p>
-              <span className="text-base opacity-40 group-hover:opacity-100 transition-all">{stat.icon}</span>
+              <stat.Icon size={14} className="opacity-40 group-hover:opacity-100 transition-all" />
             </div>
             <p className={`text-2xl font-black tracking-tighter leading-none ${stat.color}`}>{stat.val}</p>
             <div className="mt-3 pt-2 border-t border-slate-100 dark:border-white/5">
@@ -204,7 +204,7 @@ const TalentManagement: React.FC = () => {
                         <span className="text-[8px] font-black text-slate-500 uppercase">{item.dept}</span>
                       </td>
                       <td className="px-6 py-4">
-                        <span className="text-[10px] font-bold text-slate-300">{item.hires} • 59</span>
+                        <span className="text-[10px] font-bold text-slate-300">{item.hires} ï¿½ 59</span>
                       </td>
                       <td className="px-6 py-4">
                          <div className="w-12 h-4 bg-white/5 rounded-full overflow-hidden relative border border-white/5">
@@ -231,10 +231,10 @@ const TalentManagement: React.FC = () => {
                 </tbody>
               </table>
               <div className="p-4 flex justify-center items-center gap-4 border-t border-white/5 text-[9px] font-black text-slate-500 uppercase tracking-widest">
-                 <span>1 – 3 of 20</span>
+                 <span>1 ï¿½ 3 of 20</span>
                  <div className="flex gap-1">
-                    <button className="w-6 h-6 flex items-center justify-center bg-white/5 rounded-lg">‹</button>
-                    <button className="w-6 h-6 flex items-center justify-center bg-white/5 rounded-lg">›</button>
+                    <button className="w-6 h-6 flex items-center justify-center bg-white/5 rounded-lg">ï¿½</button>
+                    <button className="w-6 h-6 flex items-center justify-center bg-white/5 rounded-lg">ï¿½</button>
                  </div>
               </div>
             </div>
@@ -282,7 +282,7 @@ const TalentManagement: React.FC = () => {
               </ResponsiveContainer>
             </div>
             <div className="flex justify-end mt-2">
-               <button className="text-[9px] font-black text-slate-500 uppercase tracking-widest hover:text-white transition-colors">Date Rengs ›</button>
+               <button className="text-[9px] font-black text-slate-500 uppercase tracking-widest hover:text-white transition-colors">Date Rengs ï¿½</button>
             </div>
           </GlassCard>
 
@@ -308,7 +308,7 @@ const TalentManagement: React.FC = () => {
             </div>
           </GlassCard>
 
-          <GlassCard title="Recently Hired" action={<button className="text-[9px] font-black text-blue-400 uppercase tracking-widest hover:underline">View All ›</button>}>
+          <GlassCard title="Recently Hired" action={<button className="text-[9px] font-black text-blue-400 uppercase tracking-widest hover:underline">View All ï¿½</button>}>
             <div className="space-y-4">
                {DEMO_CANDIDATES.filter(c => c.status === 'OFFER').concat(DEMO_CANDIDATES.filter(c => c.status === 'INTERVIEW')).slice(0, 2).map((hire, i) => (
                  <div key={i} className="flex items-center gap-3 p-2 rounded-xl hover:bg-white/5 transition-colors">

@@ -1,4 +1,4 @@
-﻿// ============================================
+// ============================================
 // FILE: src/demo/voice/NarratorInlinePanel.tsx
 // PURPOSE: Narrator panel — ElevenLabs + Groq only. Kokoro removed.
 // ============================================
@@ -34,7 +34,7 @@ export function NarratorInlinePanel() {
   const [testing,     setTesting]     = useState<NarratorProvider | null>(null);
   const [configTab,   setConfigTab]   = useState<NarratorProvider>('elevenlabs');
   const [mainTab,     setMainTab]     = useState<MainTab>('providers');
-  const [previewText, setPreviewText] = useState('Welcome to HR360. Your workforce intelligence platform is ready.');
+  const [previewText, setPreviewText] = useState('Welcome to HRcopilot. Your workforce intelligence platform is ready.');
 
   // ── Ambience preview (admin-only, one-shot 6s clip) ───────────────────────
   const previewRef  = useRef<HTMLAudioElement | null>(null);

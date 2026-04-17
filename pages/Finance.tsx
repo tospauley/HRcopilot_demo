@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useCurrency } from '../src/context/CurrencyContext';
 import { db } from '../mockDb';
 import { collection, query, onSnapshot, addDoc, serverTimestamp, orderBy, setDoc, doc } from '../mockDb';
 import GlassCard from '../components/GlassCard';
@@ -11,6 +12,7 @@ import {
 import { CHART_OF_ACCOUNTS, MOCK_JOURNALS, FINANCIAL_METRICS, AGING_DATA, CUSTOMERS, MOCK_INVOICES } from '../services/financeData';
 
 const Finance: React.FC = () => {
+  const { symbol, fmt } = useCurrency();
   const [activeTab, setActiveTab] = useState('DASHBOARD');
   const [activeSubTab, setActiveSubTab] = useState('CASH_FLOW');
   const [journalEntries, setJournalEntries] = useState<any[]>(MOCK_JOURNALS);
@@ -334,7 +336,7 @@ const Finance: React.FC = () => {
                   </div>
                   <div className="col-span-4 md:col-span-2 text-right">
                     <p className="text-[9px] font-black uppercase text-slate-400 mb-2">Total</p>
-                    <p className="text-xs font-black italic tracking-tighter">${(line.amount || 0).toLocaleString()}</p>
+                    <p className="text-xs font-black italic tracking-tighter">{fmt(line.amount || 0)}</p>
                   </div>
                 </div>
               ))}
@@ -344,7 +346,7 @@ const Finance: React.FC = () => {
           <div className="pt-10 border-t border-slate-100 dark:border-white/10 flex justify-between items-center">
             <div className="bg-[#0047cc] p-6 rounded-2xl text-white">
                <p className="text-[10px] font-black uppercase tracking-widest opacity-60 mb-1">Total Receivable</p>
-               <p className="text-3xl font-black italic tracking-tighter">${totalInvoiceAmount.toLocaleString()}</p>
+               <p className="text-3xl font-black italic tracking-tighter">{fmt(totalInvoiceAmount)}</p>
             </div>
             <div className="flex gap-4">
               <button 
@@ -399,7 +401,7 @@ const Finance: React.FC = () => {
           },
           { 
             label: 'EBITDA Margin', 
-            value: `$${(FINANCIAL_METRICS.ebitda / 1000).toFixed(1)}K`, 
+            value: fmt(FINANCIAL_METRICS.ebitda, { compact: true }), 
             status: 'HEALTHY', 
             accent: '#0ea5e9',
             trend: '+12.5%',
@@ -407,7 +409,7 @@ const Finance: React.FC = () => {
           },
           { 
             label: 'Net Burn Rate', 
-            value: `$${(FINANCIAL_METRICS.burnRate / 1000).toFixed(1)}K`, 
+            value: fmt(FINANCIAL_METRICS.burnRate, { compact: true }), 
             status: 'OPTIMIZED', 
             accent: '#0ea5e9',
             trend: '-2.4%',
@@ -473,7 +475,7 @@ const Finance: React.FC = () => {
                       axisLine={false} 
                       tickLine={false} 
                       tick={{fontSize: 9, fontWeight: '900', fill: '#94a3b8'}} 
-                      tickFormatter={(v) => `$${v}`}
+                      tickFormatter={(v) => `${symbol}${v}`}
                     />
                     <Tooltip 
                       contentStyle={{ 
@@ -518,7 +520,7 @@ const Finance: React.FC = () => {
             <GlassCard className="!p-5 bg-gradient-to-br from-[#0047cc] to-[#002b7a] border-none text-white relative overflow-hidden group">
                <div className="relative z-10">
                  <p className="text-[10px] font-black uppercase tracking-[0.3em] text-blue-200/60 mb-1">Consolidated Assets</p>
-                 <h4 className="text-3xl font-black italic tracking-tighter mb-3">$4,280,500</h4>
+                 <h4 className="text-3xl font-black italic tracking-tighter mb-3">{fmt(4_280_500)}</h4>
                  <div className="flex items-center gap-3 py-3 border-t border-white/10">
                     <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center">
                        <svg className="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" strokeWidth="3"/></svg>
@@ -531,7 +533,7 @@ const Finance: React.FC = () => {
 
             <GlassCard className="!p-5 bg-white dark:bg-[#0d0a1a] shadow-xl">
                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-1">Total Liabilities</p>
-               <h4 className="text-3xl font-black italic tracking-tighter text-slate-900 dark:text-white mb-3">$1,120,400</h4>
+               <h4 className="text-3xl font-black italic tracking-tighter text-slate-900 dark:text-white mb-3">{fmt(1_120_400)}</h4>
                <div className="flex items-center gap-3 py-3 border-t border-slate-100 dark:border-white/5">
                   <div className="w-7 h-7 rounded-full bg-rose-500/10 flex items-center justify-center">
                      <svg className="w-3.5 h-3.5 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 17h8m0 0v-8m0 8l-8-8-4 4-6-6" strokeWidth="3"/></svg>
@@ -542,7 +544,7 @@ const Finance: React.FC = () => {
 
             <GlassCard className="!p-5 bg-white dark:bg-[#0d0a1a] shadow-xl border-t-[6px] border-[#0ea5e9]">
                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 mb-1">Net Income (QTD)</p>
-               <h4 className="text-3xl font-black italic tracking-tighter text-[#0ea5e9] mb-3">$840,200</h4>
+               <h4 className="text-3xl font-black italic tracking-tighter text-[#0ea5e9] mb-3">{fmt(840_200)}</h4>
                <div className="w-full bg-slate-100 dark:bg-white/5 h-1.5 rounded-full overflow-hidden">
                   <div className="h-full bg-[#0ea5e9] w-[84%] shadow-[0_0_12px_rgba(14,165,233,0.5)]" />
                </div>
@@ -601,11 +603,11 @@ const Finance: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                  <GlassCard className="!p-6 border-l-4 border-emerald-500">
                     <p className="text-[9px] font-black uppercase text-slate-400 mb-1">Operating Income</p>
-                    <p className="text-2xl font-black italic">$310,200</p>
+                    <p className="text-2xl font-black italic">{fmt(310_200)}</p>
                  </GlassCard>
                  <GlassCard className="!p-6 border-l-4 border-rose-500">
                     <p className="text-[9px] font-black uppercase text-slate-400 mb-1">EBITDA Loss Calc</p>
-                    <p className="text-2xl font-black italic">-$12,400</p>
+                    <p className="text-2xl font-black italic">-{fmt(12_400)}</p>
                  </GlassCard>
               </div>
            </div>
@@ -622,7 +624,7 @@ const Finance: React.FC = () => {
                  </div>
                  <div className="text-right">
                     <p className="text-[10px] font-black text-[#0047cc] uppercase tracking-widest">Total Outstanding</p>
-                    <p className="text-3xl font-black italic">$840,200.00</p>
+                    <p className="text-3xl font-black italic">{fmt(840_200, { decimals: 2 })}</p>
                  </div>
               </div>
 
@@ -637,7 +639,7 @@ const Finance: React.FC = () => {
                        <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest overflow-hidden">
                           <span className="text-slate-900 dark:text-white shrink-0">{row.label}</span>
                           <span className="text-slate-400 truncate mx-4 opacity-20">....................................................................................................................................</span>
-                          <span className="shrink-0">${row.value.toLocaleString()} ({row.pct}%)</span>
+                          <span className="shrink-0">{fmt(row.value)} ({row.pct}%)</span>
                        </div>
                        <div className="h-3 w-full bg-slate-50 dark:bg-white/5 rounded-full overflow-hidden flex">
                           <div 
@@ -722,7 +724,7 @@ const Finance: React.FC = () => {
           <div className="flex justify-between items-center mb-8">
             <div>
               <h3 className="text-lg font-black uppercase tracking-widest italic">Journal Entries</h3>
-              <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-1">{journalEntries.length} entries · Double-Entry Verified</p>
+              <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-1">{journalEntries.length} entries ï¿½ Double-Entry Verified</p>
             </div>
             <button
               onClick={() => setIsEntryModalOpen(true)}
@@ -774,7 +776,7 @@ const Finance: React.FC = () => {
                           <p className="text-[10px] font-black uppercase tracking-tight group-hover:text-[#0047cc] transition-colors">{entry.description}</p>
                           {entry.lines && (
                             <p className="text-[8px] text-slate-400 mt-0.5">
-                              {entry.lines.map((l: any) => l.accountCode).join(' · ')}
+                              {entry.lines.map((l: any) => l.accountCode).join(' ï¿½ ')}
                             </p>
                           )}
                         </div>
@@ -785,12 +787,12 @@ const Finance: React.FC = () => {
                     </td>
                     <td className="py-4 pr-4 text-right">
                       <span className="text-[11px] font-black text-emerald-600 font-mono">
-                        ${entry.totalDebit?.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                        {symbol}{entry.totalDebit?.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                       </span>
                     </td>
                     <td className="py-4 pr-4 text-right">
                       <span className="text-[11px] font-black text-rose-500 font-mono">
-                        ${entry.totalCredit?.toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                        {symbol}{entry.totalCredit?.toLocaleString(undefined, { minimumFractionDigits: 2 })}
                       </span>
                     </td>
                     <td className="py-4 text-center">
@@ -809,10 +811,10 @@ const Finance: React.FC = () => {
                   <tr className="border-t-2 border-slate-200 dark:border-white/10">
                     <td colSpan={4} className="pt-4 text-[9px] font-black uppercase tracking-widest text-slate-400">Period Totals</td>
                     <td className="pt-4 text-right text-[11px] font-black text-emerald-600 font-mono">
-                      ${journalEntries.reduce((s, e) => s + (e.totalDebit || 0), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                      {symbol}{journalEntries.reduce((s, e) => s + (e.totalDebit || 0), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                     </td>
                     <td className="pt-4 text-right text-[11px] font-black text-rose-500 font-mono">
-                      ${journalEntries.reduce((s, e) => s + (e.totalCredit || 0), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                      {symbol}{journalEntries.reduce((s, e) => s + (e.totalCredit || 0), 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                     </td>
                     <td className="pt-4 text-center">
                       <span className="text-[8px] font-black text-emerald-500 uppercase">? Balanced</span>
@@ -827,15 +829,15 @@ const Finance: React.FC = () => {
 
       {activeSubTab === 'CHART_OF_ACCOUNTS' && (() => {
         const CLASS_META: Record<string, { label: string; range: string; color: string; bg: string; icon: string }> = {
-          Asset:     { label: 'Assets',     range: '1000–1999', color: 'text-emerald-500', bg: 'bg-emerald-500/10', icon: '??' },
-          Liability: { label: 'Liabilities', range: '2000–2999', color: 'text-rose-500',    bg: 'bg-rose-500/10',    icon: '??' },
-          Equity:    { label: 'Equity',      range: '3000–3999', color: 'text-violet-500',  bg: 'bg-violet-500/10',  icon: '??' },
-          Revenue:   { label: 'Revenue',     range: '4000–4999', color: 'text-[#0047cc]',   bg: 'bg-[#0047cc]/10',   icon: '??' },
-          Expense:   { label: 'Expenses',    range: '5000–8999', color: 'text-amber-500',   bg: 'bg-amber-500/10',   icon: '??' },
+          Asset:     { label: 'Assets',     range: '1000ï¿½1999', color: 'text-emerald-500', bg: 'bg-emerald-500/10', icon: '??' },
+          Liability: { label: 'Liabilities', range: '2000ï¿½2999', color: 'text-rose-500',    bg: 'bg-rose-500/10',    icon: '??' },
+          Equity:    { label: 'Equity',      range: '3000ï¿½3999', color: 'text-violet-500',  bg: 'bg-violet-500/10',  icon: '??' },
+          Revenue:   { label: 'Revenue',     range: '4000ï¿½4999', color: 'text-[#0047cc]',   bg: 'bg-[#0047cc]/10',   icon: '??' },
+          Expense:   { label: 'Expenses',    range: '5000ï¿½8999', color: 'text-amber-500',   bg: 'bg-amber-500/10',   icon: '??' },
         };
         const CLASSES = ['Asset','Liability','Equity','Revenue','Expense'] as const;
 
-        const fmt = (n: number) => `$${Math.abs(n).toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
+        const fmtAmt = (n: number) => `${symbol}${Math.abs(n).toLocaleString(undefined, { minimumFractionDigits: 2 })}`;
 
         return (
         <div className="space-y-6">
@@ -861,8 +863,8 @@ const Finance: React.FC = () => {
                 <GlassCard key={cls} className="!p-4">
                   <div className={`w-8 h-8 rounded-xl ${meta.bg} flex items-center justify-center text-base mb-3`}>{meta.icon}</div>
                   <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-0.5">{meta.label}</p>
-                  <p className={`text-lg font-black italic tracking-tighter ${meta.color}`}>{fmt(total)}</p>
-                  <p className="text-[8px] text-slate-400 mt-1">{count} accounts · {meta.range}</p>
+                  <p className={`text-lg font-black italic tracking-tighter ${meta.color}`}>{fmtAmt(total)}</p>
+                  <p className="text-[8px] text-slate-400 mt-1">{count} accounts ï¿½ {meta.range}</p>
                 </GlassCard>
               );
             })}
@@ -885,15 +887,15 @@ const Finance: React.FC = () => {
                     <span className="text-xl">{meta.icon}</span>
                     <div>
                       <h4 className={`text-xs font-black uppercase tracking-widest ${meta.color}`}>
-                        Class {cls === 'Asset' ? '1' : cls === 'Liability' ? '2' : cls === 'Equity' ? '3' : cls === 'Revenue' ? '4' : '5'} — {meta.label}
+                        Class {cls === 'Asset' ? '1' : cls === 'Liability' ? '2' : cls === 'Equity' ? '3' : cls === 'Revenue' ? '4' : '5'} ï¿½ {meta.label}
                       </h4>
-                      <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Account Range {meta.range} · {clsAccts.length} accounts</p>
+                      <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Account Range {meta.range} ï¿½ {clsAccts.length} accounts</p>
                     </div>
                   </div>
                   <div className="text-right">
                     <p className="text-[9px] text-slate-400 uppercase tracking-widest font-black">Class Total</p>
                     <p className={`text-base font-black italic tracking-tighter ${meta.color}`}>
-                      {fmt(clsAccts.reduce((s, a) => s + (a.balance || 0), 0))}
+                      {fmtAmt(clsAccts.reduce((s, a) => s + (a.balance || 0), 0))}
                     </p>
                   </div>
                 </div>
@@ -950,7 +952,7 @@ const Finance: React.FC = () => {
                                   <td className="px-4 py-3 text-center">
                                     {acct.isReconcilable
                                       ? <span className="text-[8px] font-black text-emerald-500 uppercase flex items-center justify-center gap-1">? Yes</span>
-                                      : <span className="text-[8px] font-black text-slate-300 dark:text-slate-600 uppercase">—</span>
+                                      : <span className="text-[8px] font-black text-slate-300 dark:text-slate-600 uppercase">ï¿½</span>
                                     }
                                   </td>
                                   <td className="px-6 py-3 text-right">
@@ -958,7 +960,7 @@ const Finance: React.FC = () => {
                                       acct.balance === 0 ? 'text-slate-400' :
                                       isContra ? 'text-rose-500' : meta.color
                                     }`}>
-                                      {acct.balance === 0 ? '—' : fmt(acct.balance)}
+                                      {acct.balance === 0 ? 'â€”' : fmtAmt(acct.balance)}
                                     </span>
                                   </td>
                                 </tr>
@@ -967,11 +969,11 @@ const Finance: React.FC = () => {
                             {/* Sub-type subtotal */}
                             <tr className="bg-slate-50 dark:bg-white/[0.03] border-t border-slate-200 dark:border-white/10">
                               <td colSpan={5} className="px-6 py-2">
-                                <span className="text-[8px] font-black uppercase tracking-widest text-slate-400">Subtotal — {sub}</span>
+                                <span className="text-[8px] font-black uppercase tracking-widest text-slate-400">Subtotal ï¿½ {sub}</span>
                               </td>
                               <td className="px-6 py-2 text-right">
                                 <span className={`text-[10px] font-black italic ${meta.color}`}>
-                                  {fmt(subAccts.reduce((s, a) => s + (a.balance || 0), 0))}
+                                  {fmtAmt(subAccts.reduce((s, a) => s + (a.balance || 0), 0))}
                                 </span>
                               </td>
                             </tr>
@@ -1003,11 +1005,11 @@ const Finance: React.FC = () => {
               <div className="flex gap-8 border-l border-white/10 dark:border-slate-200 pl-8">
                  <div className="text-right">
                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Debits</p>
-                    <p className="text-2xl font-black italic text-white dark:text-slate-900 tracking-tighter">${accounts.filter(a => a.balance > 0).reduce((sum, a) => sum + a.balance, 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
+                    <p className="text-2xl font-black italic text-white dark:text-slate-900 tracking-tighter">{symbol}{accounts.filter(a => a.balance > 0).reduce((sum, a) => sum + a.balance, 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
                  </div>
                  <div className="text-right">
                     <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Total Credits</p>
-                    <p className="text-2xl font-black italic text-rose-500 tracking-tighter">${Math.abs(accounts.filter(a => a.balance < 0).reduce((sum, a) => sum + a.balance, 0)).toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
+                    <p className="text-2xl font-black italic text-rose-500 tracking-tighter">{symbol}{Math.abs(accounts.filter(a => a.balance < 0).reduce((sum, a) => sum + a.balance, 0)).toLocaleString(undefined, { minimumFractionDigits: 2 })}</p>
                  </div>
               </div>
            </div>
@@ -1016,7 +1018,7 @@ const Finance: React.FC = () => {
              <div className="p-5 sm:p-10 border-b border-slate-100 dark:border-white/5 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 bg-slate-50/50 dark:bg-white/[0.01]">
                <div>
                   <h3 className="text-lg font-black uppercase tracking-widest italic">Ledger Verification Matrix</h3>
-                  <p className="text-[9px] text-slate-500 font-bold uppercase tracking-[0.2em] mt-1">Fiscal Year 2024 • Q1 Finalization</p>
+                  <p className="text-[9px] text-slate-500 font-bold uppercase tracking-[0.2em] mt-1">Fiscal Year 2024 ï¿½ Q1 Finalization</p>
                </div>
                <div className="flex gap-2">
                   <button className="px-4 py-2 bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl text-[9px] font-black uppercase tracking-widest text-slate-500 hover:text-slate-900 transition-all">Generate PDF Package</button>
@@ -1047,10 +1049,10 @@ const Finance: React.FC = () => {
                           </div>
                        </td>
                        <td className="px-10 py-6 text-right font-black italic text-xs text-slate-900 dark:text-white">
-                         {account.balance > 0 ? account.balance.toLocaleString(undefined, { minimumFractionDigits: 2 }) : <span className="opacity-10 text-slate-400">—</span>}
+                         {account.balance > 0 ? account.balance.toLocaleString(undefined, { minimumFractionDigits: 2 }) : <span className="opacity-10 text-slate-400">ï¿½</span>}
                        </td>
                        <td className="px-10 py-6 text-right font-black italic text-xs text-rose-500">
-                         {account.balance < 0 ? Math.abs(account.balance).toLocaleString(undefined, { minimumFractionDigits: 2 }) : <span className="opacity-10 text-slate-400">—</span>}
+                         {account.balance < 0 ? Math.abs(account.balance).toLocaleString(undefined, { minimumFractionDigits: 2 }) : <span className="opacity-10 text-slate-400">ï¿½</span>}
                        </td>
                      </tr>
                    ))}
@@ -1059,10 +1061,10 @@ const Finance: React.FC = () => {
                    <tr className="bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-black">
                       <td colSpan={2} className="px-10 py-10 uppercase tracking-[0.3em] text-[12px] italic">Grand Consolidated Equilibrium</td>
                       <td className="px-10 py-10 text-right italic text-3xl tracking-tighter">
-                         ${accounts.filter(a => a.balance > 0).reduce((sum, a) => sum + a.balance, 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                         {symbol}{accounts.filter(a => a.balance > 0).reduce((sum, a) => sum + a.balance, 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                       </td>
                       <td className="px-10 py-10 text-right italic text-3xl tracking-tighter">
-                         ${Math.abs(accounts.filter(a => a.balance < 0).reduce((sum, a) => sum + a.balance, 0)).toLocaleString(undefined, { minimumFractionDigits: 2 })}
+                         {symbol}{Math.abs(accounts.filter(a => a.balance < 0).reduce((sum, a) => sum + a.balance, 0)).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                       </td>
                    </tr>
                  </tfoot>
@@ -1078,7 +1080,7 @@ const Finance: React.FC = () => {
                  <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-20 -mt-20 blur-3xl group-hover:scale-110 transition-transform duration-1000" />
                  <div className="relative z-10">
                     <p className="text-[10px] font-black uppercase tracking-[0.3em] opacity-60 mb-4 text-blue-100">Consolidated Assets Liquidity</p>
-                    <h4 className="text-4xl font-black italic tracking-tighter mb-8">$4,280,500.00</h4>
+                    <h4 className="text-4xl font-black italic tracking-tighter mb-8">{fmt(4_280_500, { decimals: 2 })}</h4>
                     <div className="flex items-center gap-4 pb-4 border-b border-white/10">
                        <div className="h-2 flex-1 bg-white/10 rounded-full overflow-hidden">
                           <div className="h-full bg-emerald-400 w-[65%] shadow-[0_0_12px_rgba(52,211,153,0.5)]" />
@@ -1193,7 +1195,7 @@ const Finance: React.FC = () => {
               <h3 className="text-lg font-black uppercase tracking-tighter italic text-slate-900 dark:text-white">Customer Invoices</h3>
               <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.2em] mt-2 flex items-center gap-2">
                  <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-                 Accounts Receivable Registry • {invoices.length} Active Invoices
+                 Accounts Receivable Registry ï¿½ {invoices.length} Active Invoices
               </p>
             </div>
             <button 
@@ -1370,7 +1372,7 @@ const Finance: React.FC = () => {
               <h3 className="text-lg font-black uppercase tracking-tighter italic text-slate-900 dark:text-white">Vendor Billing Registry</h3>
               <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.2em] mt-2 flex items-center gap-2">
                  <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse" />
-                 Accounts Payable Ledger • Institutional Commitments
+                 Accounts Payable Ledger ï¿½ Institutional Commitments
               </p>
             </div>
             <button className="px-6 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-2xl hover:scale-105 transition-all flex items-center gap-3">
@@ -1475,7 +1477,7 @@ const Finance: React.FC = () => {
                           <h3 className="text-xl font-black uppercase tracking-tighter italic">Reconciliation Workbench</h3>
                           <p className="text-[10px] text-slate-500 font-black uppercase tracking-tighter mt-1 flex items-center gap-2">
                              <span className="w-2 h-2 rounded-full bg-emerald-500 group-hover:animate-ping" />
-                             Direct Treasury API Sync • Chase-04-A1
+                             Direct Treasury API Sync ï¿½ Chase-04-A1
                           </p>
                        </div>
                        <div className="flex gap-2">
@@ -1893,7 +1895,7 @@ const Finance: React.FC = () => {
             <h3 className="text-lg font-black uppercase tracking-tighter italic text-slate-900 dark:text-white">Fixed Asset Registry</h3>
             <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.2em] mt-2 flex items-center gap-2">
                <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
-               Institutional Capital Assets • Depreciable Registry
+               Institutional Capital Assets ï¿½ Depreciable Registry
             </p>
           </div>
           <button className="px-6 py-3 bg-[var(--brand-primary)] text-white rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-2xl hover:scale-105 transition-all flex items-center gap-3">
@@ -2021,7 +2023,7 @@ const Finance: React.FC = () => {
               <h3 className="text-xl font-black uppercase tracking-tighter italic">Budget vs Actual Velocity</h3>
               <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.2em] mt-1 flex items-center gap-2">
                  <span className="w-2 h-2 rounded-full bg-[#0047cc] animate-pulse" />
-                 Fiscal Period 2026 • Real-time Spend Index
+                 Fiscal Period 2026 ï¿½ Real-time Spend Index
               </p>
             </div>
             <div className="flex gap-4">
@@ -2101,7 +2103,7 @@ const Finance: React.FC = () => {
              <h3 className="text-xl font-black uppercase tracking-tighter italic text-slate-900 dark:text-white underline decoration-4 decoration-[#0047cc]/10 underline-offset-8">Institutional Audit Registry</h3>
              <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.2em] mt-4 flex items-center gap-3">
                 <span className="w-2.5 h-2.5 rounded-full bg-[#0047cc] animate-pulse" />
-                Security Access Logs • Immutable Hash Chains Active
+                Security Access Logs ï¿½ Immutable Hash Chains Active
              </p>
           </div>
           <div className="flex gap-3">
@@ -2121,8 +2123,8 @@ const Finance: React.FC = () => {
             </thead>
             <tbody className="divide-y divide-slate-50 dark:divide-white/5">
               {[
-                { time: '2026-04-03 10:45', user: 'admin@hr360.com', action: 'POST_JOURNAL', resource: 'JE-1024', ip: '192.168.1.45', alert: false },
-                { time: '2026-04-03 09:12', user: 'finance_mgr@hr360.com', action: 'VOID_INVOICE', resource: 'INV-002', ip: '192.168.1.12', alert: true },
+                { time: '2026-04-03 10:45', user: 'admin@HRcopilot.com', action: 'POST_JOURNAL', resource: 'JE-1024', ip: '192.168.1.45', alert: false },
+                { time: '2026-04-03 09:12', user: 'finance_mgr@HRcopilot.com', action: 'VOID_INVOICE', resource: 'INV-002', ip: '192.168.1.12', alert: true },
                 { time: '2026-04-02 16:30', user: 'system_core', action: 'AUTO_RECONCILE', resource: 'BANK_CHASE_01', ip: 'Internal-Node', alert: false },
               ].map((log, i) => (
                 <tr key={i} className="hover:bg-white/[0.04] transition-all group cursor-pointer group/row">

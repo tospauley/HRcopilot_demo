@@ -1,6 +1,6 @@
 /**
  * LeakageClock.jsx
- * HR360+ Organizational Intelligence Widget
+ * HRcopilot Organizational Intelligence Widget
  * Part of: Phase 3 — Core UI
  * Org types supported: both
  * Dependencies: hooks/useLiveClock.js, hooks/useCurrencyFormat.js

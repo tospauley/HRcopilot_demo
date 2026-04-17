@@ -1,4 +1,4 @@
-﻿// ============================================
+// ============================================
 // FILE: src/demo/components/ProgressIndicator.tsx
 // PURPOSE: Horizontal step-dot progress bar for the guided demo.
 //   Shows completed / current / upcoming steps.

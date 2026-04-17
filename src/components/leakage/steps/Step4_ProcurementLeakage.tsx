@@ -1,6 +1,6 @@
 /**
  * Step4_ProcurementLeakage.jsx
- * HR360+ Organizational Intelligence Widget
+ * HRcopilot Organizational Intelligence Widget
  * Part of: Phase 4 — Domain Sections
  * Org types supported: both
  * Dependencies: StepWizard

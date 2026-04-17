@@ -3,6 +3,7 @@ import { db } from '../mockDb';
 import { collection, query, onSnapshot, addDoc, serverTimestamp, orderBy, where } from '../mockDb';
 import GlassCard from '../components/GlassCard';
 import { ICONS } from '../constants';
+import { Users, FolderOpen, Scale, Settings } from 'lucide-react';
 import { extractDocumentMetadata } from '../services/geminiService';
 
 // Import new components
@@ -65,10 +66,10 @@ const Cabinet: React.FC = () => {
   };
 
   const cabinets = [
-    { id: 'HR', label: 'Human Resources', icon: '??' },
-    { id: 'FINANCE', label: 'Finance & Tax', icon: '??' },
-    { id: 'LEGAL', label: 'Legal & Compliance', icon: '??' },
-    { id: 'OPS', label: 'Operations', icon: '??' },
+    { id: 'HR',      label: 'Human Resources',    Icon: Users },
+    { id: 'FINANCE', label: 'Finance & Tax',       Icon: FolderOpen },
+    { id: 'LEGAL',   label: 'Legal & Compliance',  Icon: Scale },
+    { id: 'OPS',     label: 'Operations',          Icon: Settings },
   ];
 
   const tabs = [
@@ -125,7 +126,7 @@ const Cabinet: React.FC = () => {
                 : 'bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-500 hover:bg-slate-50 dark:hover:bg-white/[0.08]'
               }`}
             >
-              <span className="text-xl">{cab.icon}</span>
+              <cab.Icon size={18} />
               <span className="text-xs font-black uppercase tracking-tight">{cab.label}</span>
             </button>
           ))}

@@ -4,7 +4,7 @@
 //
 //   Keys are loaded from TWO sources (merged, deduplicated):
 //     1. .env.local  — VITE_GROQ_API_KEY, VITE_GROQ_API_KEY_2 … _10
-//     2. localStorage — 'hr360_groq_keys' (set via Admin Panel UI)
+//     2. localStorage — 'HRcopilot_groq_keys' (set via Admin Panel UI)
 //
 //   Admin panel keys take precedence and can be updated at runtime
 //   without restarting the dev server.
@@ -18,7 +18,7 @@
 // ============================================
 
 const COOLDOWN_MS      = 60_000;          // 1 min — Groq rate-limit window
-const STORAGE_KEY      = 'hr360_groq_keys'; // localStorage key for admin-managed keys
+const STORAGE_KEY      = 'HRcopilot_groq_keys'; // localStorage key for admin-managed keys
 
 // ── Load keys ─────────────────────────────────────────────────────────────────
 

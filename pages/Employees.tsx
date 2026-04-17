@@ -1,4 +1,4 @@
-﻿
+
 import React, { useState } from 'react';
 import GlassCard from '../components/GlassCard';
 import Avatar from '../components/Avatar';
@@ -133,7 +133,7 @@ const Employees: React.FC = () => {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 px-4">
           <div>
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight uppercase italic">Provision <span className="text-[#eab308]">Identity</span></h2>
-            <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.2em] mt-1">HR360 Human Capital Onboarding</p>
+            <p className="text-[10px] text-slate-500 font-black uppercase tracking-[0.2em] mt-1">HRcopilot Human Capital Onboarding</p>
           </div>
           <button onClick={() => setIsAddingEmployee(false)} className="px-4 py-2 bg-slate-50 dark:bg-white/5 hover:bg-slate-100 dark:hover:bg-white/10 text-slate-400 font-bold text-[10px] uppercase tracking-widest rounded-xl transition-all">Cancel Onboarding</button>
         </div>

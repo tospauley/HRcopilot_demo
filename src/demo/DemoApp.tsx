@@ -1,4 +1,4 @@
-﻿// ============================================
+// ============================================
 // FILE: src/demo/DemoApp.tsx
 // PURPOSE: Root demo router. Manages the full visitor flow:
 //   Landing → WelcomeZoom → RoleSelection → OrgProfile (CEO)
@@ -8,7 +8,7 @@
 //   No login required — zero friction for demo visitors.
 // ============================================
 
-import React, { Suspense, lazy, useCallback } from 'react';
+import React, { Suspense, lazy, useCallback, useState } from 'react';
 import { HashRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { ErrorBoundary } from 'react-error-boundary';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -73,18 +73,17 @@ function LandingRoute() {
   const { setStep } = useOnboardingStore();
 
   const handleExploreDemo = useCallback(() => {
-    // Create AudioContext synchronously inside the click handler.
-    // This is the ONLY moment Chrome allows it without a gesture warning.
-    // primeAudioContext stores it in the narrationEngine module scope
-    // so it survives the React navigation that follows.
     primeAudioContext();
-
     setStep('welcome-zoom');
     navigate('/welcome');
   }, [navigate, setStep]);
 
-  // Landing expects brand + theme props — provide sensible defaults
-  const brand = { companyName: 'HR360', logoUrl: '', primaryColor: '#0047cc' };
+  const handleViewApp = useCallback((role: 'executive' | 'employee') => {
+    sessionStorage.setItem('hr360_guest_role', role);
+    window.location.reload(); // index.tsx will now load App.tsx
+  }, []);
+
+  const brand = { companyName: 'HRcopilot', logoUrl: '', primaryColor: '#0047cc' };
 
   return (
     <Suspense fallback={<PageLoader />}>
@@ -93,7 +92,8 @@ function LandingRoute() {
         theme="light"
         onToggleTheme={() => {}}
         onGetStarted={handleExploreDemo}
-        onLogin={handleExploreDemo}   // Login button also enters demo flow
+        onLogin={handleExploreDemo}
+        onViewApp={handleViewApp}
       />
     </Suspense>
   );
@@ -171,12 +171,12 @@ function SmartRedirect() {
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="/"           element={<LandingRoute />} />
-      <Route path="/welcome"    element={<WelcomeRoute />} />
-      <Route path="/role"       element={<RoleRoute />} />
-      <Route path="/mode"       element={<ModeRoute />} />
-      <Route path="/app/*"      element={<AppRoute />} />
-      <Route path="*"           element={<SmartRedirect />} />
+      <Route path="/"        element={<LandingRoute />} />
+      <Route path="/welcome" element={<WelcomeRoute />} />
+      <Route path="/role"    element={<RoleRoute />} />
+      <Route path="/mode"    element={<ModeRoute />} />
+      <Route path="/app/*"   element={<AppRoute />} />
+      <Route path="*"        element={<SmartRedirect />} />
     </Routes>
   );
 }

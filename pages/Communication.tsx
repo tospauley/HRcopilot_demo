@@ -1,4 +1,4 @@
-﻿
+
 import React, { useState } from 'react';
 import ChatInterface from '../components/ChatInterface';
 import ChatAdminDashboard from '../components/ChatAdminDashboard';
@@ -19,7 +19,7 @@ const Communication: React.FC = () => {
              <div className="w-9 h-9 gradient-bg rounded-lg flex items-center justify-center shadow-lg shadow-[#e0f2fe]0/30">
                <span className="font-bold text-lg text-white italic">H</span>
              </div>
-             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight uppercase italic">HR360 <span className="text-[#0047cc]">Chat</span></h2>
+             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight uppercase italic">HRcopilot <span className="text-[#0047cc]">Chat</span></h2>
            </div>
         </div>
 

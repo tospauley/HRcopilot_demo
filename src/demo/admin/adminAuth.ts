@@ -4,14 +4,14 @@
 //          Credentials stored in localStorage, changeable from panel.
 // ============================================
 
-const STORAGE_KEY = 'hr360_admin_session';
-const CREDS_KEY   = 'hr360_admin_creds';
+const STORAGE_KEY = 'HRcopilot_admin_session';
+const CREDS_KEY   = 'HRcopilot_admin_creds';
 
 const DEFAULT_CREDS = {
   username: 'admin',
-  // SHA-256 of 'hr360admin' — never store plaintext
+  // SHA-256 of 'HRcopilotadmin' — never store plaintext
   // For demo purposes we store a simple hash string
-  password: 'hr360admin',
+  password: 'HRcopilotadmin',
 };
 
 export interface AdminSession {

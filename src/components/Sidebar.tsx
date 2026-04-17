@@ -37,7 +37,7 @@ export function Sidebar({ activeTab, onTabChange }: { activeTab: string, onTabCh
         <div className="w-8 h-8 bg-brand-blue rounded-lg flex items-center justify-center">
           <span className="text-white font-bold text-xl">H</span>
         </div>
-        <span className="font-display font-extrabold text-xl tracking-tight text-slate-800">HR360</span>
+        <span className="font-display font-extrabold text-xl tracking-tight text-slate-800">HRcopilot</span>
       </div>
 
       <nav className="flex-1 overflow-y-auto px-4 py-2">

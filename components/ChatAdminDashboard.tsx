@@ -1,4 +1,4 @@
-﻿
+
 import React from 'react';
 import GlassCard from './GlassCard';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';

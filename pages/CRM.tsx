@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import { useCurrency } from '../src/context/CurrencyContext';
 import { db } from '../mockDb';
 import { collection, query, onSnapshot, addDoc, serverTimestamp, orderBy, updateDoc, doc } from '../mockDb';
 import GlassCard from '../components/GlassCard';
 import { ICONS } from '../constants';
+import { Trophy, Send, Phone, UserPlus, TrendingUp, ArrowUp } from 'lucide-react';
 import { scoreDeal } from '../services/geminiService';
 import { DEMO_CRM_DEALS, DEMO_CRM_CONTACTS, DEMO_DASHBOARD_KPIS } from '../demoData';
 
 const CRM: React.FC = () => {
+  const { symbol, fmt } = useCurrency();
   const [activeTab, setActiveTab] = useState('SALES_INTELLIGENCE');
   const [activeSubTab, setActiveSubTab] = useState('SALES_PIPELINE');
   const [deals, setDeals] = useState<any[]>(DEMO_CRM_DEALS);
@@ -81,23 +84,23 @@ const CRM: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <GlassCard className="p-6 bg-[#e0f2fe]0/5 border-[#e0f2fe]0/20">
           <p className="text-[10px] font-black text-[#e0f2fe]0 uppercase tracking-widest mb-1">Pipeline Value</p>
-          <h4 className="text-2xl font-black italic">?{(DEMO_DASHBOARD_KPIS.pipelineValue / 1000000).toFixed(0)}M</h4>
-          <p className="text-[9px] text-slate-500 font-bold uppercase mt-2">? 12% vs last month</p>
+          <h4 className="text-2xl font-black italic">{fmt(DEMO_DASHBOARD_KPIS.pipelineValue, { compact: true })}</h4>
+          <p className="text-[9px] text-slate-500 font-bold uppercase mt-2"><TrendingUp size={10} className="inline mr-1" />12% vs last month</p>
         </GlassCard>
         <GlassCard className="p-6 bg-emerald-500/5 border-emerald-500/20">
           <p className="text-[10px] font-black text-emerald-500 uppercase tracking-widest mb-1">Closed Won (QTD)</p>
-          <h4 className="text-2xl font-black italic">?{(DEMO_DASHBOARD_KPIS.revenueYTD / 1000000).toFixed(0)}M</h4>
-          <p className="text-[9px] text-slate-500 font-bold uppercase mt-2">Target: ?500M</p>
+          <h4 className="text-2xl font-black italic">{fmt(DEMO_DASHBOARD_KPIS.revenueYTD, { compact: true })}</h4>
+          <p className="text-[9px] text-slate-500 font-bold uppercase mt-2">Target: {fmt(500_000_000, { compact: true })}</p>
         </GlassCard>
         <GlassCard className="p-6 bg-blue-500/5 border-blue-500/20">
           <p className="text-[10px] font-black text-blue-500 uppercase tracking-widest mb-1">Avg. Deal Size</p>
-          <h4 className="text-2xl font-black italic">?{Math.round(DEMO_CRM_DEALS.reduce((s, d) => s + d.value, 0) / DEMO_CRM_DEALS.length / 1000000).toFixed(0)}M</h4>
+          <h4 className="text-2xl font-black italic">{fmt(Math.round(DEMO_CRM_DEALS.reduce((s, d) => s + d.value, 0) / DEMO_CRM_DEALS.length), { compact: true })}</h4>
           <p className="text-[9px] text-slate-500 font-bold uppercase mt-2">Stable trend</p>
         </GlassCard>
         <GlassCard className="p-6 bg-amber-500/5 border-amber-500/20">
           <p className="text-[10px] font-black text-amber-500 uppercase tracking-widest mb-1">Win Rate</p>
           <h4 className="text-2xl font-black italic">{Math.round((DEMO_CRM_DEALS.filter(d => d.status === 'WON').length / DEMO_CRM_DEALS.length) * 100)}%</h4>
-          <p className="text-[9px] text-slate-500 font-bold uppercase mt-2">? 4% improvement</p>
+          <p className="text-[9px] text-slate-500 font-bold uppercase mt-2"><ArrowUp size={10} className="inline mr-1" />4% improvement</p>
         </GlassCard>
       </div>
 
@@ -112,11 +115,11 @@ const CRM: React.FC = () => {
           </div>
           <div className="space-y-6">
             {[
-              { stage: 'Prospecting', count: 45, value: '$1.2M', color: 'bg-slate-400' },
-              { stage: 'Qualification', count: 28, value: '$850k', color: 'bg-blue-400' },
-              { stage: 'Proposal', count: 15, value: '$600k', color: 'bg-[#0ea5e9]' },
-              { stage: 'Negotiation', count: 8, value: '$450k', color: 'bg-amber-400' },
-              { stage: 'Closing', count: 4, value: '$220k', color: 'bg-emerald-400' },
+              { stage: 'Prospecting', count: 45, value: `${symbol}1.2M`, color: 'bg-slate-400' },
+              { stage: 'Qualification', count: 28, value: `${symbol}850k`, color: 'bg-blue-400' },
+              { stage: 'Proposal', count: 15, value: `${symbol}600k`, color: 'bg-[#0ea5e9]' },
+              { stage: 'Negotiation', count: 8, value: `${symbol}450k`, color: 'bg-amber-400' },
+              { stage: 'Closing', count: 4, value: `${symbol}220k`, color: 'bg-emerald-400' },
             ].map((item, i) => (
               <div key={i} className="relative">
                 <div className="flex justify-between items-center mb-2 text-[10px] font-black uppercase tracking-widest">
@@ -138,13 +141,13 @@ const CRM: React.FC = () => {
           <h3 className="text-lg font-black uppercase tracking-widest italic mb-6">Activity Feed</h3>
           <div className="space-y-6">
             {[
-              { user: 'Sarah J.', action: 'Closed Won', target: 'Acme Corp', time: '10m ago', icon: '??' },
-              { user: 'Mike R.', action: 'Sent Proposal', target: 'Globex', time: '1h ago', icon: '??' },
-              { user: 'Emma W.', action: 'Logged Call', target: 'Stark Ind', time: '3h ago', icon: '??' },
-              { user: 'System', action: 'Lead Assigned', target: 'Wayne Ent', time: '5h ago', icon: '??' },
+              { user: 'Sarah J.', action: 'Closed Won',    target: 'Acme Corp', time: '10m ago', Icon: Trophy },
+              { user: 'Mike R.', action: 'Sent Proposal',  target: 'Globex',    time: '1h ago',  Icon: Send },
+              { user: 'Emma W.', action: 'Logged Call',    target: 'Stark Ind', time: '3h ago',  Icon: Phone },
+              { user: 'System',  action: 'Lead Assigned',  target: 'Wayne Ent', time: '5h ago',  Icon: UserPlus },
             ].map((act, i) => (
               <div key={i} className="flex gap-4">
-                <div className="w-8 h-8 rounded-xl bg-slate-50 dark:bg-white/5 flex items-center justify-center text-sm">{act.icon}</div>
+                <div className="w-8 h-8 rounded-xl bg-slate-50 dark:bg-white/5 flex items-center justify-center"><act.Icon size={14} className="text-slate-500" /></div>
                 <div className="flex-1 min-w-0">
                   <p className="text-[10px] font-black uppercase tracking-tight">
                     <span className="text-[var(--brand-primary)]">{act.user}</span> {act.action}
@@ -190,9 +193,9 @@ const CRM: React.FC = () => {
               </thead>
               <tbody className="divide-y divide-slate-50 dark:divide-white/5 text-xs">
                 {[
-                  { id: 1, name: 'John Smith', company: 'TechFlow', source: 'Webinar', score: 85, status: 'NEW', email: 'john@techflow.com', ltv: '$12k', tickets: 2, deals: 1 },
-                  { id: 2, name: 'Alice Wong', company: 'DataViz', source: 'LinkedIn', score: 92, status: 'CONTACTED', email: 'alice@dataviz.io', ltv: '$45k', tickets: 0, deals: 2 },
-                  { id: 3, name: 'Bob Miller', company: 'EcoPower', source: 'Referral', score: 64, status: 'NURTURING', email: 'bob@ecopower.net', ltv: '$0', tickets: 1, deals: 0 },
+                  { id: 1, name: 'John Smith', company: 'TechFlow', source: 'Webinar', score: 85, status: 'NEW', email: 'john@techflow.com', ltv: `${symbol}12k`, tickets: 2, deals: 1 },
+                  { id: 2, name: 'Alice Wong', company: 'DataViz', source: 'LinkedIn', score: 92, status: 'CONTACTED', email: 'alice@dataviz.io', ltv: `${symbol}45k`, tickets: 0, deals: 2 },
+                  { id: 3, name: 'Bob Miller', company: 'EcoPower', source: 'Referral', score: 64, status: 'NURTURING', email: 'bob@ecopower.net', ltv: `${symbol}0`, tickets: 1, deals: 0 },
                 ].map((lead, i) => (
                   <tr 
                     key={i} 
@@ -315,7 +318,7 @@ const CRM: React.FC = () => {
                   <div className="flex justify-between items-end">
                     <div>
                       <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest mb-1">Deal Value</p>
-                      <p className="text-sm font-black italic text-[var(--brand-primary)]">${deal.value?.toLocaleString()}</p>
+                      <p className="text-sm font-black italic text-[var(--brand-primary)]">{fmt(deal.value ?? 0)}</p>
                     </div>
                     <button 
                       onClick={(e) => { e.stopPropagation(); handleScoreDeal(deal); }}
@@ -354,7 +357,7 @@ const CRM: React.FC = () => {
                   <input type="checkbox" className="w-4 h-4 rounded border-slate-300 text-[var(--brand-primary)] focus:ring-[var(--brand-primary)]" />
                   <div>
                     <h4 className="text-xs font-black uppercase tracking-tight">{t.task}</h4>
-                    <p className="text-[9px] text-slate-500 font-bold uppercase mt-1">Due: {t.due} • Assigned to {t.user}</p>
+                    <p className="text-[9px] text-slate-500 font-bold uppercase mt-1">Due: {t.due} ï¿½ Assigned to {t.user}</p>
                   </div>
                 </div>
                 <span className={`px-2 py-1 rounded-lg text-[8px] font-black uppercase ${
@@ -378,7 +381,7 @@ const CRM: React.FC = () => {
               <div key={i} className="p-4 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-100 dark:border-white/10 flex justify-between items-center">
                 <div>
                   <h4 className="text-xs font-black uppercase tracking-tight">{c.name}</h4>
-                  <p className="text-[9px] text-slate-500 font-bold uppercase mt-1">{c.leads} Leads Generated • ROI: {c.roi}</p>
+                  <p className="text-[9px] text-slate-500 font-bold uppercase mt-1">{c.leads} Leads Generated ï¿½ ROI: {c.roi}</p>
                 </div>
                 <span className={`px-2 py-1 rounded-lg text-[8px] font-black uppercase ${
                   c.status === 'ACTIVE' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-amber-500/10 text-amber-500'
@@ -404,7 +407,7 @@ const CRM: React.FC = () => {
         <GlassCard className="p-6">
           <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Avg. Response Time</p>
           <h4 className="text-2xl font-black italic">1.2h</h4>
-          <p className="text-[9px] text-emerald-500 font-bold uppercase mt-2">? 15% improvement</p>
+          <p className="text-[9px] text-emerald-500 font-bold uppercase mt-2"><ArrowUp size={10} className="inline mr-1" />15% improvement</p>
         </GlassCard>
         <GlassCard className="p-6">
           <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Health Score</p>
@@ -460,10 +463,10 @@ const CRM: React.FC = () => {
           <h3 className="text-lg font-black uppercase tracking-widest italic mb-8">Product Catalog</h3>
           <div className="grid grid-cols-2 gap-4">
             {[
-              { name: 'Enterprise License', price: '$5,000/yr', stock: 'Unlimited' },
-              { name: 'API Access (Tier 1)', price: '$200/mo', stock: 'Unlimited' },
-              { name: 'On-site Training', price: '$2,500', stock: 'Available' },
-              { name: 'Premium Support', price: '$1,000/yr', stock: 'Available' },
+              { name: 'Enterprise License', price: `${symbol}5,000/yr`, stock: 'Unlimited' },
+              { name: 'API Access (Tier 1)', price: `${symbol}200/mo`, stock: 'Unlimited' },
+              { name: 'On-site Training', price: `${symbol}2,500`, stock: 'Available' },
+              { name: 'Premium Support', price: `${symbol}1,000/yr`, stock: 'Available' },
             ].map((prod, i) => (
               <div key={i} className="p-4 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-100 dark:border-white/10">
                 <h4 className="text-[10px] font-black uppercase tracking-tight mb-1">{prod.name}</h4>
@@ -509,9 +512,9 @@ const CRM: React.FC = () => {
           <h3 className="text-lg font-black uppercase tracking-widest italic mb-8">Marketing ROI by Channel</h3>
           <div className="space-y-6">
             {[
-              { channel: 'Google Ads', spend: '$12k', revenue: '$45k', roi: '3.75x' },
-              { channel: 'LinkedIn', spend: '$8k', revenue: '$12k', roi: '1.5x' },
-              { channel: 'Email', spend: '$2k', revenue: '$25k', roi: '12.5x' },
+              { channel: 'Google Ads', spend: `${symbol}12k`, revenue: `${symbol}45k`, roi: '3.75x' },
+              { channel: 'LinkedIn', spend: `${symbol}8k`, revenue: `${symbol}12k`, roi: '1.5x' },
+              { channel: 'Email', spend: `${symbol}2k`, revenue: `${symbol}25k`, roi: '12.5x' },
             ].map((ch, i) => (
               <div key={i} className="space-y-2">
                 <div className="flex justify-between text-[9px] font-black uppercase tracking-widest">

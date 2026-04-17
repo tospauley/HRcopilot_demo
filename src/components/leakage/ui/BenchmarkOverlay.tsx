@@ -1,6 +1,6 @@
 /**
  * BenchmarkOverlay.jsx
- * HR360+ Organizational Intelligence Widget
+ * HRcopilot Organizational Intelligence Widget
  * Part of: Phase 6 — Close Sections
  * Org types supported: both
  * Dependencies: useCurrencyFormat

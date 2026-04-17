@@ -1,4 +1,4 @@
-# HR360 Demo System — Implementation Spec
+﻿# HRcopilot Demo System — Implementation Spec
 **Last Updated:** 15 April 2026  
 **Status:** ~85% Complete  
 **Goal:** Production-ready, self-selling enterprise demo with 12 modules, voice narration, cinematic subtitles, onboarding flow, and demo orchestration.
@@ -18,7 +18,7 @@
 | Leakage Widget | `src/components/leakage/` — full engine, hooks, steps, UI (100%) |
 | Core Modules (pages) | `Employees.tsx`, `Attendance.tsx`, `Payroll.tsx`, `Performance.tsx`, `Leave.tsx`, `Branches.tsx`, `RoleManagement.tsx`, `Communication.tsx`, `CRM.tsx`, `Finance.tsx`, `TalentManagement.tsx`, `Goals.tsx` |
 | AI Advisor Widget | `components/AIAdvisorModal.tsx` |
-| Data Layer | `demoData.ts` (seed data), `src/context/HR360Context.tsx`, `src/lib/storage.ts`, `src/lib/cache.ts` |
+| Data Layer | `demoData.ts` (seed data), `src/context/HRcopilotContext.tsx`, `src/lib/storage.ts`, `src/lib/cache.ts` |
 | Onboarding Store | `src/demo/onboarding/onboardingStore.ts` |
 | WelcomeZoom | `src/demo/onboarding/WelcomeZoom.tsx` |
 | Landing Page | `pages/Landing.tsx` |
@@ -74,7 +74,7 @@
   ↓ "Explore Demo" click
 /welcome (WelcomeZoom)
   → Framer Motion zoom-in (1.5s)
-  → Quen: "Welcome to HR360 Explorer..."
+  → Quen: "Welcome to HRcopilot Explorer..."
   → Auto-advance after narration
 /role (RoleSelection)
   → 3 animated cards: CEO / HR Manager / Accountant
@@ -161,7 +161,7 @@ import { useNarration } from '../voice/useNarration';
 const { speak, stop, isSpeaking } = useNarration();
 
 // Speak with role-aware script key
-await speak("Welcome to HR360...", { scriptId: 'hook.opening', role: 'CEO' });
+await speak("Welcome to HRcopilot...", { scriptId: 'hook.opening', role: 'CEO' });
 ```
 
 Scripts are already defined in `src/demo/voice/scripts/index.ts` for all roles (CEO / HR / FINANCE).

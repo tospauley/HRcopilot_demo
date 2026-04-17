@@ -1,6 +1,6 @@
-
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Palmtree, Hourglass, CheckCircle2, X, Calendar, PartyPopper, Plus } from 'lucide-react';
 import GlassCard from '../components/GlassCard';
 import Button from '../components/Button';
 import { 
@@ -11,11 +11,11 @@ import {
 import { DEMO_LEAVE_REQUESTS, DEMO_LEAVE_BALANCES, DEMO_DASHBOARD_KPIS } from '../demoData';
 
 const LEAVE_STATS = [
-  { label: 'Employees on Leave Today',    val: String(DEMO_DASHBOARD_KPIS.onLeaveToday),          icon: '??', action: 'View List', color: 'border-l-emerald-500', accent: '#10b981' },
-  { label: 'Pending Leave Requests',      val: String(DEMO_DASHBOARD_KPIS.pendingLeaveRequests),   icon: '??', action: 'View List', color: 'border-l-amber-500',   accent: '#f59e0b' },
-  { label: 'Approved This Month',         val: String(DEMO_LEAVE_REQUESTS.filter(r => r.status === 'APPROVED').length), delta: '+3 from last month', icon: '??', color: 'border-l-[#0047cc]', accent: '#0047cc' },
-  { label: 'Rejected Requests',           val: String(DEMO_LEAVE_REQUESTS.filter(r => r.status === 'REJECTED').length), delta: '-2 from last month', icon: '??', color: 'border-l-rose-500', accent: '#ef4444' },
-  { label: 'Upcoming Leaves Next 7 Days', val: String(DEMO_LEAVE_REQUESTS.filter(r => r.status === 'PENDING').length), icon: '??', action: 'View List', color: 'border-l-[#0035a0]', accent: '#0035a0' },
+  { label: 'Employees on Leave Today',    val: String(DEMO_DASHBOARD_KPIS.onLeaveToday),          Icon: Palmtree,     action: 'View List', color: 'border-l-emerald-500', accent: '#10b981' },
+  { label: 'Pending Leave Requests',      val: String(DEMO_DASHBOARD_KPIS.pendingLeaveRequests),   Icon: Hourglass,    action: 'View List', color: 'border-l-amber-500',   accent: '#f59e0b' },
+  { label: 'Approved This Month',         val: String(DEMO_LEAVE_REQUESTS.filter(r => r.status === 'APPROVED').length), delta: '+3 from last month', Icon: CheckCircle2, color: 'border-l-[#0047cc]', accent: '#0047cc' },
+  { label: 'Rejected Requests',           val: String(DEMO_LEAVE_REQUESTS.filter(r => r.status === 'REJECTED').length), delta: '-2 from last month', Icon: X,            color: 'border-l-rose-500', accent: '#ef4444' },
+  { label: 'Upcoming Leaves Next 7 Days', val: String(DEMO_LEAVE_REQUESTS.filter(r => r.status === 'PENDING').length), Icon: Calendar,     action: 'View List', color: 'border-l-[#0035a0]', accent: '#0035a0' },
 ];
 
 const PENDING_REQUESTS = DEMO_LEAVE_REQUESTS
@@ -87,7 +87,7 @@ const Leave: React.FC = () => {
             size="md" 
             onClick={() => setIsApplyModalOpen(true)}
           >
-            Apply Leave ?
+            Apply Leave <Plus size={12} className="inline ml-1" />
           </Button>
        </div>
 
@@ -116,7 +116,7 @@ const Leave: React.FC = () => {
                 <GlassCard key={idx} accentColor={stat.accent} className="!p-4 cursor-default">
                   <div className="flex justify-between items-center mb-3">
                     <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest leading-tight">{stat.label}</p>
-                    <span className="text-base opacity-40">{stat.icon}</span>
+                    <stat.Icon size={14} className="opacity-40" />
                   </div>
                   <p className="text-2xl font-black tracking-tighter leading-none text-slate-900 dark:text-white">{stat.val}</p>
                   {stat.delta ? (
@@ -277,7 +277,7 @@ const Leave: React.FC = () => {
                            </td>
                            <td className="px-6 py-4">
                               <div className="text-xs font-black text-slate-900 dark:text-white">{req.days} Days</div>
-                              <div className="text-[9px] text-slate-500 font-bold">{req.startDate} – {req.endDate}</div>
+                              <div className="text-[9px] text-slate-500 font-bold">{req.startDate} ï¿½ {req.endDate}</div>
                            </td>
                            <td className="px-6 py-4">
                               <span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase ${
@@ -411,7 +411,7 @@ const Leave: React.FC = () => {
              </div>
              <div className="space-y-6">
                 <GlassCard title="Next Holiday Pulse" className="!bg-[#0047cc]/10 border-[#0047cc]/20 text-center !p-10">
-                   <div className="text-5xl mb-4">??</div>
+                   <div className="flex justify-center mb-4"><PartyPopper size={40} className="text-[#0047cc]" /></div>
                    <h4 className="text-xl font-black text-slate-900 dark:text-white tracking-tight mb-1">Labor Day</h4>
                    <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-6">In 12 Days (May 01)</p>
                    <div className="h-1 bg-slate-100 dark:bg-white/5 rounded-full overflow-hidden mb-8">

@@ -1,4 +1,4 @@
-﻿// ============================================
+// ============================================
 // FILE: src/demo/admin/ApiKeysTab.tsx
 // PURPOSE: Admin UI — manage Groq key pool (up to 10) + ElevenLabs pool (up to 10).
 //   Keys saved to localStorage, pools reload instantly — no restart needed.
@@ -358,7 +358,7 @@ interface TestResult {
   error:     string | null;
 }
 
-const TEST_TEXT = 'HR360 pool test.';
+const TEST_TEXT = 'HRcopilot pool test.';
 
 async function runGroqCall(id: number): Promise<TestResult> {
   const t0 = Date.now();

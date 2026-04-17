@@ -1,4 +1,4 @@
-﻿// ============================================
+// ============================================
 // FILE: src/demo/admin/AdminCredentialsTab.tsx
 // PURPOSE: Change admin username and password
 // ============================================

@@ -1,6 +1,6 @@
 /**
  * narrationScripts.js
- * HR360+ Organizational Intelligence Widget
+ * HRcopilot Organizational Intelligence Widget
  * Part of: Phase 1 — Data Layer
  * Org types supported: both
  * Dependencies: none
@@ -65,7 +65,7 @@ export const LEAKAGE_NARRATION = {
 
   allDomains: {
     CEO: "Six domains. Each one leaking independently. Together, they represent a recoverable opportunity that exceeds the cost of fixing them many times over.",
-    HR: "Every domain you just saw is addressable with the right system. HR360 closes each one systematically.",
+    HR: "Every domain you just saw is addressable with the right system. HRcopilot closes each one systematically.",
     FINANCE: "The total leakage figure is the sum of six independently sourced, benchmarked calculations. This is your organization's financial exposure.",
   },
 
@@ -82,15 +82,15 @@ export const LEAKAGE_NARRATION = {
   },
 
   advisorPrescriptive: {
-    CEO: "Now the advisor is prescribing the highest-ROI intervention sequence — which HR360 module to activate first, and what recovery to expect.",
-    HR: "The prescriptive analysis tells you which HR360 module closes the most leakage fastest, based on your specific profile.",
+    CEO: "Now the advisor is prescribing the highest-ROI intervention sequence — which HRcopilot module to activate first, and what recovery to expect.",
+    HR: "The prescriptive analysis tells you which HRcopilot module closes the most leakage fastest, based on your specific profile.",
     FINANCE: "The advisor is sequencing the interventions by financial impact. This is your implementation roadmap.",
   },
 
   roiClose: {
-    CEO: "HR360 recovers an estimated fifty percent of this leakage. At your scale, that pays for the platform many times over in year one.",
+    CEO: "HRcopilot recovers an estimated fifty percent of this leakage. At your scale, that pays for the platform many times over in year one.",
     HR: "The people-related leakage alone justifies the investment. Everything else is upside.",
-    FINANCE: "The break-even point on HR360 is measured in weeks, not years. The leakage it stops in month one exceeds its annual cost.",
+    FINANCE: "The break-even point on HRcopilot is measured in weeks, not years. The leakage it stops in month one exceeds its annual cost.",
   },
 
   missionImpactClose: {

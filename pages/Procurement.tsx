@@ -156,7 +156,7 @@ const Procurement: React.FC = () => {
                   <td className="py-4 font-black text-[var(--brand-primary)]">{pr.id}</td>
                   <td className="py-4 font-bold uppercase">{pr.requesterName}</td>
                   <td className="py-4 font-bold text-slate-500 uppercase">{pr.department}</td>
-                  <td className="py-4 font-black italic">?{pr.estimatedAmount.toLocaleString()}</td>
+                  <td className="py-4 font-black italic">₦{pr.estimatedAmount.toLocaleString()}</td>
                   <td className="py-4">
                     <span className={`px-2 py-1 rounded-lg text-[9px] font-black uppercase ${
                       pr.status === 'APPROVED' ? 'bg-emerald-500/10 text-emerald-500' : 
@@ -188,7 +188,7 @@ const Procurement: React.FC = () => {
               <div key={i} className="p-4 bg-slate-50 dark:bg-white/5 rounded-2xl border border-slate-100 dark:border-white/10 flex justify-between items-center">
                 <div>
                   <h4 className="text-xs font-black uppercase tracking-tight">{rfq.title}</h4>
-                  <p className="text-[9px] text-slate-500 font-bold uppercase mt-1">{rfq.vendors} Vendors Invited � {rfq.deadline}</p>
+                  <p className="text-[9px] text-slate-500 font-bold uppercase mt-1">{rfq.vendors} Vendors Invited � {rfq.deadline}</p>
                 </div>
                 <span className={`px-2 py-1 rounded-lg text-[8px] font-black uppercase ${
                   rfq.status === 'OPEN' ? 'bg-blue-500/10 text-blue-500' : 'bg-[#e0f2fe]0/10 text-[#e0f2fe]0'
@@ -288,7 +288,7 @@ const Procurement: React.FC = () => {
           <GlassCard key={idx} className="p-6 relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-24 h-24 bg-[var(--brand-primary)]/5 blur-2xl rounded-full -mr-12 -mt-12 group-hover:bg-[var(--brand-primary)]/10 transition-colors" />
             <h4 className="text-xs font-black uppercase tracking-tight mb-1">{s.name}</h4>
-            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-4">Spend: ?{(s.totalSpend / 1000000).toFixed(1)}M</p>
+            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest mb-4">Spend: ₦{(s.totalSpend / 1000000).toFixed(1)}M</p>
             <div className="space-y-2">
               <div className="flex justify-between items-center text-[9px] font-black uppercase tracking-widest">
                 <span className="text-slate-400">Score</span>

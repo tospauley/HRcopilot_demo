@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Heart, CheckCircle2, Trophy, Shield, ClipboardList, HelpCircle, Globe, Building2, Users, Check } from 'lucide-react';
 import GlassCard from '../components/GlassCard';
 import FormBuilder from '../components/FormBuilder';
 import EvaluationForm from '../components/EvaluationForm';
@@ -265,15 +266,15 @@ const Performance: React.FC<PerformanceProps> = ({ onNotify }) => {
           <div className="space-y-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3" id="performance-health-grid" data-demo-id="performance-health-grid">
               {[
-                { label: 'Org Health Score', val: '86.5', delta: '+2.1%', color: 'text-emerald-500', accent: '#10b981', icon: '??' },
-                { label: 'Completion Rate', val: '94%', delta: 'Goal: 100%', color: 'text-[#0047cc]', accent: '#0047cc', icon: '??' },
-                { label: 'Top Performers', val: '42', delta: '11% of workforce', color: 'text-amber-500', accent: '#f59e0b', icon: '?' },
-                { label: 'Risk of Turnover', val: 'LOW', delta: 'AI Prediction', color: 'text-emerald-500', accent: '#10b981', icon: '???' },
+                { label: 'Org Health Score', val: '86.5', delta: '+2.1%', color: 'text-emerald-500', accent: '#10b981', Icon: Heart },
+                { label: 'Completion Rate', val: '94%', delta: 'Goal: 100%', color: 'text-[#0047cc]', accent: '#0047cc', Icon: CheckCircle2 },
+                { label: 'Top Performers', val: '42', delta: '11% of workforce', color: 'text-amber-500', accent: '#f59e0b', Icon: Trophy },
+                { label: 'Risk of Turnover', val: 'LOW', delta: 'AI Prediction', color: 'text-emerald-500', accent: '#10b981', Icon: Shield },
               ].map((s, idx) => (
                 <GlassCard key={idx} accentColor={s.accent} className="!p-4">
                   <div className="flex justify-between items-center mb-3">
                     <p className="text-[8px] font-black text-slate-500 uppercase tracking-widest">{s.label}</p>
-                    <span className="text-base opacity-50">{s.icon}</span>
+                    <s.Icon size={14} className="opacity-50" />
                   </div>
                   <p className={`text-2xl font-black tracking-tighter leading-none ${s.color}`}>{s.val}</p>
                   <p className="text-[8px] text-slate-400 font-bold uppercase mt-2">{s.delta}</p>
@@ -324,7 +325,7 @@ const Performance: React.FC<PerformanceProps> = ({ onNotify }) => {
                     <div className="flex justify-between items-start mb-4">
                       <div>
                         <h4 className="text-sm font-black text-slate-900 dark:text-white uppercase tracking-tight">{cycle.title}</h4>
-                        <p className="text-[10px] text-slate-500 font-bold uppercase mt-1">{cycle.participants} Participants • Deadline: {cycle.deadline}</p>
+                        <p className="text-[10px] text-slate-500 font-bold uppercase mt-1">{cycle.participants} Participants ï¿½ Deadline: {cycle.deadline}</p>
                       </div>
                       <span className={`px-3 py-1 rounded-full text-[8px] font-black uppercase ${
                         cycle.status === 'In Progress' ? 'bg-blue-500/10 text-blue-500' : 
@@ -496,14 +497,14 @@ const Performance: React.FC<PerformanceProps> = ({ onNotify }) => {
 
                         <div className="grid grid-cols-2 gap-4 mb-6">
                           <div className="flex items-center gap-3 p-2 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-100 dark:border-white/10">
-                            <div className="w-8 h-8 rounded-lg bg-white dark:bg-white/10 flex items-center justify-center text-xs shadow-sm">??</div>
+                            <div className="w-8 h-8 rounded-lg bg-white dark:bg-white/10 flex items-center justify-center shadow-sm"><ClipboardList size={14} className="text-slate-500" /></div>
                             <div>
                               <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Sections</p>
                               <p className="text-xs font-black text-slate-900 dark:text-white">{template.sections.length}</p>
                             </div>
                           </div>
                           <div className="flex items-center gap-3 p-2 bg-slate-50 dark:bg-white/5 rounded-xl border border-slate-100 dark:border-white/10">
-                            <div className="w-8 h-8 rounded-lg bg-white dark:bg-white/10 flex items-center justify-center text-xs shadow-sm">??</div>
+                            <div className="w-8 h-8 rounded-lg bg-white dark:bg-white/10 flex items-center justify-center shadow-sm"><HelpCircle size={14} className="text-slate-500" /></div>
                             <div>
                               <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">Questions</p>
                               <p className="text-xs font-black text-slate-900 dark:text-white">
@@ -725,14 +726,14 @@ const Performance: React.FC<PerformanceProps> = ({ onNotify }) => {
                   onClick={() => setModalScope('GLOBAL')}
                   className={`w-full p-6 rounded-2xl border-2 text-left transition-all flex items-center gap-6 ${modalScope === 'GLOBAL' ? 'border-[#0047cc] bg-[#0047cc]/5' : 'border-slate-100 dark:border-white/5 hover:border-slate-200 dark:hover:border-white/10'}`}
                 >
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl ${modalScope === 'GLOBAL' ? 'bg-[#0047cc] text-white' : 'bg-slate-100 dark:bg-white/5 text-slate-500'}`}>
-                    ??
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${modalScope === 'GLOBAL' ? 'bg-[#0047cc] text-white' : 'bg-slate-100 dark:bg-white/5 text-slate-500'}`}>
+                    <Globe size={20} />
                   </div>
                   <div className="flex-1">
                     <p className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-tight">Global Scope</p>
                     <p className="text-[10px] text-slate-500 font-medium mt-1">Available fallback for all employees in the organization.</p>
                   </div>
-                  {modalScope === 'GLOBAL' && <div className="w-5 h-5 rounded-full bg-[#0047cc] flex items-center justify-center text-white text-[10px]">?</div>}
+                  {modalScope === 'GLOBAL' && <div className="w-5 h-5 rounded-full bg-[#0047cc] flex items-center justify-center text-white"><Check size={10} /></div>}
                 </button>
 
                 {/* Branch Specific */}
@@ -740,14 +741,14 @@ const Performance: React.FC<PerformanceProps> = ({ onNotify }) => {
                   onClick={() => setModalScope('BRANCH')}
                   className={`w-full p-6 rounded-2xl border-2 text-left transition-all flex items-center gap-6 ${modalScope === 'BRANCH' ? 'border-[#0047cc] bg-[#0047cc]/5' : 'border-slate-100 dark:border-white/5 hover:border-slate-200 dark:hover:border-white/10'}`}
                 >
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl ${modalScope === 'BRANCH' ? 'bg-[#0047cc] text-white' : 'bg-slate-100 dark:bg-white/5 text-slate-500'}`}>
-                    ??
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${modalScope === 'BRANCH' ? 'bg-[#0047cc] text-white' : 'bg-slate-100 dark:bg-white/5 text-slate-500'}`}>
+                    <Building2 size={20} />
                   </div>
                   <div className="flex-1">
                     <p className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-tight">Branch Specific</p>
                     <p className="text-[10px] text-slate-500 font-medium mt-1">Overrides global template for employees in chosen branch.</p>
                   </div>
-                  {modalScope === 'BRANCH' && <div className="w-5 h-5 rounded-full bg-[#0047cc] flex items-center justify-center text-white text-[10px]">?</div>}
+                  {modalScope === 'BRANCH' && <div className="w-5 h-5 rounded-full bg-[#0047cc] flex items-center justify-center text-white"><Check size={10} /></div>}
                 </button>
 
                 {/* Department Specific */}
@@ -756,14 +757,14 @@ const Performance: React.FC<PerformanceProps> = ({ onNotify }) => {
                     onClick={() => setModalScope('DEPT')}
                     className="w-full p-6 text-left flex items-center gap-6"
                   >
-                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-xl ${modalScope === 'DEPT' ? 'bg-[#0047cc] text-white' : 'bg-slate-100 dark:bg-white/5 text-slate-500'}`}>
-                      ??
+                    <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${modalScope === 'DEPT' ? 'bg-[#0047cc] text-white' : 'bg-slate-100 dark:bg-white/5 text-slate-500'}`}>
+                      <Users size={20} />
                     </div>
                     <div className="flex-1">
                       <p className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-tight">Department Specific</p>
                       <p className="text-[10px] text-slate-500 font-medium mt-1">Highest priority. Can be assigned to multiple departments.</p>
                     </div>
-                    {modalScope === 'DEPT' && <div className="w-5 h-5 rounded-full bg-[#0047cc] flex items-center justify-center text-white text-[10px]">?</div>}
+                    {modalScope === 'DEPT' && <div className="w-5 h-5 rounded-full bg-[#0047cc] flex items-center justify-center text-white"><Check size={10} /></div>}
                   </button>
 
                   {modalScope === 'DEPT' && (

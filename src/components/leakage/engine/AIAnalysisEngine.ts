@@ -1,6 +1,6 @@
 /**
  * AIAnalysisEngine.js
- * HR360+ Organizational Intelligence Widget
+ * HRcopilot Organizational Intelligence Widget
  */
 
 import { isNGO } from '../data/orgTypeProfiles.js'
@@ -48,7 +48,7 @@ export class AIAnalysisEngine {
     const frame = this.isNGOOrg
       ? 'Frame all insights around mission efficiency, donor accountability, and beneficiary impact. Never use profit language.'
       : 'Frame all insights around financial performance, operational efficiency, and competitive advantage.'
-    return `You are an expert organizational intelligence advisor for HR360+. You are speaking directly to a ${roleLabel} at a ${orgLabel}.\n${frame}\nAll monetary amounts in the data are in ${this.currency}. Always use ${this.currency} amounts and the ${this.currency} currency code when mentioning figures — never use USD or $ unless the currency is USD.\nReturn ONLY valid JSON matching the schema provided. No preamble, no markdown, no explanation.\nBe specific. Use numbers from the data provided. Maximum 40 words per insight field.`
+    return `You are an expert organizational intelligence advisor for HRcopilot. You are speaking directly to a ${roleLabel} at a ${orgLabel}.\n${frame}\nAll monetary amounts in the data are in ${this.currency}. Always use ${this.currency} amounts and the ${this.currency} currency code when mentioning figures — never use USD or $ unless the currency is USD.\nReturn ONLY valid JSON matching the schema provided. No preamble, no markdown, no explanation.\nBe specific. Use numbers from the data provided. Maximum 40 words per insight field.`
   }
 
   async generateDescriptive(results) {
@@ -153,7 +153,7 @@ export class AIAnalysisEngine {
       descriptive:  { headline: 'Leakage analysis complete', insight: 'AI analysis unavailable. Your leakage figures are calculated from your inputs.', topCategory: 'workforce', topAmount: 0, trend: 'stable', urgency: 'medium' },
       diagnostic:   { headline: 'Root cause analysis unavailable', insight: 'Review the leakage breakdown for manual analysis.', rootCause: 'Manual processes and lack of integrated systems', systemicPattern: 'Workforce and finance leakage share the same root cause', severity: 'medium' },
       predictive:   { headline: 'Predictive analysis unavailable', insight: 'Based on current leakage, exposure compounds annually.', threeYearExposure: 0, highestRiskCategory: 'workforce', confidence: '-', triggerEvent: 'Continued manual operations without digital controls' },
-      prescriptive: { headline: 'Intervention plan unavailable', insight: 'HR360 modules address each leakage category directly.', firstIntervention: { module: 'HR & Attendance', expectedRecovery: 0, timeToValue: '30-60 days' }, secondIntervention: { module: 'Accounting & Finance', expectedRecovery: 0, timeToValue: '60-90 days' }, totalRecoveryYear1: 0 },
+      prescriptive: { headline: 'Intervention plan unavailable', insight: 'HRcopilot modules address each leakage category directly.', firstIntervention: { module: 'HR & Attendance', expectedRecovery: 0, timeToValue: '30-60 days' }, secondIntervention: { module: 'Accounting & Finance', expectedRecovery: 0, timeToValue: '60-90 days' }, totalRecoveryYear1: 0 },
     }
     return map[type] || map.descriptive
   }

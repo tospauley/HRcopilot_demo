@@ -1,7 +1,7 @@
-﻿import React from 'react';
+import React from 'react';
 
 /**
- * HR360 Design System — Button
+ * HRcopilot Design System — Button
  *
  * Variants:
  *   primary   — brand purple  (#0047cc)  main CTA

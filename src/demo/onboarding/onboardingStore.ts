@@ -58,7 +58,7 @@ export const useOnboardingStore = create<OnboardingState>()(
       reset:         ()           => set({ ...DEFAULTS }),
     }),
     {
-      name:    'hr360_onboarding',
+      name:    'HRcopilot_onboarding',
       storage: createJSONStorage(() => sessionStorage),
       partialize: (s) => ({
         step:       s.step,

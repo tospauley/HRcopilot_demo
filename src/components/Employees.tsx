@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { Plus, Search, Filter, MoreHorizontal, User } from 'lucide-react';
 import { cn } from '../lib/utils';
 

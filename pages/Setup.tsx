@@ -33,7 +33,7 @@ const Setup: React.FC = () => {
           COMPANY <span className="text-[#0047cc]">PROVISIONING</span>
         </h1>
         <p className="text-slate-500 dark:text-slate-400 max-w-lg mx-auto">
-          Initialize your enterprise workspace. HR360 will automatically configure modules based on your organizational identity.
+          Initialize your enterprise workspace. HRcopilot will automatically configure modules based on your organizational identity.
         </p>
       </motion.div>
 

@@ -1,4 +1,4 @@
-﻿// ============================================
+// ============================================
 // FILE: src/demo/admin/AdminLogin.tsx
 // PURPOSE: Isolated admin login page — no connection to main app
 // ============================================
@@ -77,7 +77,7 @@ export function AdminLogin({ onSuccess }: Props) {
               </svg>
             </div>
             <h1 className="text-xl font-black text-white uppercase tracking-tight">
-              HR360 Admin
+              HRcopilot Admin
             </h1>
             <p className="text-[11px] text-white/40 font-medium mt-1 uppercase tracking-[0.2em]">
               Demo System Control Panel
@@ -164,14 +164,14 @@ export function AdminLogin({ onSuccess }: Props) {
           {/* Default creds hint — only in dev */}
           {import.meta.env.DEV && (
             <p className="text-center text-[9px] text-white/20 mt-6 font-mono">
-              Default: admin / hr360admin
+              Default: admin / HRcopilotadmin
             </p>
           )}
         </div>
 
         {/* Footer */}
         <p className="text-center text-[9px] text-white/20 mt-4 uppercase tracking-widest">
-          HR360 · Restricted Access · Admin Only
+          HRcopilot · Restricted Access · Admin Only
         </p>
       </motion.div>
     </div>

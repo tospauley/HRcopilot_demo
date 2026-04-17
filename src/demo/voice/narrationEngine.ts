@@ -626,8 +626,8 @@ export async function testProvider(provider: NarratorProvider): Promise<Narrator
   const token = ++_speakToken; // claim the token so playback works normally
   _currentScriptId = null;     // no caching for test calls
   try {
-    if (provider === 'elevenlabs') await speakElevenLabs('HR360 voice system ready.', token, null);
-    else                           await speakGroq('HR360 voice system ready.', token, null);
+    if (provider === 'elevenlabs') await speakElevenLabs('HRcopilot voice system ready.', token, null);
+    else                           await speakGroq('HRcopilot voice system ready.', token, null);
     return { provider, success: true,  latencyMs: Date.now() - t0 };
   } catch (err) {
     return { provider, success: false, latencyMs: Date.now() - t0,

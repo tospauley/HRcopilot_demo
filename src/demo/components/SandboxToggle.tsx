@@ -1,4 +1,4 @@
-﻿// ============================================
+// ============================================
 // FILE: src/demo/components/SandboxToggle.tsx
 // PURPOSE: Mode switcher pill — Guided / Sandbox / Flows.
 //   Reads/writes demoOrchestrator + onboardingStore.

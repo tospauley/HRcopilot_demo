@@ -27,7 +27,7 @@ const fetchBranchEmployeesApi = async (branchId: string) => {
       name: e.name,
       role: e.position,
       status: e.status,
-      email: `${e.name.split(' ')[0].toLowerCase()}.${e.name.split(' ')[1].toLowerCase()}@hr360.io`,
+      email: `${e.name.split(' ')[0].toLowerCase()}.${e.name.split(' ')[1].toLowerCase()}@HRcopilot.io`,
       avatar: e.avatar,
     }));
 };
@@ -248,7 +248,7 @@ const Branches: React.FC = () => {
               <h2 className="text-3xl font-black text-slate-900 dark:text-white uppercase italic tracking-tight">{selectedBranch.name}</h2>
               <span className="px-3 py-1 bg-[#0047cc]/10 border border-[#0047cc]/20 text-[#0047cc] text-[10px] font-black uppercase rounded-full">{selectedBranch.code}</span>
             </div>
-            <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest mt-1 italic">Operating since Jan 2024 • Managed by {selectedBranch.manager_name}</p>
+            <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest mt-1 italic">Operating since Jan 2024 ï¿½ Managed by {selectedBranch.manager_name}</p>
           </div>
         </div>
 
@@ -412,7 +412,7 @@ const Branches: React.FC = () => {
                           <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-inner bg-emerald-500/10 text-emerald-400">??</div>
                           <div className="flex-1 min-w-0">
                              <p className="text-sm font-black text-white uppercase tracking-tight truncate">Face-ID LOBBY-01</p>
-                             <p className="text-[9px] font-mono text-slate-500 mt-1 uppercase tracking-tighter">SN: HR360-SFO-901</p>
+                             <p className="text-[9px] font-mono text-slate-500 mt-1 uppercase tracking-tighter">SN: HRcopilot-SFO-901</p>
                           </div>
                           <div className="text-right">
                              <span className="text-[8px] font-black uppercase text-emerald-400 bg-emerald-400/10 px-2 py-0.5 rounded">ONLINE</span>
@@ -423,7 +423,7 @@ const Branches: React.FC = () => {
                           <div className="w-14 h-14 rounded-2xl flex items-center justify-center text-2xl shadow-inner bg-rose-500/10 text-rose-500">?</div>
                           <div className="flex-1 min-w-0">
                              <p className="text-sm font-black text-white uppercase tracking-tight truncate">Finger-Scan BACK-02</p>
-                             <p className="text-[9px] font-mono text-slate-500 mt-1 uppercase tracking-tighter">SN: HR360-SFO-404</p>
+                             <p className="text-[9px] font-mono text-slate-500 mt-1 uppercase tracking-tighter">SN: HRcopilot-SFO-404</p>
                           </div>
                           <div className="text-right">
                              <span className="text-[8px] font-black uppercase text-rose-500 bg-rose-500/10 px-2 py-0.5 rounded">OFFLINE</span>
@@ -648,7 +648,7 @@ const Branches: React.FC = () => {
                                          {branch.name}
                                          {branch.is_hq && <span className="w-1.5 h-1.5 rounded-full bg-amber-500 shadow-[0_0_8px_#f59e0b]" />}
                                        </p>
-                                       <p className="text-[9px] font-mono text-slate-500 mt-1 uppercase tracking-tighter">{branch.code} • {branch.city}</p>
+                                       <p className="text-[9px] font-mono text-slate-500 mt-1 uppercase tracking-tighter">{branch.code} ï¿½ {branch.city}</p>
                                     </div>
                                  </div>
                               </td>

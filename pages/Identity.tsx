@@ -7,7 +7,7 @@ import { DEMO_EMPLOYEES } from '../demoData';
 const USERS_DATA: User[] = DEMO_EMPLOYEES.slice(0, 6).map((e, i) => ({
   id: e.id,
   name: e.name,
-  email: `${e.name.split(' ')[0].toLowerCase()}.${e.name.split(' ')[1].toLowerCase()}@hr360.io`,
+  email: `${e.name.split(' ')[0].toLowerCase()}.${e.name.split(' ')[1].toLowerCase()}@HRcopilot.io`,
   role: (i === 0 ? 'CEO' : i < 3 ? 'HR_MANAGER' : 'EMPLOYEE') as any,
   avatar: e.avatar,
   department: e.department,

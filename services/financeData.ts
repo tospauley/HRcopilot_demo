@@ -446,7 +446,7 @@ export const MOCK_JOURNALS: any[] = [
   {
     id: 'JE-2026-017',
     date: '2026-04-15T14:00:00Z',
-    description: 'Intercompany Loan Settlement — HR360 Nigeria Subsidiary',
+    description: 'Intercompany Loan Settlement — HRcopilot Nigeria Subsidiary',
     reference: 'IC-NG-APR-2026',
     source: 'Treasury',
     status: 'POSTED',

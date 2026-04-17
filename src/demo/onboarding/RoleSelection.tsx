@@ -1,4 +1,4 @@
-﻿// ============================================
+// ============================================
 // FILE: src/demo/onboarding/RoleSelection.tsx
 // ============================================
 
@@ -28,7 +28,7 @@ const IconFinance = () => (
 
 const ROLES = [
   { role: UserRole.CEO,        Icon: IconCEO,     label: 'CEO',        tagline: 'Strategic Oversight',   features: ['Company-wide analytics', 'Financial planning', 'Executive dashboards'], narration: "As CEO, you'll see the full financial picture — payroll costs, procurement spend, and workforce ROI — all in one command centre.", scriptId: 'role.ceo' },
-  { role: UserRole.HR_MANAGER, Icon: IconHR,      label: 'HR Manager', tagline: 'Operations Management', features: ['Employee lifecycle', 'Payroll automation', 'Talent acquisition'],       narration: "As HR Manager, you'll see how HR360 eliminates manual processes — attendance, payroll, and performance reviews all automated.",    scriptId: 'role.hr' },
+  { role: UserRole.HR_MANAGER, Icon: IconHR,      label: 'HR Manager', tagline: 'Operations Management', features: ['Employee lifecycle', 'Payroll automation', 'Talent acquisition'],       narration: "As HR Manager, you'll see how HRcopilot eliminates manual processes — attendance, payroll, and performance reviews all automated.",    scriptId: 'role.hr' },
   { role: UserRole.ACCOUNTANT, Icon: IconFinance, label: 'Accountant', tagline: 'Financial Control',     features: ['Payroll processing', 'Budget tracking', 'Compliance reporting'],        narration: "As Accountant, you'll see how every payroll run posts directly to the general ledger — automated journal entries, instant reconciliation.", scriptId: 'role.finance' },
 ];
 
@@ -78,7 +78,7 @@ export function RoleSelection({ onDone }: Props) {
           Choose Your <span style={{ color: '#0047cc' }}>Role</span>
         </h1>
         <p className="text-sm max-w-sm mx-auto" style={{ color: 'rgba(10,22,40,0.45)' }}>
-          HR360 adapts the demo to what matters most for your position
+          HRcopilot adapts the demo to what matters most for your position
         </p>
       </motion.div>
 

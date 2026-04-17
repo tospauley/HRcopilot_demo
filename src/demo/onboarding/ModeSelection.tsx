@@ -1,4 +1,4 @@
-﻿// ============================================
+// ============================================
 // FILE: src/demo/onboarding/ModeSelection.tsx
 // ============================================
 
@@ -28,9 +28,9 @@ const IconFlows = () => (
 );
 
 const MODES = [
-  { id: 'guided' as DemoMode,  Icon: IconGlance,  title: 'HR360 At A Glance', tagline: 'The full story in under 12 minutes', duration: '10–12 min', disabled: false,
+  { id: 'guided' as DemoMode,  Icon: IconGlance,  title: 'HRcopilot At A Glance', tagline: 'The full story in under 12 minutes', duration: '10–12 min', disabled: false,
     details: ['Every module — live, narrated, explained', 'Payroll slip, procurement & leakage ROI', 'Discover what your org is losing today', 'Ends with a personalised proposal'],
-    narration: "HR360 At A Glance gives you the complete picture in under twelve minutes. I'll walk you through every module, show you a live payroll slip, reveal what your organisation is losing right now, and end with a personalised proposal." },
+    narration: "HRcopilot At A Glance gives you the complete picture in under twelve minutes. I'll walk you through every module, show you a live payroll slip, reveal what your organisation is losing right now, and end with a personalised proposal." },
   { id: 'sandbox' as DemoMode, Icon: IconSandbox, title: 'Sandbox Mode',       tagline: 'Explore freely at your own pace',    duration: 'Unlimited', disabled: true,
     details: ['Full access to all 12 modules', 'Live data simulation', 'Try any feature instantly', 'Reset to seed data anytime'],
     narration: "Sandbox mode gives you full control. Add employees, run payroll, test the geofence — everything is live and you can reset any time." },

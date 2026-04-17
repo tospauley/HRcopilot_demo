@@ -40,7 +40,7 @@ export function DemoPayslipModal({ isOpen, onClose }: Props) {
             exit={{ opacity: 0, scale: 0.92, y: 32 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             onClick={e => e.stopPropagation()}
-            className="relative w-full max-w-3xl bg-white rounded-[24px] md:rounded-[32px] shadow-2xl overflow-hidden max-h-[95vh] overflow-y-auto"
+            className="relative w-full max-w-2xl mx-auto bg-white rounded-[24px] md:rounded-[32px] shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto"
           >
             {/* Top accent bar */}
             <div className="h-1.5 bg-gradient-to-r from-[#0047cc] via-[#e0f2fe]0 to-[#0047cc]" />
@@ -83,7 +83,7 @@ export function DemoPayslipModal({ isOpen, onClose }: Props) {
                   </div>
                   <div>
                     <h1 className="text-base md:text-xl font-black tracking-tighter text-slate-900 uppercase italic">
-                      HR360 <span className="text-[#0047cc]">ENTERPRISE</span>
+                      HRcopilot <span className="text-[#0047cc]">ENTERPRISE</span>
                     </h1>
                     <p className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em] mt-0.5">
                       Institutional Financial Document
