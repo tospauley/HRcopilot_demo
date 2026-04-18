@@ -50,11 +50,19 @@
 :root {
   --glass-bg: rgba(255, 255, 255, 0.75);
   --glass-border: rgba(0, 0, 0, 0.08);
+  /* Chart tooltip — light mode */
+  --tooltip-bg: #ffffff;
+  --tooltip-border: #e2e8f0;
+  --tooltip-color: #0f172a;
 }
 
 .dark {
   --glass-bg: rgba(15, 23, 42, 0.6);
   --glass-border: rgba(255, 255, 255, 0.08);
+  /* Chart tooltip — dark mode */
+  --tooltip-bg: #0f172a;
+  --tooltip-border: rgba(255, 255, 255, 0.08);
+  --tooltip-color: #f8fafc;
 }
 
 @layer base {

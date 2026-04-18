@@ -479,14 +479,15 @@ const Finance: React.FC = () => {
                     />
                     <Tooltip 
                       contentStyle={{ 
-                        backgroundColor: '#0d0a1a', 
-                        border: '1px solid rgba(255,255,255,0.05)', 
+                        backgroundColor: 'var(--tooltip-bg, #fff)',
+                        border: '1px solid var(--tooltip-border, #e2e8f0)',
                         borderRadius: '24px', 
                         padding: '20px',
-                        boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)'
+                        boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
+                        color: 'var(--tooltip-color, #0f172a)'
                       }}
                       itemStyle={{ fontSize: '10px', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}
-                      cursor={{ stroke: 'rgba(255,255,255,0.1)', strokeWidth: 2 }}
+                      cursor={{ stroke: 'rgba(0,71,204,0.1)', strokeWidth: 2 }}
                     />
                     <Area 
                       type="monotone" 
@@ -568,7 +569,7 @@ const Finance: React.FC = () => {
                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
                        <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 9, fontWeight: '900', fill: '#94a3b8'}} />
                        <YAxis axisLine={false} tickLine={false} tick={{fontSize: 9, fontWeight: '900', fill: '#94a3b8'}} />
-                       <Tooltip contentStyle={{ backgroundColor: '#0d0a1a', border: 'none', borderRadius: '16px' }} />
+                       <Tooltip contentStyle={{ backgroundColor: 'var(--tooltip-bg, #fff)', border: '1px solid var(--tooltip-border, #e2e8f0)', borderRadius: '16px', color: 'var(--tooltip-color, #0f172a)' }} />
                        <Bar dataKey="value" radius={[8, 8, 0, 0]}>
                           {[0, 1, 2, 3].map((entry, index) => (
                              <Cell key={`cell-${index}`} fill={index < 2 ? '#0047cc' : '#f43f5e'} />
@@ -1288,8 +1289,8 @@ const Finance: React.FC = () => {
                     <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fontSize: 10, fontWeight: 'bold', fill: '#64748b'}} />
                     <YAxis axisLine={false} tickLine={false} tick={{fontSize: 10, fontWeight: 'bold', fill: '#64748b'}} />
                     <Tooltip 
-                       cursor={{fill: 'rgba(255,255,255,0.02)'}}
-                       contentStyle={{ backgroundColor: '#0f1120', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '16px', color: '#fff' }}
+                       cursor={{fill: 'rgba(0,71,204,0.04)'}}
+                       contentStyle={{ backgroundColor: 'var(--tooltip-bg, #fff)', border: '1px solid var(--tooltip-border, #e2e8f0)', borderRadius: '16px', color: 'var(--tooltip-color, #0f172a)' }}
                     />
                     <Bar dataKey="amount" fill="url(#barGradient)" radius={[8, 8, 0, 0]} barSize={60}>
                        {AGING_DATA.map((entry, index) => (
@@ -2060,7 +2061,7 @@ const Finance: React.FC = () => {
                 <YAxis axisLine={false} tickLine={false} tick={{fontSize: 10, fontWeight: 'bold', fill: '#64748b'}} />
                 <Tooltip 
                    cursor={{stroke: 'rgba(0,71,204,0.1)', strokeWidth: 30}}
-                   contentStyle={{ backgroundColor: '#0f1120', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '16px', color: '#fff' }} 
+                   contentStyle={{ backgroundColor: 'var(--tooltip-bg, #fff)', border: '1px solid var(--tooltip-border, #e2e8f0)', borderRadius: '16px', color: 'var(--tooltip-color, #0f172a)' }} 
                 />
                 <Line type="monotone" dataKey="budget" stroke="#64748b" strokeDasharray="8 8" strokeWidth={1} dot={false} />
                 <Line type="monotone" dataKey="actual" stroke="#0047cc" strokeWidth={4} dot={{ r: 6, fill: '#0047cc', strokeWidth: 0 }} activeDot={{ r: 8, strokeWidth: 0 }} filter="url(#shadow)" />

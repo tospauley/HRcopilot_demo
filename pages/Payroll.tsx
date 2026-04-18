@@ -150,12 +150,13 @@ const Payroll: React.FC = () => {
                       />
                       <Tooltip 
                         contentStyle={{ 
-                          backgroundColor: '#0f172a', 
-                          border: 'none', 
+                          backgroundColor: 'var(--tooltip-bg, #fff)',
+                          border: '1px solid var(--tooltip-border, #e2e8f0)',
                           borderRadius: '16px',
                           fontSize: '10px',
                           fontWeight: '800',
-                          color: '#fff'
+                          color: 'var(--tooltip-color, #0f172a)',
+                          boxShadow: '0 4px 24px rgba(0,0,0,0.08)'
                         }}
                         itemStyle={{ color: '#0047cc' }}
                       />

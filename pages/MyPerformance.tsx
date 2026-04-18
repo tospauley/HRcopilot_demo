@@ -173,7 +173,7 @@ const MyPerformance: React.FC = () => {
                       <CartesianGrid strokeDasharray="3 3" stroke="#00000010" vertical={false} />
                       <XAxis dataKey="week" axisLine={false} tickLine={false} tick={{ fontSize: 9, fill: '#64748b' }} />
                       <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 9, fill: '#64748b' }} domain={[60, 100]} />
-                      <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '12px', fontSize: '10px' }} />
+                      <Tooltip contentStyle={{ backgroundColor: 'var(--tooltip-bg, #fff)', border: '1px solid var(--tooltip-border, #e2e8f0)', borderRadius: '12px', fontSize: '10px', color: 'var(--tooltip-color, #0f172a)' }} />
                       <Bar dataKey="score" fill="#0047cc" radius={[4, 4, 0, 0]} />
                     </BarChart>
                   </ResponsiveContainer>

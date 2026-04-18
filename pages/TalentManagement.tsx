@@ -272,7 +272,7 @@ const TalentManagement: React.FC = () => {
               <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={0}>
                 <BarChart data={CANDIDATE_CHART_DATA}>
                   <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 7, fill: '#64748b' }} />
-                  <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '8px', fontSize: '10px' }} />
+                  <Tooltip contentStyle={{ backgroundColor: 'var(--tooltip-bg, #fff)', border: '1px solid var(--tooltip-border, #e2e8f0)', borderRadius: '8px', fontSize: '10px', color: 'var(--tooltip-color, #0f172a)' }} />
                   <Bar dataKey="val" radius={[4, 4, 0, 0]}>
                     {CANDIDATE_CHART_DATA.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={index === 4 ? '#f59e0b' : '#0047cc'} opacity={0.6} />

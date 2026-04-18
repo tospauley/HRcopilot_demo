@@ -291,7 +291,7 @@ const Performance: React.FC<PerformanceProps> = ({ onNotify }) => {
                              <CartesianGrid strokeDasharray="3 3" stroke="#00000010" vertical={false} />
                              <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fontSize: 9, fill: '#64748b' }} />
                              <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 9, fill: '#64748b' }} />
-                             <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: 'none', borderRadius: '12px' }} />
+                             <Tooltip contentStyle={{ backgroundColor: 'var(--tooltip-bg, #fff)', border: '1px solid var(--tooltip-border, #e2e8f0)', borderRadius: '12px', color: 'var(--tooltip-color, #0f172a)' }} />
                              <Bar dataKey="kpi" fill="#0047cc" radius={[4, 4, 0, 0]} />
                              <Bar dataKey="behavioral" fill="#0047cc" radius={[4, 4, 0, 0]} />
                           </BarChart>
