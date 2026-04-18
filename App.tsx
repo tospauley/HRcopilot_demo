@@ -46,7 +46,8 @@ import LeakageAnalysisModal from './components/LeakageAnalysisModal';
 import { HR360Provider } from './src/context/HR360Context';
 import { CurrencyProvider } from './src/context/CurrencyContext';
 import { loadBrandSettings } from './src/db/settingsDb';
-import { CinematicSubtitles } from './src/demo/voice';
+// CinematicSubtitles lazy-loaded to break App.tsx → voice barrel → narrationEngine → narratorStore TDZ
+const CinematicSubtitles = lazy(() => import('./src/demo/voice').then(m => ({ default: m.CinematicSubtitles })));
 export { ThemeToggle } from './components/ThemeToggle';
 
 // ── Page loading fallback ─────────────────────────────────────────────────────
@@ -494,7 +495,7 @@ export const MainApp: React.FC<{
       />
 
       {/* ── Voice System — subtitles only in main app ────────────────────── */}
-      <CinematicSubtitles />
+      <Suspense fallback={null}><CinematicSubtitles /></Suspense>
     </div>
   );
 };
